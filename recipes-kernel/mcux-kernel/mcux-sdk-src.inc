@@ -21,7 +21,7 @@ SRC_URI = "\
     git://${NXPMICRO_BASE}/rpmsg-lite.git;protocol=https;nobranch=1;destsuffix=git/middleware/multicore/rpmsg_lite;name=rpmsg-lite \
     git://github.com/EmbeddedRPC/erpc;protocol=https;nobranch=1;destsuffix=git/middleware/multicore/erpc;name=erpc \
     git://${NXPMICRO_BASE}/mcux-soc-svd.git;protocol=https;nobranch=1;destsuffix=git/svd;name=mcux-soc-svd \
-    git://bitbucket.sw.nxp.com/dnind/soem.git;protocol=ssh;nobranch=1;destsuffix=git/core/components/SOEM;name=SOEM \
+    git://${NXPMICRO_BASE}/soem.git;protocol=https;nobranch=1;destsuffix=git/core/components/SOEM;name=SOEM \
     "
 
 S = "${WORKDIR}/git"
