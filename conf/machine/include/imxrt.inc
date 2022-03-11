@@ -13,7 +13,7 @@ MACHINEOVERRIDES =. "imxrt:"
 TUNE_FEATURES = "armv7m cortexm4"
 # TUNE_FEATURES = "armv6m cortexm0"
 
-ARCH_imxrt = "arm"
+ARCH:imxrt = "arm"
 
 # TUNE_ARCH = "arm"
 # TARGET_SYS = "arm-none-eabi"

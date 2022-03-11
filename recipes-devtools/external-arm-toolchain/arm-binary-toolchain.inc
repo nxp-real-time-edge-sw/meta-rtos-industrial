@@ -4,7 +4,7 @@ INHIBIT_DEFAULT_DEPS = "1"
 
 # inherit deploy
 
-FILES_${PN} = "${datadir} ${bindir}"
+FILES:${PN} = "${datadir} ${bindir}"
 BINNAME = "${@d.getVar("BPN").strip("gcc-")}"
 
 do_install() {

@@ -43,7 +43,7 @@ do_compile() {
     done
 }
 
-FILES_${PN} += "/examples/*"
+FILES:${PN} += "/examples/*"
 
 do_install () {
     install -d ${D}/examples/${PN}

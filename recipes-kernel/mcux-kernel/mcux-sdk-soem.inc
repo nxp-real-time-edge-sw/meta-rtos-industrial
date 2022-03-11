@@ -1,6 +1,6 @@
 # Copyright 2022 NXP
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/mcux-sdk-soem:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/mcux-sdk-soem:"
 
 
 SRC_URI += " \
