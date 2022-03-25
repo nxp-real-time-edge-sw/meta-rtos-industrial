@@ -292,3 +292,12 @@ CRC32-GS                   Name: CRC32 code
                            components/codec/tfa9xxx/vas_tfa_drv/tfa_container
                            _crc32.c
                            Origin: Gary S. Brown
+
+soem                       Name: soem
+                           Version: 1.4.0
+                           Outgoing License: GPL-2.0
+                           License File: gpl-2.0.txt
+                           Format: source
+                           Description: Simple Open EtherCAT Master Library
+                           Location: https://github.com/NXPmicro/soem.git
+                           Origin: OpenEtherCATsociety (GPL-2.0) - https://github.com/OpenEtherCATsociety/SOEM
