@@ -3,14 +3,14 @@
 
 #@DESCRIPTION: Machine configuration for NXP Semiconductor iMXRT SoC.
 
-# require conf/machine/include/arm/armv7m/tune-cortexm7.inc
+require conf/machine/include/arm/armv7m/tune-cortexm7.inc
 #require conf/machine/include/tune-cortex-m0.inc
-require conf/machine/include/tune-cortexm4.inc
+#require conf/machine/include/tune-cortexm4.inc
 
 MACHINEOVERRIDES =. "imxrt:"
 
-# TUNE_FEATURES = "armv7m cortexm7"
-TUNE_FEATURES = "armv7m cortexm4"
+TUNE_FEATURES = "armv7m cortexm7"
+# TUNE_FEATURES = "armv7m cortexm4"
 # TUNE_FEATURES = "armv6m cortexm0"
 
 ARCH:imxrt = "arm"
