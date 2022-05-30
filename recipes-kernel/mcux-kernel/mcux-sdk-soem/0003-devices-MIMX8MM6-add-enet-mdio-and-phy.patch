@@ -1,0 +1,36 @@
+From 181bac8eb7a9d13a00e76ef36e67c651173eebed Mon Sep 17 00:00:00 2001
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Date: Tue, 26 Apr 2022 11:17:47 +0800
+Subject: [PATCH 3/4] devices: MIMX8MM6: add enet/mdio and phy
+
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+---
+ devices/MIMX8MM6/all_lib_device_MIMX8MM6.cmake | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/devices/MIMX8MM6/all_lib_device_MIMX8MM6.cmake b/devices/MIMX8MM6/all_lib_device_MIMX8MM6.cmake
+index cceed1b3..1e02f735 100644
+--- a/devices/MIMX8MM6/all_lib_device_MIMX8MM6.cmake
++++ b/devices/MIMX8MM6/all_lib_device_MIMX8MM6.cmake
+@@ -11,6 +11,10 @@ list(APPEND CMAKE_MODULE_PATH
+     ${CMAKE_CURRENT_LIST_DIR}/../../components/codec/wm8524
+     ${CMAKE_CURRENT_LIST_DIR}/../../components/i2c
+     ${CMAKE_CURRENT_LIST_DIR}/../../components/lists
++    ${CMAKE_CURRENT_LIST_DIR}/../../components/phy
++    ${CMAKE_CURRENT_LIST_DIR}/../../components/phy/mdio
++    ${CMAKE_CURRENT_LIST_DIR}/../../components/phy/mdio/enet
++    ${CMAKE_CURRENT_LIST_DIR}/../../components/phy/device/phyar8031
+     ${CMAKE_CURRENT_LIST_DIR}/../../components/serial_manager
+     ${CMAKE_CURRENT_LIST_DIR}/../../components/srtm
+     ${CMAKE_CURRENT_LIST_DIR}/../../components/srtm/port
+@@ -18,6 +22,7 @@ list(APPEND CMAKE_MODULE_PATH
+     ${CMAKE_CURRENT_LIST_DIR}/../../drivers/cache/lmem
+     ${CMAKE_CURRENT_LIST_DIR}/../../drivers/common
+     ${CMAKE_CURRENT_LIST_DIR}/../../drivers/ecspi
++    ${CMAKE_CURRENT_LIST_DIR}/../../drivers/enet
+     ${CMAKE_CURRENT_LIST_DIR}/../../drivers/gpc_2
+     ${CMAKE_CURRENT_LIST_DIR}/../../drivers/gpt
+     ${CMAKE_CURRENT_LIST_DIR}/../../drivers/igpio
+-- 
+2.25.1
+
