@@ -1,0 +1,2946 @@
+From 733c08c46b9aa4ed409c5838ea82d31fdb187045 Mon Sep 17 00:00:00 2001
+From: Biwen Li <biwen.li@nxp.com>
+Date: Tue, 31 May 2022 20:53:42 +0800
+Subject: [PATCH] add demo rpmsg_lite_uart_sharing_rtos
+
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+ .../FreeRTOSConfig.h                          | 143 ++++
+ .../rpmsg_lite_uart_sharing_rtos/app_srtm.c   | 277 ++++++++
+ .../rpmsg_lite_uart_sharing_rtos/app_srtm.h   |  81 +++
+ .../armgcc/CMakeLists.txt                     | 148 ++++
+ .../armgcc/MIMX8MM6xxxxx_cm4_ram.ld           | 223 ++++++
+ .../armgcc/build_all.bat                      |  15 +
+ .../armgcc/build_all.sh                       |  15 +
+ .../armgcc/build_debug.bat                    |   6 +
+ .../armgcc/build_debug.sh                     |   7 +
+ .../armgcc/build_release.bat                  |   6 +
+ .../armgcc/build_release.sh                   |   7 +
+ .../armgcc/clean.bat                          |   3 +
+ .../armgcc/clean.sh                           |   3 +
+ .../armgcc/config.cmake                       |   6 +
+ .../armgcc/flags.cmake                        | 228 ++++++
+ .../rpmsg_lite_uart_sharing_rtos/fsl_iomuxc.h | 660 ++++++++++++++++++
+ .../main_remote.c                             | 123 ++++
+ .../rpmsg_lite_uart_sharing_rtos/pin_mux.c    |  85 +++
+ .../rpmsg_lite_uart_sharing_rtos/pin_mux.h    |  55 ++
+ .../rpmsg_lite_uart_sharing_rtos/readme.txt   |  67 ++
+ .../rpmsg_lite_uart_sharing_rtos/remoteproc.h | 372 ++++++++++
+ .../rpmsg_config.h                            |  86 +++
+ .../rpmsg_lite_uart_sharing_rtos/rsc_table.c  |  74 ++
+ .../rpmsg_lite_uart_sharing_rtos/rsc_table.h  |  52 ++
+ 24 files changed, 2742 insertions(+)
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/FreeRTOSConfig.h
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/app_srtm.c
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/app_srtm.h
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/CMakeLists.txt
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/MIMX8MM6xxxxx_cm4_ram.ld
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_all.bat
+ create mode 100755 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_all.sh
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_debug.bat
+ create mode 100755 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_debug.sh
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_release.bat
+ create mode 100755 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_release.sh
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/clean.bat
+ create mode 100755 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/clean.sh
+ create mode 100755 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/config.cmake
+ create mode 100755 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/flags.cmake
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/fsl_iomuxc.h
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/main_remote.c
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/pin_mux.c
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/pin_mux.h
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/readme.txt
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/remoteproc.h
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/rpmsg_config.h
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/rsc_table.c
+ create mode 100644 evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/rsc_table.h
+
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/FreeRTOSConfig.h b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/FreeRTOSConfig.h
+new file mode 100644
+index 000000000..e290be9c6
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/FreeRTOSConfig.h
+@@ -0,0 +1,143 @@
++/*
++ * FreeRTOS Kernel V10.4.3
++ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a copy of
++ * this software and associated documentation files (the "Software"), to deal in
++ * the Software without restriction, including without limitation the rights to
++ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
++ * the Software, and to permit persons to whom the Software is furnished to do so,
++ * subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice shall be included in all
++ * copies or substantial portions of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
++ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
++ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
++ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
++ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++ *
++ * https://www.FreeRTOS.org
++ * https://github.com/FreeRTOS
++ *
++ */
++
++#ifndef FREERTOS_CONFIG_H
++#define FREERTOS_CONFIG_H
++
++/*-----------------------------------------------------------
++ * Application specific definitions.
++ *
++ * These definitions should be adjusted for your particular hardware and
++ * application requirements.
++ *
++ * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
++ * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
++ *
++ * See http://www.freertos.org/a00110.html.
++ *----------------------------------------------------------*/
++
++#define configUSE_PREEMPTION 1
++#define configUSE_TICKLESS_IDLE 1
++#define configUSE_IDLE_HOOK 0
++#define configUSE_TICK_HOOK 0
++#define configCPU_CLOCK_HZ (SystemCoreClock)
++#define configTICK_RATE_HZ ((TickType_t)1000)
++#define configMAX_PRIORITIES (15)
++#define configMINIMAL_STACK_SIZE ((unsigned short)128)
++#define configTOTAL_HEAP_SIZE ((size_t)(40 * 1024))
++#define configMAX_TASK_NAME_LEN (10)
++#define configUSE_TRACE_FACILITY 0
++#define configUSE_16_BIT_TICKS 0
++#define configIDLE_SHOULD_YIELD 1
++#define configUSE_MUTEXES 1
++#define configQUEUE_REGISTRY_SIZE 0
++#define configCHECK_FOR_STACK_OVERFLOW 0
++#define configUSE_RECURSIVE_MUTEXES 1
++#define configUSE_MALLOC_FAILED_HOOK 1
++#define configUSE_APPLICATION_TASK_TAG 0
++#define configUSE_COUNTING_SEMAPHORES 1
++#define configGENERATE_RUN_TIME_STATS 0
++#define configUSE_TIME_SLICING 0
++
++/* Co-routine definitions. */
++#define configUSE_CO_ROUTINES 0
++#define configMAX_CO_ROUTINE_PRIORITIES (2)
++
++/* Software timer definitions. */
++#define configUSE_TIMERS 1
++#define configTIMER_TASK_PRIORITY (10)
++#define configTIMER_QUEUE_LENGTH 10
++#define configTIMER_TASK_STACK_DEPTH (configMINIMAL_STACK_SIZE * 2)
++
++/* Set the following definitions to 1 to include the API function, or zero
++to exclude the API function. */
++#define INCLUDE_vTaskPrioritySet 0
++#define INCLUDE_uxTaskPriorityGet 0
++#define INCLUDE_vTaskDelete 0
++#define INCLUDE_vTaskCleanUpResources 0
++#define INCLUDE_vTaskSuspend 1
++#define INCLUDE_vTaskDelayUntil 0
++#define INCLUDE_vTaskDelay 1
++#define INCLUDE_xTimerPendFunctionCall 1
++
++/* Normal assert() semantics without relying on the provision of an assert.h
++header file. */
++#define configASSERT(x)           \
++    if ((x) == 0)                 \
++    {                             \
++        taskDISABLE_INTERRUPTS(); \
++        for (;;)                  \
++            ;                     \
++    }
++
++
++
++#if defined(__ICCARM__)||defined(__CC_ARM)||defined(__GNUC__)
++    /* Clock manager provides in this variable system core clock frequency */
++    #include <stdint.h>
++    extern uint32_t SystemCoreClock;
++#endif
++
++/* Redefine: Mutex is needed for SRTM communication */
++#undef configUSE_MUTEXES
++#define configUSE_MUTEXES                       1
++
++#ifndef configTOTAL_HEAP_SIZE
++#define configTOTAL_HEAP_SIZE ((size_t)(40 * 1024))
++#endif
++
++/* Interrupt nesting behaviour configuration. Cortex-M specific. */
++#ifdef __NVIC_PRIO_BITS
++/* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
++#define configPRIO_BITS __NVIC_PRIO_BITS
++#else
++#define configPRIO_BITS 4 /* 15 priority levels */
++#endif
++
++/* The lowest interrupt priority that can be used in a call to a "set priority"
++function. */
++#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY ((1U << (configPRIO_BITS)) - 1)
++
++/* The highest interrupt priority that can be used by any interrupt service
++routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL
++INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER
++PRIORITY THAN THIS! (higher priorities are lower numeric values. */
++#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY 2
++
++/* Interrupt priorities used by the kernel port layer itself.  These are generic
++to all Cortex-M ports, and do not rely on any particular library functions. */
++#define configKERNEL_INTERRUPT_PRIORITY (configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS))
++/* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
++See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
++#define configMAX_SYSCALL_INTERRUPT_PRIORITY (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS))
++
++/* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
++standard names. */
++#define vPortSVCHandler SVC_Handler
++#define xPortPendSVHandler PendSV_Handler
++#define xPortSysTickHandler SysTick_Handler
++
++#endif /* FREERTOS_CONFIG_H */
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/app_srtm.c b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/app_srtm.c
+new file mode 100644
+index 000000000..b88046e29
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/app_srtm.c
+@@ -0,0 +1,277 @@
++/*
++ * Copyright 2022 NXP
++ * All rights reserved.
++ *
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++#include "FreeRTOS.h"
++#include "task.h"
++#include "timers.h"
++#include "semphr.h"
++#include "fsl_mu.h"
++#include "fsl_iomuxc.h"
++#include "srtm_dispatcher.h"
++#include "srtm_peercore.h"
++#include "srtm_message.h"
++#include "srtm_uart_adapter.h"
++#include "srtm_uart_service.h"
++#include "app_srtm.h"
++#include "board.h"
++#include "srtm_rpmsg_endpoint.h"
++#include "fsl_debug_console.h"
++/*******************************************************************************
++ * Definitions
++ ******************************************************************************/
++/*******************************************************************************
++ * Prototypes
++ ******************************************************************************/
++
++/*******************************************************************************
++ * Variables
++ ******************************************************************************/
++app_rpmsg_monitor_t rpmsgMonitor;
++volatile app_srtm_state_t srtmState = APP_SRTM_StateRun;
++
++static srtm_dispatcher_t disp;
++static srtm_peercore_t core;
++static srtm_service_t uartService = NULL;
++static srtm_uart_adapter_t uartAdapter = NULL;
++
++SemaphoreHandle_t monSig;
++struct rpmsg_lite_instance *rpmsgHandle;
++
++void *rpmsgMonitorParam;
++TimerHandle_t linkupTimer;
++
++static SERIAL_MANAGER_HANDLE_DEFINE(serialHandle3);
++static SERIAL_MANAGER_WRITE_HANDLE_DEFINE(serialWriteHandle3);
++static SERIAL_MANAGER_READ_HANDLE_DEFINE(serialReadHandle3);
++/* don't have UART0, so +1 to skip UART0(seq is start from 1, such as: UART1, UART2...) */
++static serial_handle_t serialHandles[FSL_FEATURE_SOC_IUART_COUNT + 1] = { NULL, NULL, NULL, (serial_handle_t)serialHandle3, NULL}; /* uart3 is used */
++static serial_write_handle_t serialWriteHandles[FSL_FEATURE_SOC_IUART_COUNT + 1] = { NULL, NULL, NULL, (serial_write_handle_t)serialWriteHandle3, NULL}; /* uart3 is used */
++static serial_read_handle_t serialReadHandles[FSL_FEATURE_SOC_IUART_COUNT + 1] = { NULL, NULL, NULL, (serial_read_handle_t)serialReadHandle3, NULL}; /* uart3 is used */
++
++/*******************************************************************************
++ * Code
++ ******************************************************************************/
++static void APP_SRTM_PollLinkup(srtm_dispatcher_t dispatcher, void *param1, void *param2)
++{
++    if (srtmState == APP_SRTM_StateRun)
++    {
++        if (rpmsg_lite_is_link_up(rpmsgHandle))
++        {
++            srtmState = APP_SRTM_StateLinkedUp;
++            xSemaphoreGive(monSig);
++        }
++        else
++        {
++            /* Start timer to poll linkup status. */
++            xTimerStart(linkupTimer, portMAX_DELAY);
++        }
++    }
++}
++
++static void APP_LinkupTimerCallback(TimerHandle_t xTimer)
++{
++    srtm_procedure_t proc = SRTM_Procedure_Create(APP_SRTM_PollLinkup, NULL, NULL);
++
++    if (proc)
++    {
++        SRTM_Dispatcher_PostProc(disp, proc);
++    }
++}
++
++static void APP_SRTM_NotifyPeerCoreReady(struct rpmsg_lite_instance *rpmsgHandle, bool ready)
++{
++    if (rpmsgMonitor)
++    {
++        rpmsgMonitor(rpmsgHandle, ready, rpmsgMonitorParam);
++    }
++}
++
++static void APP_SRTM_Linkup(void)
++{
++    uint8_t uart_id = 0;
++    srtm_channel_t chan;
++    srtm_rpmsg_endpoint_config_t rpmsgConfig;
++
++    APP_SRTM_NotifyPeerCoreReady(rpmsgHandle, true);
++
++    /* Create SRTM peer core */
++    core = SRTM_PeerCore_Create(1U); /* Assign CA53 core ID to 1U */
++
++    SRTM_PeerCore_SetState(core, SRTM_PeerCore_State_Activated);
++
++    /* Common RPMsg channel config */
++    rpmsgConfig.localAddr = RL_ADDR_ANY;
++    rpmsgConfig.peerAddr  = RL_ADDR_ANY;
++
++    rpmsgConfig.rpmsgHandle = rpmsgHandle;
++
++    /* Create and add SRTM uart channel to peer core */
++    rpmsgConfig.epName      = APP_SRTM_UART_CHANNEL_NAME;
++    for (uart_id = 0; uart_id < APP_SRTM_UART_ENDPOINT_MAX_NUM; uart_id++)
++    {
++        chan                    = SRTM_RPMsgEndpoint_Create(&rpmsgConfig);
++        uartAdapter->bindChanByUartId(chan, SRTM_UART_INVALID_BUS_ID, 0U, uart_id);
++        SRTM_PeerCore_AddChannel(core, chan);
++    }
++
++    SRTM_Dispatcher_AddPeerCore(disp, core);
++}
++
++static void APP_SRTM_InitPeerCore(void)
++{
++    copyResourceTable();
++
++    rpmsgHandle = rpmsg_lite_remote_init((void *)RPMSG_LITE_SRTM_SHMEM_BASE, RPMSG_LITE_SRTM_LINK_ID, RL_NO_FLAGS);
++    assert(rpmsgHandle);
++    if (rpmsg_lite_is_link_up(rpmsgHandle))
++    {
++        APP_SRTM_Linkup();
++    }
++    else
++    {
++        /* Start timer to poll linkup status. */
++        xTimerStart(linkupTimer, portMAX_DELAY);
++    }
++}
++
++static uint8_t s_ringBuffer[APP_SRTM_UART_SERIAL_MANAGER_RING_BUFFER_SIZE];
++
++static srtm_status_t APP_SRTM_InitUartDevice(void)
++{
++    srtm_status_t error = SRTM_Status_Error;
++    serial_port_uart_config_t uartConfig[ARRAY_SIZE(serialHandles)] = {0};
++    serial_manager_config_t serialManagerConfig[ARRAY_SIZE(serialHandles)] = {0};
++    int i = 0;
++
++    uartConfig[APP_SRTM_UART3_INSTANCE].clockRate = APP_SRTM_UART3_CLK_FREQ;
++    uartConfig[APP_SRTM_UART3_INSTANCE].baudRate = APP_SRTM_UART3_BAUDRATE;
++    uartConfig[APP_SRTM_UART3_INSTANCE].parityMode = kSerialManager_UartParityDisabled;
++    uartConfig[APP_SRTM_UART3_INSTANCE].stopBitCount = kSerialManager_UartOneStopBit;
++    uartConfig[APP_SRTM_UART3_INSTANCE].enableRx = 1;
++    uartConfig[APP_SRTM_UART3_INSTANCE].enableTx = 1;
++    uartConfig[APP_SRTM_UART3_INSTANCE].enableRxRTS = 0;
++    uartConfig[APP_SRTM_UART3_INSTANCE].enableTxCTS = 0;
++    uartConfig[APP_SRTM_UART3_INSTANCE].instance = APP_SRTM_UART3_INSTANCE;
++
++    serialManagerConfig[APP_SRTM_UART3_INSTANCE].type = APP_SRTM_UART_TYPE;
++    serialManagerConfig[APP_SRTM_UART3_INSTANCE].ringBuffer     = &s_ringBuffer[0];
++    serialManagerConfig[APP_SRTM_UART3_INSTANCE].ringBufferSize = sizeof(s_ringBuffer);
++    serialManagerConfig[APP_SRTM_UART3_INSTANCE].blockType = APP_SRTM_UART_SERIAL_MANAGER_BLOCK_TYPE;
++    serialManagerConfig[APP_SRTM_UART3_INSTANCE].portConfig = (serial_port_uart_config_t *)&uartConfig[APP_SRTM_UART3_INSTANCE];
++    for (i = APP_SRTM_FIRST_UART_INSTANCE; i <= ARRAY_SIZE(serialHandles); i++)
++    {
++        if (serialHandles[i] != NULL)
++        {
++            do {
++                if (SerialManager_Init((serial_handle_t)serialHandles[i], &serialManagerConfig[i]) != kStatus_SerialManager_Success)
++                    break;
++                if (SerialManager_OpenWriteHandle((serial_handle_t)serialHandles[i], (serial_write_handle_t)serialWriteHandles[i]) != kStatus_SerialManager_Success)
++                    break;
++                if (SerialManager_OpenReadHandle((serial_handle_t)serialHandles[i], (serial_read_handle_t)serialReadHandles[i]) != kStatus_SerialManager_Success)
++                    break;
++                if (SerialManager_InstallRxCallback((serial_read_handle_t)serialReadHandles[i], SRTM_Uart_RxCallBack, serialReadHandles[i]) != kStatus_SerialManager_Success)
++                    break;
++                if (SerialManager_InstallTxCallback((serial_write_handle_t)serialWriteHandles[i], SRTM_Uart_TxCallBack, serialWriteHandles[i]) != kStatus_SerialManager_Success)
++                    break;
++                error = SRTM_Status_Success;
++            } while(0);
++        }
++    }
++    return error;
++}
++
++static void APP_SRTM_InitUartService(void)
++{
++    if (SRTM_Status_Success == APP_SRTM_InitUartDevice())
++    {
++        uartAdapter = SRTM_UartAdapter_Create(serialHandles, serialWriteHandles, serialReadHandles, ARRAY_SIZE(serialHandles));
++        assert(uartAdapter);
++
++        /* Create and register serial service */
++        uartService = SRTM_UartService_Create(uartAdapter);
++        SRTM_Dispatcher_RegisterService(disp, uartService);
++    }
++    else
++    {
++	PRINTF("%s: %d Failed to Do Init SRTM Serial Service\r\n", __func__, __LINE__);
++    }
++}
++
++static void APP_SRTM_InitServices(void)
++{
++    APP_SRTM_InitUartService();
++}
++
++static void SRTM_MonitorTask(void *pvParameters)
++{
++    /* Initialize services and add to dispatcher */
++    APP_SRTM_InitServices();
++
++    /* Start SRTM dispatcher */
++    SRTM_Dispatcher_Start(disp);
++
++    xSemaphoreGive(monSig);
++    while (true)
++    {
++        xSemaphoreTake(monSig, portMAX_DELAY);
++        if (srtmState == APP_SRTM_StateRun)
++        {
++            SRTM_Dispatcher_Stop(disp);
++            APP_SRTM_InitPeerCore();
++            SRTM_Dispatcher_Start(disp);
++        }
++        else
++        {
++            SRTM_Dispatcher_Stop(disp);
++            /* Need to announce channel as we just linked up. */
++            APP_SRTM_Linkup();
++            SRTM_Dispatcher_Start(disp);
++        }
++    }
++}
++
++static void SRTM_DispatcherTask(void *pvParameters)
++{
++    SRTM_Dispatcher_Run(disp);
++}
++
++void APP_SRTM_Init(void)
++{
++    MU_Init(MUB);
++
++    monSig = xSemaphoreCreateBinary();
++    assert(monSig);
++    linkupTimer =
++        xTimerCreate("Linkup", APP_MS2TICK(APP_LINKUP_TIMER_PERIOD_MS), pdFALSE, NULL, APP_LinkupTimerCallback);
++    assert(linkupTimer);
++    /* Create SRTM dispatcher */
++    disp = SRTM_Dispatcher_Create();
++
++    if (xTaskCreate(SRTM_MonitorTask, "SRTM monitor", 256U, NULL, APP_SRTM_MONITOR_TASK_PRIO, NULL) != pdPASS)
++    {
++        PRINTF("Task creation failed!.\r\n");
++        while (1)
++            ;
++    }
++    if (xTaskCreate(SRTM_DispatcherTask, "SRTM dispatcher", 512U, NULL, APP_SRTM_DISPATCHER_TASK_PRIO, NULL) != pdPASS)
++    {
++        PRINTF("Task creation failed!.\r\n");
++        while (1)
++            ;
++    }
++}
++
++void APP_SRTM_Suspend(void)
++{
++    /* For user use. */
++}
++
++void APP_SRTM_Resume(void)
++{
++    /* For user use. */
++}
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/app_srtm.h b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/app_srtm.h
+new file mode 100644
+index 000000000..363ef82d7
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/app_srtm.h
+@@ -0,0 +1,81 @@
++/*
++ * Copyright 2022 NXP
++ * All rights reserved.
++ *
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++#ifndef _APP_SRTM_H_
++#define _APP_SRTM_H_
++
++#include "rpmsg_lite.h"
++#include "rsc_table.h"
++
++/*******************************************************************************
++ * Definitions
++ ******************************************************************************/
++
++/* @TEST_ANCHOR */
++
++typedef enum
++{
++    APP_SRTM_StateRun = 0x0U,
++    APP_SRTM_StateLinkedUp,
++} app_srtm_state_t;
++
++#define APP_MS2TICK(ms) ((ms + portTICK_PERIOD_MS - 1) / portTICK_PERIOD_MS)
++
++#define APP_SRTM_UART3_CLK_FREQ                                                           \
++           CLOCK_GetPllFreq(kCLOCK_SystemPll1Ctrl) / (CLOCK_GetRootPreDivider(kCLOCK_RootUart3)) / \
++          (CLOCK_GetRootPostDivider(kCLOCK_RootUart3)) / 10
++
++#define APP_SRTM_UART3_BAUDRATE (115200U)
++#define APP_SRTM_UART3_INSTANCE (3U)
++#define APP_SRTM_FIRST_UART_INSTANCE (1U)
++#define APP_SRTM_UART_SERIAL_MANAGER_RING_BUFFER_SIZE (1024U)
++#define APP_SRTM_UART_SERIAL_MANAGER_BLOCK_TYPE (kSerialManager_NonBlocking)
++#define APP_SRTM_UART_TYPE (kSerialPort_Uart)
++#define APP_SRTM_UART_RECEIVER_TASK_PRIO (3U)
++
++/* Task priority definition, bigger number stands for higher priority */
++#define APP_SRTM_MONITOR_TASK_PRIO    (4U)
++#define APP_SRTM_DISPATCHER_TASK_PRIO (3U)
++/* Define the timeout ms to polling the CA7 link up status */
++#define APP_LINKUP_TIMER_PERIOD_MS (10U)
++
++#define RPMSG_LITE_SRTM_SHMEM_BASE (VDEV0_VRING_BASE)
++#define RPMSG_LITE_SRTM_LINK_ID    (0U)
++
++/* for srtm uart service */
++#define APP_SRTM_UART_ENDPOINT_MAX_NUM (0x0BU) /* 11 endpoints are binded to srtm uart channel */
++#define APP_SRTM_UART_CHANNEL_NAME "srtm-uart-channel"
++
++typedef void (*app_rpmsg_monitor_t)(struct rpmsg_lite_instance *rpmsgHandle, bool ready, void *param);
++typedef void (*app_irq_handler_t)(IRQn_Type irq, void *param);
++
++/*******************************************************************************
++ * API
++ ******************************************************************************/
++
++#if defined(__cplusplus)
++extern "C" {
++#endif
++
++/* Initialize SRTM contexts */
++void APP_SRTM_Init(void);
++
++/* Deinit SRTM service in suspend */
++void APP_SRTM_Suspend(void);
++
++/* Restore SRTM service in resume */
++void APP_SRTM_Resume(void);
++
++/* Set RPMsg channel init/deinit monitor */
++void APP_SRTM_SetRpmsgMonitor(app_rpmsg_monitor_t monitor, void *param);
++
++#if defined(__cplusplus)
++}
++#endif
++
++#endif /* _APP_SRTM_H_ */
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/CMakeLists.txt b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/CMakeLists.txt
+new file mode 100644
+index 000000000..d7ab7cd5d
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/CMakeLists.txt
+@@ -0,0 +1,148 @@
++# CROSS COMPILER SETTING
++SET(CMAKE_SYSTEM_NAME Generic)
++CMAKE_MINIMUM_REQUIRED (VERSION 3.10.0)
++
++# THE VERSION NUMBER
++SET (Tutorial_VERSION_MAJOR 1)
++SET (Tutorial_VERSION_MINOR 0)
++
++# ENABLE ASM
++ENABLE_LANGUAGE(ASM)
++
++SET(CMAKE_STATIC_LIBRARY_PREFIX)
++SET(CMAKE_STATIC_LIBRARY_SUFFIX)
++
++SET(CMAKE_EXECUTABLE_LIBRARY_PREFIX)
++SET(CMAKE_EXECUTABLE_LIBRARY_SUFFIX)
++
++# CURRENT DIRECTORY
++SET(ProjDirPath ${CMAKE_CURRENT_SOURCE_DIR})
++
++if (DEFINED ENV{SdkRootDirPath})
++    SET(SdkRootDirPath "$ENV{SdkRootDirPath}")
++else()
++    SET(SdkRootDirPath "${ProjDirPath}/../../../../..")
++endif()
++
++SET(EXECUTABLE_OUTPUT_PATH ${ProjDirPath}/${CMAKE_BUILD_TYPE})
++SET(LIBRARY_OUTPUT_PATH ${ProjDirPath}/${CMAKE_BUILD_TYPE})
++
++
++project(rpmsg_lite_uart_sharing_rtos)
++
++set(MCUX_SDK_PROJECT_NAME rpmsg_lite_uart_sharing_rtos.elf)
++
++include(${ProjDirPath}/flags.cmake)
++
++include(${ProjDirPath}/config.cmake)
++
++add_executable(${MCUX_SDK_PROJECT_NAME} 
++"${ProjDirPath}/../FreeRTOSConfig.h"
++"${ProjDirPath}/../rpmsg_config.h"
++"${ProjDirPath}/../main_remote.c"
++"${ProjDirPath}/../pin_mux.c"
++"${ProjDirPath}/../pin_mux.h"
++"${ProjDirPath}/../rsc_table.c"
++"${ProjDirPath}/../rsc_table.h"
++"${ProjDirPath}/../remoteproc.h"
++"${SdkRootDirPath}/core/boards/evkmimx8mm/board.c"
++"${SdkRootDirPath}/core/boards/evkmimx8mm/board.h"
++"${SdkRootDirPath}/core/boards/evkmimx8mm/clock_config.c"
++"${SdkRootDirPath}/core/boards/evkmimx8mm/clock_config.h"
++"${ProjDirPath}/../fsl_iomuxc.h"
++"${ProjDirPath}/../app_srtm.c"
++"${ProjDirPath}/../app_srtm.h"
++"${SdkRootDirPath}/core/components/srtm/channels/srtm_rpmsg_endpoint.h"
++"${SdkRootDirPath}/core/components/srtm/channels/srtm_rpmsg_endpoint.c"
++"${SdkRootDirPath}/core/components/srtm/services/srtm_uart_adapter.h"
++"${SdkRootDirPath}/core/components/srtm/services/srtm_uart_adapter.c"
++"${SdkRootDirPath}/core/components/srtm/services/srtm_uart_service.h"
++"${SdkRootDirPath}/core/components/srtm/services/srtm_uart_service.c"
++)
++
++target_include_directories(${MCUX_SDK_PROJECT_NAME} PRIVATE
++    ${SdkRootDirPath}/examples/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/
++    ${ProjDirPath}/..
++    ${SdkRootDirPath}/core/boards/evkmimx8mm
++    ${SdkRootDirPath}/core/components/srtm/channels
++    ${SdkRootDirPath}/core/components/srtm/services
++)
++
++#path for entry cmake
++set(CMAKE_MODULE_PATH
++    ${SdkRootDirPath}/core
++)
++
++#Include Entry cmake component
++include(all_devices)
++
++# include modules
++include(driver_iuart)
++
++include(driver_gpc_2)
++
++include(driver_common)
++
++include(middleware_multicore_rpmsg_lite_MIMX8MM6)
++
++include(middleware_multicore_rpmsg_lite_freertos)
++
++include(driver_clock)
++
++include(driver_rdc)
++
++include(device_CMSIS)
++
++include(utility_debug_console)
++
++include(component_iuart_adapter)
++
++include(component_serial_manager)
++
++include(component_lists)
++
++include(component_serial_manager_uart)
++
++include(device_startup)
++
++include(utility_assert)
++
++include(CMSIS_Include_core_cm)
++
++include(driver_memory)
++
++include(driver_mu)
++
++include(driver_srtm_freertos)
++
++include(driver_srtm_MIMX8MM6)
++
++include(middleware_freertos-kernel_MIMX8MM6)
++
++include(middleware_freertos-kernel_extension)
++
++include(middleware_multicore_rpmsg_lite_imx8mm_m4_freertos)
++
++include(middleware_freertos-kernel_heap_4)
++
++
++include(utilities_misc_utilities)
++
++include(device_system)
++
++
++TARGET_LINK_LIBRARIES(${MCUX_SDK_PROJECT_NAME} PRIVATE -Wl,--start-group)
++
++target_link_libraries(${MCUX_SDK_PROJECT_NAME} PRIVATE m)
++
++target_link_libraries(${MCUX_SDK_PROJECT_NAME} PRIVATE c)
++
++target_link_libraries(${MCUX_SDK_PROJECT_NAME} PRIVATE gcc)
++
++target_link_libraries(${MCUX_SDK_PROJECT_NAME} PRIVATE nosys)
++
++TARGET_LINK_LIBRARIES(${MCUX_SDK_PROJECT_NAME} PRIVATE -Wl,--end-group)
++
++ADD_CUSTOM_COMMAND(TARGET ${MCUX_SDK_PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_OBJCOPY}
++-Obinary ${EXECUTABLE_OUTPUT_PATH}/${MCUX_SDK_PROJECT_NAME} ${EXECUTABLE_OUTPUT_PATH}/rpmsg_lite_uart_sharing_rtos.bin)
++
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/MIMX8MM6xxxxx_cm4_ram.ld b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/MIMX8MM6xxxxx_cm4_ram.ld
+new file mode 100644
+index 000000000..d7b3057a0
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/MIMX8MM6xxxxx_cm4_ram.ld
+@@ -0,0 +1,223 @@
++/*
++** ###################################################################
++**     Processor:           MIMX8MM6DVTLZ
++**     Compiler:            GNU C Compiler
++**     Reference manual:    MX8MMRM, Rev. A, 07/2018
++**     Version:             rev. 2.0, 2018-07-20
++**     Build:               b180720
++**
++**     Abstract:
++**         Linker file for the GNU C Compiler
++**
++**     Copyright 2018 NXP
++**     All rights reserved.
++**
++**     SPDX-License-Identifier: BSD-3-Clause
++**
++**     http:                 www.nxp.com
++**     mail:                 support@nxp.com
++**
++** ###################################################################
++*/
++
++/* Entry Point */
++ENTRY(Reset_Handler)
++
++HEAP_SIZE  = DEFINED(__heap_size__)  ? __heap_size__  : 0x0400;
++STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x0400;
++
++/* Specify the memory areas */
++MEMORY
++{
++  m_interrupts          (RX)  : ORIGIN = 0x1FFE0000, LENGTH = 0x00000240
++  m_text                (RX)  : ORIGIN = 0x1FFE0240, LENGTH = 0x0001E000
++  m_data                (RW)  : ORIGIN = 0x1FFFBA40, LENGTH = 0x000245C0
++}
++
++/* Define output sections */
++SECTIONS
++{
++/* The startup code goes first into internal RAM */
++  .interrupts :
++  {
++    __VECTOR_TABLE = .;
++    __Vectors = .;
++    . = ALIGN(4);
++    KEEP(*(.isr_vector))     /* Startup code */
++    . = ALIGN(4);
++  } > m_interrupts
++
++  .resource_table :
++  {
++    . = ALIGN(8);
++    KEEP(*(.resource_table)) /* Resource table */
++    . = ALIGN(8);
++  } > m_text
++
++    /* The program code and other data goes into internal RAM */
++  .text :
++  {
++    . = ALIGN(4);
++    *(.text)                 /* .text sections (code) */
++    *(.text*)                /* .text* sections (code) */
++    *(.rodata)               /* .rodata sections (constants, strings, etc.) */
++    *(.rodata*)              /* .rodata* sections (constants, strings, etc.) */
++    *(.glue_7)               /* glue arm to thumb code */
++    *(.glue_7t)              /* glue thumb to arm code */
++    *(.eh_frame)
++    KEEP (*(.init))
++    KEEP (*(.fini))
++    . = ALIGN(4);
++  } > m_text
++
++  .ARM.extab :
++  {
++    *(.ARM.extab* .gnu.linkonce.armextab.*)
++  } > m_text
++
++  .ARM :
++  {
++    __exidx_start = .;
++    *(.ARM.exidx*)
++    __exidx_end = .;
++  } > m_text
++
++ .ctors :
++  {
++    __CTOR_LIST__ = .;
++    /* gcc uses crtbegin.o to find the start of
++       the constructors, so we make sure it is
++       first.  Because this is a wildcard, it
++       doesn't matter if the user does not
++       actually link against crtbegin.o; the
++       linker won't look for a file to match a
++       wildcard.  The wildcard also means that it
++       doesn't matter which directory crtbegin.o
++       is in.  */
++    KEEP (*crtbegin.o(.ctors))
++    KEEP (*crtbegin?.o(.ctors))
++    /* We don't want to include the .ctor section from
++       from the crtend.o file until after the sorted ctors.
++       The .ctor section from the crtend file contains the
++       end of ctors marker and it must be last */
++    KEEP (*(EXCLUDE_FILE(*crtend?.o *crtend.o) .ctors))
++    KEEP (*(SORT(.ctors.*)))
++    KEEP (*(.ctors))
++    __CTOR_END__ = .;
++  } > m_text
++
++  .dtors :
++  {
++    __DTOR_LIST__ = .;
++    KEEP (*crtbegin.o(.dtors))
++    KEEP (*crtbegin?.o(.dtors))
++    KEEP (*(EXCLUDE_FILE(*crtend?.o *crtend.o) .dtors))
++    KEEP (*(SORT(.dtors.*)))
++    KEEP (*(.dtors))
++    __DTOR_END__ = .;
++  } > m_text
++
++  .preinit_array :
++  {
++    PROVIDE_HIDDEN (__preinit_array_start = .);
++    KEEP (*(.preinit_array*))
++    PROVIDE_HIDDEN (__preinit_array_end = .);
++  } > m_text
++
++  .init_array :
++  {
++    PROVIDE_HIDDEN (__init_array_start = .);
++    KEEP (*(SORT(.init_array.*)))
++    KEEP (*(.init_array*))
++    PROVIDE_HIDDEN (__init_array_end = .);
++  } > m_text
++
++  .fini_array :
++  {
++    PROVIDE_HIDDEN (__fini_array_start = .);
++    KEEP (*(SORT(.fini_array.*)))
++    KEEP (*(.fini_array*))
++    PROVIDE_HIDDEN (__fini_array_end = .);
++  } > m_text
++
++  __etext = .;    /* define a global symbol at end of code */
++  __DATA_ROM = .; /* Symbol is used by startup for data initialization */
++
++  .data : AT(__DATA_ROM)
++  {
++    . = ALIGN(4);
++    __DATA_RAM = .;
++    __data_start__ = .;      /* create a global symbol at data start */
++    *(.data)                 /* .data sections */
++    *(.data*)                /* .data* sections */
++    KEEP(*(.jcr*))
++    . = ALIGN(4);
++    __data_end__ = .;        /* define a global symbol at data end */
++  } > m_data
++
++  __CACHE_REGION_START = ORIGIN(m_interrupts);
++  __CACHE_REGION_SIZE  = 0;
++  __NDATA_ROM = __DATA_ROM + SIZEOF(.data); /* Symbol is used by startup for ncache data initialization */
++
++  .ncache.init : AT(__NDATA_ROM)
++  {
++    __noncachedata_start__ = .;   /* create a global symbol at ncache data start */
++    *(NonCacheable.init)
++    . = ALIGN(4);
++    __noncachedata_init_end__ = .;   /* create a global symbol at initialized ncache data end */
++  } > m_data
++
++  . = __noncachedata_init_end__;
++  .ncache :
++  {
++    *(NonCacheable)
++    . = ALIGN(4);
++    __noncachedata_end__ = .;     /* define a global symbol at ncache data end */
++  } > m_data
++
++  __DATA_END = __DATA_ROM + (__data_end__ - __data_start__);
++  text_end = ORIGIN(m_text) + LENGTH(m_text);
++  ASSERT(__DATA_END <= text_end, "region m_text overflowed with text and data")
++
++  /* Uninitialized data section */
++  .bss :
++  {
++    /* This is used by the startup in order to initialize the .bss section */
++    . = ALIGN(4);
++    __START_BSS = .;
++    __bss_start__ = .;
++    *(.bss)
++    *(.bss*)
++    *(COMMON)
++    . = ALIGN(4);
++    __bss_end__ = .;
++    __END_BSS = .;
++  } > m_data
++
++  .heap :
++  {
++    . = ALIGN(8);
++    __end__ = .;
++    PROVIDE(end = .);
++    __HeapBase = .;
++    . += HEAP_SIZE;
++    __HeapLimit = .;
++    __heap_limit = .; /* Add for _sbrk */
++  } > m_data
++
++  .stack :
++  {
++    . = ALIGN(8);
++    . += STACK_SIZE;
++  } > m_data
++
++  /* Initializes stack on the end of block */
++  __StackTop   = ORIGIN(m_data) + LENGTH(m_data);
++  __StackLimit = __StackTop - STACK_SIZE;
++  PROVIDE(__stack = __StackTop);
++
++  .ARM.attributes 0 : { *(.ARM.attributes) }
++
++  ASSERT(__StackLimit >= __HeapLimit, "region m_data overflowed with stack and heap")
++}
++
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_all.bat b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_all.bat
+new file mode 100644
+index 000000000..1bb8a9cc4
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_all.bat
+@@ -0,0 +1,15 @@
++if exist CMakeFiles (RD /s /Q CMakeFiles)
++if exist Makefile (DEL /s /Q /F Makefile)
++if exist cmake_install.cmake (DEL /s /Q /F cmake_install.cmake)
++if exist CMakeCache.txt (DEL /s /Q /F CMakeCache.txt)
++cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../core/tools/cmake_toolchain_files/armgcc.cmake" -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=debug  .
++mingw32-make -j
++
++if exist CMakeFiles (RD /s /Q CMakeFiles)
++if exist Makefile (DEL /s /Q /F Makefile)
++if exist cmake_install.cmake (DEL /s /Q /F cmake_install.cmake)
++if exist CMakeCache.txt (DEL /s /Q /F CMakeCache.txt)
++cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../core/tools/cmake_toolchain_files/armgcc.cmake" -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=release  .
++mingw32-make -j
++
++IF "%1" == "" ( pause )
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_all.sh b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_all.sh
+new file mode 100755
+index 000000000..21601076c
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_all.sh
+@@ -0,0 +1,15 @@
++#!/bin/sh
++if [ -d "CMakeFiles" ];then rm -rf CMakeFiles; fi
++if [ -f "Makefile" ];then rm -f Makefile; fi
++if [ -f "cmake_install.cmake" ];then rm -f cmake_install.cmake; fi
++if [ -f "CMakeCache.txt" ];then rm -f CMakeCache.txt; fi
++cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../core/tools/cmake_toolchain_files/armgcc.cmake" -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=debug  .
++make -j
++
++if [ -d "CMakeFiles" ];then rm -rf CMakeFiles; fi
++if [ -f "Makefile" ];then rm -f Makefile; fi
++if [ -f "cmake_install.cmake" ];then rm -f cmake_install.cmake; fi
++if [ -f "CMakeCache.txt" ];then rm -f CMakeCache.txt; fi
++cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../core/tools/cmake_toolchain_files/armgcc.cmake" -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=release  .
++make -j
++
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_debug.bat b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_debug.bat
+new file mode 100644
+index 000000000..91c5925be
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_debug.bat
+@@ -0,0 +1,6 @@
++if exist CMakeFiles (RD /s /Q CMakeFiles)
++if exist Makefile (DEL /s /Q /F Makefile)
++if exist cmake_install.cmake (DEL /s /Q /F cmake_install.cmake)
++if exist CMakeCache.txt (DEL /s /Q /F CMakeCache.txt)
++cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../core/tools/cmake_toolchain_files/armgcc.cmake" -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=debug  .
++mingw32-make -j 2> build_log.txt 
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_debug.sh b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_debug.sh
+new file mode 100755
+index 000000000..088872c90
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_debug.sh
+@@ -0,0 +1,7 @@
++#!/bin/sh
++if [ -d "CMakeFiles" ];then rm -rf CMakeFiles; fi
++if [ -f "Makefile" ];then rm -f Makefile; fi
++if [ -f "cmake_install.cmake" ];then rm -f cmake_install.cmake; fi
++if [ -f "CMakeCache.txt" ];then rm -f CMakeCache.txt; fi
++cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../core/tools/cmake_toolchain_files/armgcc.cmake" -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=debug  .
++make -j 2>&1 | tee build_log.txt
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_release.bat b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_release.bat
+new file mode 100644
+index 000000000..e603434be
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_release.bat
+@@ -0,0 +1,6 @@
++if exist CMakeFiles (RD /s /Q CMakeFiles)
++if exist Makefile (DEL /s /Q /F Makefile)
++if exist cmake_install.cmake (DEL /s /Q /F cmake_install.cmake)
++if exist CMakeCache.txt (DEL /s /Q /F CMakeCache.txt)
++cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../core/tools/cmake_toolchain_files/armgcc.cmake" -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=release  .
++mingw32-make -j 2> build_log.txt 
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_release.sh b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_release.sh
+new file mode 100755
+index 000000000..094cbd202
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_release.sh
+@@ -0,0 +1,7 @@
++#!/bin/sh
++if [ -d "CMakeFiles" ];then rm -rf CMakeFiles; fi
++if [ -f "Makefile" ];then rm -f Makefile; fi
++if [ -f "cmake_install.cmake" ];then rm -f cmake_install.cmake; fi
++if [ -f "CMakeCache.txt" ];then rm -f CMakeCache.txt; fi
++cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../core/tools/cmake_toolchain_files/armgcc.cmake" -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=release  .
++make -j 2>&1 | tee build_log.txt
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/clean.bat b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/clean.bat
+new file mode 100644
+index 000000000..f391a79b5
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/clean.bat
+@@ -0,0 +1,3 @@
++RD /s /Q debug release CMakeFiles
++DEL /s /Q /F Makefile cmake_install.cmake CMakeCache.txt
++pause
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/clean.sh b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/clean.sh
+new file mode 100755
+index 000000000..795ad8716
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/clean.sh
+@@ -0,0 +1,3 @@
++#!/bin/sh
++rm -rf debug release CMakeFiles
++rm -rf Makefile cmake_install.cmake CMakeCache.txt
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/config.cmake b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/config.cmake
+new file mode 100755
+index 000000000..391b61b19
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/config.cmake
+@@ -0,0 +1,6 @@
++# config to select component, the format is CONFIG_USE_${component}
++set(CONFIG_USE_middleware_multicore_rpmsg_lite_freertos true)
++set(CONFIG_USE_component_serial_manager_uart true)
++set(CONFIG_USE_driver_iuart true)
++set(CONFIG_USE_middleware_freertos-kernel_MIMX8MM6 true)
++set(MCUX_DEVICE "MIMX8MM6")
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/flags.cmake b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/flags.cmake
+new file mode 100755
+index 000000000..efde25ab0
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/flags.cmake
+@@ -0,0 +1,228 @@
++SET(CMAKE_ASM_FLAGS_DEBUG " \
++    ${CMAKE_ASM_FLAGS_DEBUG} \
++    -DDEBUG \
++    -D__STARTUP_CLEAR_BSS \
++    -DNO_CRP \
++    -D__STARTUP_INITIALIZE_NONCACHEDATA \
++    -g \
++    -mcpu=cortex-m4 \
++    -Wall \
++    -Wno-address-of-packed-member \
++    -mfloat-abi=hard \
++    -mfpu=fpv4-sp-d16 \
++    -mthumb \
++    -fno-common \
++    -ffunction-sections \
++    -fdata-sections \
++    -ffreestanding \
++    -fno-builtin \
++    -mapcs \
++    -std=gnu99 \
++")
++SET(CMAKE_ASM_FLAGS_RELEASE " \
++    ${CMAKE_ASM_FLAGS_RELEASE} \
++    -DNDEBUG \
++    -D__STARTUP_CLEAR_BSS \
++    -DNO_CRP \
++    -D__STARTUP_INITIALIZE_NONCACHEDATA \
++    -mcpu=cortex-m4 \
++    -Wall \
++    -Wno-address-of-packed-member \
++    -mfloat-abi=hard \
++    -mfpu=fpv4-sp-d16 \
++    -mthumb \
++    -fno-common \
++    -ffunction-sections \
++    -fdata-sections \
++    -ffreestanding \
++    -fno-builtin \
++    -mapcs \
++    -std=gnu99 \
++")
++SET(CMAKE_C_FLAGS_DEBUG " \
++    ${CMAKE_C_FLAGS_DEBUG} \
++    -DDEBUG_CONSOLE_TRANSFER_NON_BLOCKING \
++    -DDEBUG \
++    -DCPU_MIMX8MM6DVTLZ \
++    -DCPU_MIMX8MM6DVTLZ_cm4 \
++    -DSRTM_DEBUG_MESSAGE_FUNC=DbgConsole_Printf \
++    -DSRTM_DEBUG_VERBOSE_LEVEL=SRTM_DEBUG_VERBOSE_WARN \
++    -DNOT_CONFIG_CLK_ROOT=1 \
++    -DSDK_I2C_BASED_COMPONENT_USED=1 \
++    -DCODEC_MULTI_ADAPTERS=1 \
++    -DSERIAL_PORT_TYPE_UART=1 \
++    -DCODEC_AK4497_ENABLE \
++    -DSDK_OS_FREE_RTOS \
++    -DBOARD_USE_CODEC=1 \
++    -DCODEC_WM8524_ENABLE \
++    -DMCUXPRESSO_SDK \
++    -g \
++    -O0 \
++    -mcpu=cortex-m4 \
++    -Wall \
++    -Wno-address-of-packed-member \
++    -mfloat-abi=hard \
++    -mfpu=fpv4-sp-d16 \
++    -mthumb \
++    -MMD \
++    -MP \
++    -fno-common \
++    -ffunction-sections \
++    -fdata-sections \
++    -ffreestanding \
++    -fno-builtin \
++    -mapcs \
++    -std=gnu99 \
++")
++SET(CMAKE_C_FLAGS_RELEASE " \
++    ${CMAKE_C_FLAGS_RELEASE} \
++    -DDEBUG_CONSOLE_TRANSFER_NON_BLOCKING \
++    -DNDEBUG \
++    -DCPU_MIMX8MM6DVTLZ \
++    -DCPU_MIMX8MM6DVTLZ_cm4 \
++    -DSRTM_DEBUG_MESSAGE_FUNC=DbgConsole_Printf \
++    -DSRTM_DEBUG_VERBOSE_LEVEL=SRTM_DEBUG_VERBOSE_WARN \
++    -DNOT_CONFIG_CLK_ROOT=1 \
++    -DSDK_I2C_BASED_COMPONENT_USED=1 \
++    -DCODEC_MULTI_ADAPTERS=1 \
++    -DSERIAL_PORT_TYPE_UART=1 \
++    -DCODEC_AK4497_ENABLE \
++    -DSDK_OS_FREE_RTOS \
++    -DBOARD_USE_CODEC=1 \
++    -DCODEC_WM8524_ENABLE \
++    -DMCUXPRESSO_SDK \
++    -Os \
++    -mcpu=cortex-m4 \
++    -Wall \
++    -Wno-address-of-packed-member \
++    -mfloat-abi=hard \
++    -mfpu=fpv4-sp-d16 \
++    -mthumb \
++    -MMD \
++    -MP \
++    -fno-common \
++    -ffunction-sections \
++    -fdata-sections \
++    -ffreestanding \
++    -fno-builtin \
++    -mapcs \
++    -std=gnu99 \
++")
++SET(CMAKE_CXX_FLAGS_DEBUG " \
++    ${CMAKE_CXX_FLAGS_DEBUG} \
++    -DDEBUG_CONSOLE_TRANSFER_NON_BLOCKING \
++    -DDEBUG \
++    -DCPU_MIMX8MM6DVTLZ \
++    -DCPU_MIMX8MM6DVTLZ_cm4 \
++    -DSERIAL_PORT_TYPE_UART=1 \
++    -DMCUXPRESSO_SDK \
++    -g \
++    -O0 \
++    -mcpu=cortex-m4 \
++    -Wall \
++    -Wno-address-of-packed-member \
++    -mfloat-abi=hard \
++    -mfpu=fpv4-sp-d16 \
++    -mthumb \
++    -MMD \
++    -MP \
++    -fno-common \
++    -ffunction-sections \
++    -fdata-sections \
++    -ffreestanding \
++    -fno-builtin \
++    -mapcs \
++    -fno-rtti \
++    -fno-exceptions \
++")
++SET(CMAKE_CXX_FLAGS_RELEASE " \
++    ${CMAKE_CXX_FLAGS_RELEASE} \
++    -DDEBUG_CONSOLE_TRANSFER_NON_BLOCKING \
++    -DNDEBUG \
++    -DCPU_MIMX8MM6DVTLZ \
++    -DCPU_MIMX8MM6DVTLZ_cm4 \
++    -DSERIAL_PORT_TYPE_UART=1 \
++    -DMCUXPRESSO_SDK \
++    -Os \
++    -mcpu=cortex-m4 \
++    -Wall \
++    -Wno-address-of-packed-member \
++    -mfloat-abi=hard \
++    -mfpu=fpv4-sp-d16 \
++    -mthumb \
++    -MMD \
++    -MP \
++    -fno-common \
++    -ffunction-sections \
++    -fdata-sections \
++    -ffreestanding \
++    -fno-builtin \
++    -mapcs \
++    -fno-rtti \
++    -fno-exceptions \
++")
++SET(CMAKE_EXE_LINKER_FLAGS_DEBUG " \
++    ${CMAKE_EXE_LINKER_FLAGS_DEBUG} \
++    -g \
++    -mcpu=cortex-m4 \
++    -Wall \
++    -mfloat-abi=hard \
++    -mfpu=fpv4-sp-d16 \
++    -Wl,--print-memory-usage \
++    --specs=nano.specs \
++    --specs=nosys.specs \
++    -fno-common \
++    -ffunction-sections \
++    -fdata-sections \
++    -ffreestanding \
++    -fno-builtin \
++    -mthumb \
++    -mapcs \
++    -Xlinker \
++    --defsym=__stack_size__=0x400 \
++    -Xlinker \
++    --defsym=__heap_size__=0x400 \
++    -Xlinker \
++    --gc-sections \
++    -Xlinker \
++    -static \
++    -Xlinker \
++    -z \
++    -Xlinker \
++    muldefs \
++    -Xlinker \
++    -Map=output.map \
++    -T${ProjDirPath}/MIMX8MM6xxxxx_cm4_ram.ld -static \
++")
++SET(CMAKE_EXE_LINKER_FLAGS_RELEASE " \
++    ${CMAKE_EXE_LINKER_FLAGS_RELEASE} \
++    -mcpu=cortex-m4 \
++    -Wall \
++    -mfloat-abi=hard \
++    -mfpu=fpv4-sp-d16 \
++    -Wl,--print-memory-usage \
++    --specs=nano.specs \
++    --specs=nosys.specs \
++    -fno-common \
++    -ffunction-sections \
++    -fdata-sections \
++    -ffreestanding \
++    -fno-builtin \
++    -mthumb \
++    -mapcs \
++    -Xlinker \
++    --defsym=__stack_size__=0x400 \
++    -Xlinker \
++    --defsym=__heap_size__=0x400 \
++    -Xlinker \
++    --gc-sections \
++    -Xlinker \
++    -static \
++    -Xlinker \
++    -z \
++    -Xlinker \
++    muldefs \
++    -Xlinker \
++    -Map=output.map \
++    -T${ProjDirPath}/MIMX8MM6xxxxx_cm4_ram.ld -static \
++")
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/fsl_iomuxc.h b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/fsl_iomuxc.h
+new file mode 100644
+index 000000000..3c77cf1e5
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/fsl_iomuxc.h
+@@ -0,0 +1,660 @@
++/*
++ * Copyright 2018-2021 NXP
++ * All rights reserved.
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++#ifndef _FSL_IOMUXC_H_
++#define _FSL_IOMUXC_H_
++
++#include "fsl_common.h"
++
++/*!
++ * @addtogroup iomuxc_driver
++ * @{
++ */
++
++/*! @file */
++
++/*******************************************************************************
++ * Definitions
++ ******************************************************************************/
++/* Component ID definition, used by tools. */
++#ifndef FSL_COMPONENT_ID
++#define FSL_COMPONENT_ID "platform.drivers.iomuxc"
++#endif
++
++/*! @name Driver version */
++/*@{*/
++/*! @brief IOMUXC driver version 2.0.2. */
++#define FSL_IOMUXC_DRIVER_VERSION (MAKE_VERSION(2, 0, 2))
++/*@}*/
++
++/*!
++ * @name Pin function ID
++ * The pin function ID is a tuple of \<muxRegister muxMode inputRegister inputDaisy configRegister\>
++ *
++ * @{
++ */
++#define IOMUXC_PMIC_STBY_REQ                        0x30330014, 0x0, 0x00000000, 0x0, 0x3033027C
++#define IOMUXC_PMIC_ON_REQ                          0x30330018, 0x0, 0x00000000, 0x0, 0x30330280
++#define IOMUXC_ONOFF                                0x3033001C, 0x0, 0x00000000, 0x0, 0x30330284
++#define IOMUXC_POR_B                                0x30330020, 0x0, 0x00000000, 0x0, 0x30330288
++#define IOMUXC_RTC_RESET_B                          0x30330024, 0x0, 0x00000000, 0x0, 0x3033028C
++#define IOMUXC_GPIO1_IO00_GPIO1_IO00                0x30330028, 0x0, 0x00000000, 0x0, 0x30330290
++#define IOMUXC_GPIO1_IO00_CCM_ENET_PHY_REF_CLK_ROOT 0x30330028, 0x1, 0x00000000, 0x0, 0x30330290
++#define IOMUXC_GPIO1_IO00_XTALOSC_REF_CLK_32K       0x30330028, 0x5, 0x00000000, 0x0, 0x30330290
++#define IOMUXC_GPIO1_IO00_CCM_EXT_CLK1              0x30330028, 0x6, 0x00000000, 0x0, 0x30330290
++#define IOMUXC_GPIO1_IO01_GPIO1_IO01                0x3033002C, 0x0, 0x00000000, 0x0, 0x30330294
++#define IOMUXC_GPIO1_IO01_PWM1_OUT                  0x3033002C, 0x1, 0x00000000, 0x0, 0x30330294
++#define IOMUXC_GPIO1_IO01_XTALOSC_REF_CLK_24M       0x3033002C, 0x5, 0x00000000, 0x0, 0x30330294
++#define IOMUXC_GPIO1_IO01_CCM_EXT_CLK2              0x3033002C, 0x6, 0x00000000, 0x0, 0x30330294
++#define IOMUXC_GPIO1_IO02_GPIO1_IO02                0x30330030, 0x0, 0x00000000, 0x0, 0x30330298
++#define IOMUXC_GPIO1_IO02_WDOG1_WDOG_B              0x30330030, 0x1, 0x00000000, 0x0, 0x30330298
++#define IOMUXC_GPIO1_IO02_WDOG1_WDOG_ANY            0x30330030, 0x5, 0x00000000, 0x0, 0x30330298
++#define IOMUXC_GPIO1_IO03_GPIO1_IO03                0x30330034, 0x0, 0x00000000, 0x0, 0x3033029C
++#define IOMUXC_GPIO1_IO03_USDHC1_VSELECT            0x30330034, 0x1, 0x00000000, 0x0, 0x3033029C
++#define IOMUXC_GPIO1_IO03_SDMA1_EXT_EVENT0          0x30330034, 0x5, 0x00000000, 0x0, 0x3033029C
++#define IOMUXC_GPIO1_IO04_GPIO1_IO04                0x30330038, 0x0, 0x00000000, 0x0, 0x303302A0
++#define IOMUXC_GPIO1_IO04_USDHC2_VSELECT            0x30330038, 0x1, 0x00000000, 0x0, 0x303302A0
++#define IOMUXC_GPIO1_IO04_SDMA1_EXT_EVENT1          0x30330038, 0x5, 0x00000000, 0x0, 0x303302A0
++#define IOMUXC_GPIO1_IO05_GPIO1_IO05                0x3033003C, 0x0, 0x00000000, 0x0, 0x303302A4
++#define IOMUXC_GPIO1_IO05_M4_NMI                    0x3033003C, 0x1, 0x00000000, 0x0, 0x303302A4
++#define IOMUXC_GPIO1_IO05_CCM_PMIC_READY            0x3033003C, 0x5, 0x303304BC, 0x0, 0x303302A4
++#define IOMUXC_GPIO1_IO06_GPIO1_IO06                0x30330040, 0x0, 0x00000000, 0x0, 0x303302A8
++#define IOMUXC_GPIO1_IO06_ENET1_MDC                 0x30330040, 0x1, 0x00000000, 0x0, 0x303302A8
++#define IOMUXC_GPIO1_IO06_USDHC1_CD_B               0x30330040, 0x5, 0x00000000, 0x0, 0x303302A8
++#define IOMUXC_GPIO1_IO06_CCM_EXT_CLK3              0x30330040, 0x6, 0x00000000, 0x0, 0x303302A8
++#define IOMUXC_GPIO1_IO07_GPIO1_IO07                0x30330044, 0x0, 0x00000000, 0x0, 0x303302AC
++#define IOMUXC_GPIO1_IO07_ENET1_MDIO                0x30330044, 0x1, 0x303304C0, 0x0, 0x303302AC
++#define IOMUXC_GPIO1_IO07_USDHC1_WP                 0x30330044, 0x5, 0x00000000, 0x0, 0x303302AC
++#define IOMUXC_GPIO1_IO07_CCM_EXT_CLK4              0x30330044, 0x6, 0x00000000, 0x0, 0x303302AC
++#define IOMUXC_GPIO1_IO08_GPIO1_IO08                0x30330048, 0x0, 0x00000000, 0x0, 0x303302B0
++#define IOMUXC_GPIO1_IO08_ENET1_1588_EVENT0_IN      0x30330048, 0x1, 0x00000000, 0x0, 0x303302B0
++#define IOMUXC_GPIO1_IO08_USDHC2_RESET_B            0x30330048, 0x5, 0x00000000, 0x0, 0x303302B0
++#define IOMUXC_GPIO1_IO09_GPIO1_IO09                0x3033004C, 0x0, 0x00000000, 0x0, 0x303302B4
++#define IOMUXC_GPIO1_IO09_ENET1_1588_EVENT0_OUT     0x3033004C, 0x1, 0x00000000, 0x0, 0x303302B4
++#define IOMUXC_GPIO1_IO09_USDHC3_RESET_B            0x3033004C, 0x4, 0x00000000, 0x0, 0x303302B4
++#define IOMUXC_GPIO1_IO09_SDMA2_EXT_EVENT0          0x3033004C, 0x5, 0x00000000, 0x0, 0x303302B4
++#define IOMUXC_GPIO1_IO10_GPIO1_IO10                0x30330050, 0x0, 0x00000000, 0x0, 0x303302B8
++#define IOMUXC_GPIO1_IO10_USB1_OTG_ID               0x30330050, 0x1, 0x00000000, 0x0, 0x303302B8
++#define IOMUXC_GPIO1_IO11_GPIO1_IO11                0x30330054, 0x0, 0x00000000, 0x0, 0x303302BC
++#define IOMUXC_GPIO1_IO11_USB2_OTG_ID               0x30330054, 0x1, 0x00000000, 0x0, 0x303302BC
++#define IOMUXC_GPIO1_IO11_USDHC3_VSELECT            0x30330054, 0x4, 0x00000000, 0x0, 0x303302BC
++#define IOMUXC_GPIO1_IO11_CCM_PMIC_READY            0x30330054, 0x5, 0x303304BC, 0x1, 0x303302BC
++#define IOMUXC_GPIO1_IO12_GPIO1_IO12                0x30330058, 0x0, 0x00000000, 0x0, 0x303302C0
++#define IOMUXC_GPIO1_IO12_USB1_OTG_PWR              0x30330058, 0x1, 0x00000000, 0x0, 0x303302C0
++#define IOMUXC_GPIO1_IO12_SDMA2_EXT_EVENT1          0x30330058, 0x5, 0x00000000, 0x0, 0x303302C0
++#define IOMUXC_GPIO1_IO13_GPIO1_IO13                0x3033005C, 0x0, 0x00000000, 0x0, 0x303302C4
++#define IOMUXC_GPIO1_IO13_USB1_OTG_OC               0x3033005C, 0x1, 0x00000000, 0x0, 0x303302C4
++#define IOMUXC_GPIO1_IO13_PWM2_OUT                  0x3033005C, 0x5, 0x00000000, 0x0, 0x303302C4
++#define IOMUXC_GPIO1_IO14_GPIO1_IO14                0x30330060, 0x0, 0x00000000, 0x0, 0x303302C8
++#define IOMUXC_GPIO1_IO14_USB2_OTG_PWR              0x30330060, 0x1, 0x00000000, 0x0, 0x303302C8
++#define IOMUXC_GPIO1_IO14_USDHC3_CD_B               0x30330060, 0x4, 0x30330544, 0x2, 0x303302C8
++#define IOMUXC_GPIO1_IO14_PWM3_OUT                  0x30330060, 0x5, 0x00000000, 0x0, 0x303302C8
++#define IOMUXC_GPIO1_IO14_CCM_CLKO1                 0x30330060, 0x6, 0x00000000, 0x0, 0x303302C8
++#define IOMUXC_GPIO1_IO15_GPIO1_IO15                0x30330064, 0x0, 0x00000000, 0x0, 0x303302CC
++#define IOMUXC_GPIO1_IO15_USB2_OTG_OC               0x30330064, 0x1, 0x00000000, 0x0, 0x303302CC
++#define IOMUXC_GPIO1_IO15_USDHC3_WP                 0x30330064, 0x4, 0x30330548, 0x2, 0x303302CC
++#define IOMUXC_GPIO1_IO15_PWM4_OUT                  0x30330064, 0x5, 0x00000000, 0x0, 0x303302CC
++#define IOMUXC_GPIO1_IO15_CCM_CLKO2                 0x30330064, 0x6, 0x00000000, 0x0, 0x303302CC
++#define IOMUXC_ENET_MDC_ENET1_MDC                   0x30330068, 0x0, 0x00000000, 0x0, 0x303302D0
++#define IOMUXC_ENET_MDC_GPIO1_IO16                  0x30330068, 0x5, 0x00000000, 0x0, 0x303302D0
++#define IOMUXC_ENET_MDIO_ENET1_MDIO                 0x3033006C, 0x0, 0x303304C0, 0x1, 0x303302D4
++#define IOMUXC_ENET_MDIO_GPIO1_IO17                 0x3033006C, 0x5, 0x00000000, 0x0, 0x303302D4
++#define IOMUXC_ENET_TD3_ENET1_RGMII_TD3             0x30330070, 0x0, 0x00000000, 0x0, 0x303302D8
++#define IOMUXC_ENET_TD3_GPIO1_IO18                  0x30330070, 0x5, 0x00000000, 0x0, 0x303302D8
++#define IOMUXC_ENET_TD2_ENET1_RGMII_TD2             0x30330074, 0x0, 0x00000000, 0x0, 0x303302DC
++#define IOMUXC_ENET_TD2_ENET1_TX_CLK                0x30330074, 0x1, 0x00000000, 0x0, 0x303302DC
++#define IOMUXC_ENET_TD2_GPIO1_IO19                  0x30330074, 0x5, 0x00000000, 0x0, 0x303302DC
++#define IOMUXC_ENET_TD1_ENET1_RGMII_TD1             0x30330078, 0x0, 0x00000000, 0x0, 0x303302E0
++#define IOMUXC_ENET_TD1_GPIO1_IO20                  0x30330078, 0x5, 0x00000000, 0x0, 0x303302E0
++#define IOMUXC_ENET_TD0_ENET1_RGMII_TD0             0x3033007C, 0x0, 0x00000000, 0x0, 0x303302E4
++#define IOMUXC_ENET_TD0_GPIO1_IO21                  0x3033007C, 0x5, 0x00000000, 0x0, 0x303302E4
++#define IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL       0x30330080, 0x0, 0x00000000, 0x0, 0x303302E8
++#define IOMUXC_ENET_TX_CTL_GPIO1_IO22               0x30330080, 0x5, 0x00000000, 0x0, 0x303302E8
++#define IOMUXC_ENET_TXC_ENET1_RGMII_TXC             0x30330084, 0x0, 0x00000000, 0x0, 0x303302EC
++#define IOMUXC_ENET_TXC_ENET1_TX_ER                 0x30330084, 0x1, 0x00000000, 0x0, 0x303302EC
++#define IOMUXC_ENET_TXC_GPIO1_IO23                  0x30330084, 0x5, 0x00000000, 0x0, 0x303302EC
++#define IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL       0x30330088, 0x0, 0x00000000, 0x0, 0x303302F0
++#define IOMUXC_ENET_RX_CTL_GPIO1_IO24               0x30330088, 0x5, 0x00000000, 0x0, 0x303302F0
++#define IOMUXC_ENET_RXC_ENET1_RGMII_RXC             0x3033008C, 0x0, 0x00000000, 0x0, 0x303302F4
++#define IOMUXC_ENET_RXC_ENET1_RX_ER                 0x3033008C, 0x1, 0x00000000, 0x0, 0x303302F4
++#define IOMUXC_ENET_RXC_GPIO1_IO25                  0x3033008C, 0x5, 0x00000000, 0x0, 0x303302F4
++#define IOMUXC_ENET_RD0_ENET1_RGMII_RD0             0x30330090, 0x0, 0x00000000, 0x0, 0x303302F8
++#define IOMUXC_ENET_RD0_GPIO1_IO26                  0x30330090, 0x5, 0x00000000, 0x0, 0x303302F8
++#define IOMUXC_ENET_RD1_ENET1_RGMII_RD1             0x30330094, 0x0, 0x00000000, 0x0, 0x303302FC
++#define IOMUXC_ENET_RD1_GPIO1_IO27                  0x30330094, 0x5, 0x00000000, 0x0, 0x303302FC
++#define IOMUXC_ENET_RD2_ENET1_RGMII_RD2             0x30330098, 0x0, 0x00000000, 0x0, 0x30330300
++#define IOMUXC_ENET_RD2_GPIO1_IO28                  0x30330098, 0x5, 0x00000000, 0x0, 0x30330300
++#define IOMUXC_ENET_RD3_ENET1_RGMII_RD3             0x3033009C, 0x0, 0x00000000, 0x0, 0x30330304
++#define IOMUXC_ENET_RD3_GPIO1_IO29                  0x3033009C, 0x5, 0x00000000, 0x0, 0x30330304
++#define IOMUXC_SD1_CLK_USDHC1_CLK                   0x303300A0, 0x0, 0x00000000, 0x0, 0x30330308
++#define IOMUXC_SD1_CLK_GPIO2_IO00                   0x303300A0, 0x5, 0x00000000, 0x0, 0x30330308
++#define IOMUXC_SD1_CMD_USDHC1_CMD                   0x303300A4, 0x0, 0x00000000, 0x0, 0x3033030C
++#define IOMUXC_SD1_CMD_GPIO2_IO01                   0x303300A4, 0x5, 0x00000000, 0x0, 0x3033030C
++#define IOMUXC_SD1_DATA0_USDHC1_DATA0               0x303300A8, 0x0, 0x00000000, 0x0, 0x30330310
++#define IOMUXC_SD1_DATA0_GPIO2_IO02                 0x303300A8, 0x5, 0x00000000, 0x0, 0x30330310
++#define IOMUXC_SD1_DATA1_USDHC1_DATA1               0x303300AC, 0x0, 0x00000000, 0x0, 0x30330314
++#define IOMUXC_SD1_DATA1_GPIO2_IO03                 0x303300AC, 0x5, 0x00000000, 0x0, 0x30330314
++#define IOMUXC_SD1_DATA2_USDHC1_DATA2               0x303300B0, 0x0, 0x00000000, 0x0, 0x30330318
++#define IOMUXC_SD1_DATA2_GPIO2_IO04                 0x303300B0, 0x5, 0x00000000, 0x0, 0x30330318
++#define IOMUXC_SD1_DATA3_USDHC1_DATA3               0x303300B4, 0x0, 0x00000000, 0x0, 0x3033031C
++#define IOMUXC_SD1_DATA3_GPIO2_IO05                 0x303300B4, 0x5, 0x00000000, 0x0, 0x3033031C
++#define IOMUXC_SD1_DATA4_USDHC1_DATA4               0x303300B8, 0x0, 0x00000000, 0x0, 0x30330320
++#define IOMUXC_SD1_DATA4_GPIO2_IO06                 0x303300B8, 0x5, 0x00000000, 0x0, 0x30330320
++#define IOMUXC_SD1_DATA5_USDHC1_DATA5               0x303300BC, 0x0, 0x00000000, 0x0, 0x30330324
++#define IOMUXC_SD1_DATA5_GPIO2_IO07                 0x303300BC, 0x5, 0x00000000, 0x0, 0x30330324
++#define IOMUXC_SD1_DATA6_USDHC1_DATA6               0x303300C0, 0x0, 0x00000000, 0x0, 0x30330328
++#define IOMUXC_SD1_DATA6_GPIO2_IO08                 0x303300C0, 0x5, 0x00000000, 0x0, 0x30330328
++#define IOMUXC_SD1_DATA7_USDHC1_DATA7               0x303300C4, 0x0, 0x00000000, 0x0, 0x3033032C
++#define IOMUXC_SD1_DATA7_GPIO2_IO09                 0x303300C4, 0x5, 0x00000000, 0x0, 0x3033032C
++#define IOMUXC_SD1_RESET_B_USDHC1_RESET_B           0x303300C8, 0x0, 0x00000000, 0x0, 0x30330330
++#define IOMUXC_SD1_RESET_B_GPIO2_IO10               0x303300C8, 0x5, 0x00000000, 0x0, 0x30330330
++#define IOMUXC_SD1_STROBE_USDHC1_STROBE             0x303300CC, 0x0, 0x00000000, 0x0, 0x30330334
++#define IOMUXC_SD1_STROBE_GPIO2_IO11                0x303300CC, 0x5, 0x00000000, 0x0, 0x30330334
++#define IOMUXC_SD2_CD_B_USDHC2_CD_B                 0x303300D0, 0x0, 0x00000000, 0x0, 0x30330338
++#define IOMUXC_SD2_CD_B_GPIO2_IO12                  0x303300D0, 0x5, 0x00000000, 0x0, 0x30330338
++#define IOMUXC_SD2_CLK_USDHC2_CLK                   0x303300D4, 0x0, 0x00000000, 0x0, 0x3033033C
++#define IOMUXC_SD2_CLK_GPIO2_IO13                   0x303300D4, 0x5, 0x00000000, 0x0, 0x3033033C
++#define IOMUXC_SD2_CMD_USDHC2_CMD                   0x303300D8, 0x0, 0x00000000, 0x0, 0x30330340
++#define IOMUXC_SD2_CMD_GPIO2_IO14                   0x303300D8, 0x5, 0x00000000, 0x0, 0x30330340
++#define IOMUXC_SD2_DATA0_USDHC2_DATA0               0x303300DC, 0x0, 0x00000000, 0x0, 0x30330344
++#define IOMUXC_SD2_DATA0_GPIO2_IO15                 0x303300DC, 0x5, 0x00000000, 0x0, 0x30330344
++#define IOMUXC_SD2_DATA1_USDHC2_DATA1               0x303300E0, 0x0, 0x00000000, 0x0, 0x30330348
++#define IOMUXC_SD2_DATA1_GPIO2_IO16                 0x303300E0, 0x5, 0x00000000, 0x0, 0x30330348
++#define IOMUXC_SD2_DATA2_USDHC2_DATA2               0x303300E4, 0x0, 0x00000000, 0x0, 0x3033034C
++#define IOMUXC_SD2_DATA2_GPIO2_IO17                 0x303300E4, 0x5, 0x00000000, 0x0, 0x3033034C
++#define IOMUXC_SD2_DATA3_USDHC2_DATA3               0x303300E8, 0x0, 0x00000000, 0x0, 0x30330350
++#define IOMUXC_SD2_DATA3_GPIO2_IO18                 0x303300E8, 0x5, 0x00000000, 0x0, 0x30330350
++#define IOMUXC_SD2_DATA3_SRC_EARLY_RESET            0x303300E8, 0x6, 0x00000000, 0x0, 0x30330350
++#define IOMUXC_SD2_RESET_B_USDHC2_RESET_B           0x303300EC, 0x0, 0x00000000, 0x0, 0x30330354
++#define IOMUXC_SD2_RESET_B_GPIO2_IO19               0x303300EC, 0x5, 0x00000000, 0x0, 0x30330354
++#define IOMUXC_SD2_RESET_B_SRC_SYSTEM_RESET         0x303300EC, 0x6, 0x00000000, 0x0, 0x30330354
++#define IOMUXC_SD2_WP_USDHC2_WP                     0x303300F0, 0x0, 0x00000000, 0x0, 0x30330358
++#define IOMUXC_SD2_WP_GPIO2_IO20                    0x303300F0, 0x5, 0x00000000, 0x0, 0x30330358
++#define IOMUXC_NAND_ALE_RAWNAND_ALE                 0x303300F4, 0x0, 0x00000000, 0x0, 0x3033035C
++#define IOMUXC_NAND_ALE_QSPI_A_SCLK                 0x303300F4, 0x1, 0x00000000, 0x0, 0x3033035C
++#define IOMUXC_NAND_ALE_GPIO3_IO00                  0x303300F4, 0x5, 0x00000000, 0x0, 0x3033035C
++#define IOMUXC_NAND_CE0_B_RAWNAND_CE0_B             0x303300F8, 0x0, 0x00000000, 0x0, 0x30330360
++#define IOMUXC_NAND_CE0_B_QSPI_A_SS0_B              0x303300F8, 0x1, 0x00000000, 0x0, 0x30330360
++#define IOMUXC_NAND_CE0_B_GPIO3_IO01                0x303300F8, 0x5, 0x00000000, 0x0, 0x30330360
++#define IOMUXC_NAND_CE1_B_RAWNAND_CE1_B             0x303300FC, 0x0, 0x00000000, 0x0, 0x30330364
++#define IOMUXC_NAND_CE1_B_QSPI_A_SS1_B              0x303300FC, 0x1, 0x00000000, 0x0, 0x30330364
++#define IOMUXC_NAND_CE1_B_USDHC3_STROBE             0x303300FC, 0x2, 0x00000000, 0x0, 0x30330364
++#define IOMUXC_NAND_CE1_B_GPIO3_IO02                0x303300FC, 0x5, 0x00000000, 0x0, 0x30330364
++#define IOMUXC_NAND_CE2_B_RAWNAND_CE2_B             0x30330100, 0x0, 0x00000000, 0x0, 0x30330368
++#define IOMUXC_NAND_CE2_B_QSPI_B_SS0_B              0x30330100, 0x1, 0x00000000, 0x0, 0x30330368
++#define IOMUXC_NAND_CE2_B_USDHC3_DATA5              0x30330100, 0x2, 0x00000000, 0x0, 0x30330368
++#define IOMUXC_NAND_CE2_B_GPIO3_IO03                0x30330100, 0x5, 0x00000000, 0x0, 0x30330368
++#define IOMUXC_NAND_CE3_B_RAWNAND_CE3_B             0x30330104, 0x0, 0x00000000, 0x0, 0x3033036C
++#define IOMUXC_NAND_CE3_B_QSPI_B_SS1_B              0x30330104, 0x1, 0x00000000, 0x0, 0x3033036C
++#define IOMUXC_NAND_CE3_B_USDHC3_DATA6              0x30330104, 0x2, 0x00000000, 0x0, 0x3033036C
++#define IOMUXC_NAND_CE3_B_GPIO3_IO04                0x30330104, 0x5, 0x00000000, 0x0, 0x3033036C
++#define IOMUXC_NAND_CLE_RAWNAND_CLE                 0x30330108, 0x0, 0x00000000, 0x0, 0x30330370
++#define IOMUXC_NAND_CLE_QSPI_B_SCLK                 0x30330108, 0x1, 0x00000000, 0x0, 0x30330370
++#define IOMUXC_NAND_CLE_USDHC3_DATA7                0x30330108, 0x2, 0x00000000, 0x0, 0x30330370
++#define IOMUXC_NAND_CLE_GPIO3_IO05                  0x30330108, 0x5, 0x00000000, 0x0, 0x30330370
++#define IOMUXC_NAND_DATA00_RAWNAND_DATA00           0x3033010C, 0x0, 0x00000000, 0x0, 0x30330374
++#define IOMUXC_NAND_DATA00_QSPI_A_DATA0             0x3033010C, 0x1, 0x00000000, 0x0, 0x30330374
++#define IOMUXC_NAND_DATA00_GPIO3_IO06               0x3033010C, 0x5, 0x00000000, 0x0, 0x30330374
++#define IOMUXC_NAND_DATA01_RAWNAND_DATA01           0x30330110, 0x0, 0x00000000, 0x0, 0x30330378
++#define IOMUXC_NAND_DATA01_QSPI_A_DATA1             0x30330110, 0x1, 0x00000000, 0x0, 0x30330378
++#define IOMUXC_NAND_DATA01_GPIO3_IO07               0x30330110, 0x5, 0x00000000, 0x0, 0x30330378
++#define IOMUXC_NAND_DATA02_RAWNAND_DATA02           0x30330114, 0x0, 0x00000000, 0x0, 0x3033037C
++#define IOMUXC_NAND_DATA02_QSPI_A_DATA2             0x30330114, 0x1, 0x00000000, 0x0, 0x3033037C
++#define IOMUXC_NAND_DATA02_USDHC3_CD_B              0x30330114, 0x2, 0x30330544, 0x0, 0x3033037C
++#define IOMUXC_NAND_DATA02_GPIO3_IO08               0x30330114, 0x5, 0x00000000, 0x0, 0x3033037C
++#define IOMUXC_NAND_DATA03_RAWNAND_DATA03           0x30330118, 0x0, 0x00000000, 0x0, 0x30330380
++#define IOMUXC_NAND_DATA03_QSPI_A_DATA3             0x30330118, 0x1, 0x00000000, 0x0, 0x30330380
++#define IOMUXC_NAND_DATA03_USDHC3_WP                0x30330118, 0x2, 0x30330548, 0x0, 0x30330380
++#define IOMUXC_NAND_DATA03_GPIO3_IO09               0x30330118, 0x5, 0x00000000, 0x0, 0x30330380
++#define IOMUXC_NAND_DATA04_RAWNAND_DATA04           0x3033011C, 0x0, 0x00000000, 0x0, 0x30330384
++#define IOMUXC_NAND_DATA04_QSPI_B_DATA0             0x3033011C, 0x1, 0x00000000, 0x0, 0x30330384
++#define IOMUXC_NAND_DATA04_USDHC3_DATA0             0x3033011C, 0x2, 0x00000000, 0x0, 0x30330384
++#define IOMUXC_NAND_DATA04_GPIO3_IO10               0x3033011C, 0x5, 0x00000000, 0x0, 0x30330384
++#define IOMUXC_NAND_DATA05_RAWNAND_DATA05           0x30330120, 0x0, 0x00000000, 0x0, 0x30330388
++#define IOMUXC_NAND_DATA05_QSPI_B_DATA1             0x30330120, 0x1, 0x00000000, 0x0, 0x30330388
++#define IOMUXC_NAND_DATA05_USDHC3_DATA1             0x30330120, 0x2, 0x00000000, 0x0, 0x30330388
++#define IOMUXC_NAND_DATA05_GPIO3_IO11               0x30330120, 0x5, 0x00000000, 0x0, 0x30330388
++#define IOMUXC_NAND_DATA06_RAWNAND_DATA06           0x30330124, 0x0, 0x00000000, 0x0, 0x3033038C
++#define IOMUXC_NAND_DATA06_QSPI_B_DATA2             0x30330124, 0x1, 0x00000000, 0x0, 0x3033038C
++#define IOMUXC_NAND_DATA06_USDHC3_DATA2             0x30330124, 0x2, 0x00000000, 0x0, 0x3033038C
++#define IOMUXC_NAND_DATA06_GPIO3_IO12               0x30330124, 0x5, 0x00000000, 0x0, 0x3033038C
++#define IOMUXC_NAND_DATA07_RAWNAND_DATA07           0x30330128, 0x0, 0x00000000, 0x0, 0x30330390
++#define IOMUXC_NAND_DATA07_QSPI_B_DATA3             0x30330128, 0x1, 0x00000000, 0x0, 0x30330390
++#define IOMUXC_NAND_DATA07_USDHC3_DATA3             0x30330128, 0x2, 0x00000000, 0x0, 0x30330390
++#define IOMUXC_NAND_DATA07_GPIO3_IO13               0x30330128, 0x5, 0x00000000, 0x0, 0x30330390
++#define IOMUXC_NAND_DQS_RAWNAND_DQS                 0x3033012C, 0x0, 0x00000000, 0x0, 0x30330394
++#define IOMUXC_NAND_DQS_QSPI_A_DQS                  0x3033012C, 0x1, 0x00000000, 0x0, 0x30330394
++#define IOMUXC_NAND_DQS_GPIO3_IO14                  0x3033012C, 0x5, 0x00000000, 0x0, 0x30330394
++#define IOMUXC_NAND_RE_B_RAWNAND_RE_B               0x30330130, 0x0, 0x00000000, 0x0, 0x30330398
++#define IOMUXC_NAND_RE_B_QSPI_B_DQS                 0x30330130, 0x1, 0x00000000, 0x0, 0x30330398
++#define IOMUXC_NAND_RE_B_USDHC3_DATA4               0x30330130, 0x2, 0x00000000, 0x0, 0x30330398
++#define IOMUXC_NAND_RE_B_GPIO3_IO15                 0x30330130, 0x5, 0x00000000, 0x0, 0x30330398
++#define IOMUXC_NAND_READY_B_RAWNAND_READY_B         0x30330134, 0x0, 0x00000000, 0x0, 0x3033039C
++#define IOMUXC_NAND_READY_B_USDHC3_RESET_B          0x30330134, 0x2, 0x00000000, 0x0, 0x3033039C
++#define IOMUXC_NAND_READY_B_GPIO3_IO16              0x30330134, 0x5, 0x00000000, 0x0, 0x3033039C
++#define IOMUXC_NAND_WE_B_RAWNAND_WE_B               0x30330138, 0x0, 0x00000000, 0x0, 0x303303A0
++#define IOMUXC_NAND_WE_B_USDHC3_CLK                 0x30330138, 0x2, 0x00000000, 0x0, 0x303303A0
++#define IOMUXC_NAND_WE_B_GPIO3_IO17                 0x30330138, 0x5, 0x00000000, 0x0, 0x303303A0
++#define IOMUXC_NAND_WP_B_RAWNAND_WP_B               0x3033013C, 0x0, 0x00000000, 0x0, 0x303303A4
++#define IOMUXC_NAND_WP_B_USDHC3_CMD                 0x3033013C, 0x2, 0x00000000, 0x0, 0x303303A4
++#define IOMUXC_NAND_WP_B_GPIO3_IO18                 0x3033013C, 0x5, 0x00000000, 0x0, 0x303303A4
++#define IOMUXC_SAI5_RXFS_SAI5_RX_SYNC               0x30330140, 0x0, 0x303304E4, 0x0, 0x303303A8
++#define IOMUXC_SAI5_RXFS_SAI1_TX_DATA0              0x30330140, 0x1, 0x00000000, 0x0, 0x303303A8
++#define IOMUXC_SAI5_RXFS_GPIO3_IO19                 0x30330140, 0x5, 0x00000000, 0x0, 0x303303A8
++#define IOMUXC_SAI5_RXC_SAI5_RX_BCLK                0x30330144, 0x0, 0x303304D0, 0x0, 0x303303AC
++#define IOMUXC_SAI5_RXC_SAI1_TX_DATA1               0x30330144, 0x1, 0x00000000, 0x0, 0x303303AC
++#define IOMUXC_SAI5_RXC_PDM_CLK                     0x30330144, 0x4, 0x00000000, 0x0, 0x303303AC
++#define IOMUXC_SAI5_RXC_GPIO3_IO20                  0x30330144, 0x5, 0x00000000, 0x0, 0x303303AC
++#define IOMUXC_SAI5_RXD0_SAI5_RX_DATA0              0x30330148, 0x0, 0x303304D4, 0x0, 0x303303B0
++#define IOMUXC_SAI5_RXD0_SAI1_TX_DATA2              0x30330148, 0x1, 0x00000000, 0x0, 0x303303B0
++#define IOMUXC_SAI5_RXD0_PDM_BIT_STREAM0            0x30330148, 0x4, 0x30330534, 0x0, 0x303303B0
++#define IOMUXC_SAI5_RXD0_GPIO3_IO21                 0x30330148, 0x5, 0x00000000, 0x0, 0x303303B0
++#define IOMUXC_SAI5_RXD1_SAI5_RX_DATA1              0x3033014C, 0x0, 0x303304D8, 0x0, 0x303303B4
++#define IOMUXC_SAI5_RXD1_SAI1_TX_DATA3              0x3033014C, 0x1, 0x00000000, 0x0, 0x303303B4
++#define IOMUXC_SAI5_RXD1_SAI1_TX_SYNC               0x3033014C, 0x2, 0x303304CC, 0x0, 0x303303B4
++#define IOMUXC_SAI5_RXD1_SAI5_TX_SYNC               0x3033014C, 0x3, 0x303304EC, 0x0, 0x303303B4
++#define IOMUXC_SAI5_RXD1_PDM_BIT_STREAM1            0x3033014C, 0x4, 0x30330538, 0x0, 0x303303B4
++#define IOMUXC_SAI5_RXD1_GPIO3_IO22                 0x3033014C, 0x5, 0x00000000, 0x0, 0x303303B4
++#define IOMUXC_SAI5_RXD2_SAI5_RX_DATA2              0x30330150, 0x0, 0x303304DC, 0x0, 0x303303B8
++#define IOMUXC_SAI5_RXD2_SAI1_TX_DATA4              0x30330150, 0x1, 0x00000000, 0x0, 0x303303B8
++#define IOMUXC_SAI5_RXD2_SAI1_TX_SYNC               0x30330150, 0x2, 0x303304CC, 0x1, 0x303303B8
++#define IOMUXC_SAI5_RXD2_SAI5_TX_BCLK               0x30330150, 0x3, 0x303304E8, 0x0, 0x303303B8
++#define IOMUXC_SAI5_RXD2_PDM_BIT_STREAM2            0x30330150, 0x4, 0x3033053C, 0x0, 0x303303B8
++#define IOMUXC_SAI5_RXD2_GPIO3_IO23                 0x30330150, 0x5, 0x00000000, 0x0, 0x303303B8
++#define IOMUXC_SAI5_RXD3_SAI5_RX_DATA3              0x30330154, 0x0, 0x303304E0, 0x0, 0x303303BC
++#define IOMUXC_SAI5_RXD3_SAI1_TX_DATA5              0x30330154, 0x1, 0x00000000, 0x0, 0x303303BC
++#define IOMUXC_SAI5_RXD3_SAI1_TX_SYNC               0x30330154, 0x2, 0x303304CC, 0x2, 0x303303BC
++#define IOMUXC_SAI5_RXD3_SAI5_TX_DATA0              0x30330154, 0x3, 0x00000000, 0x0, 0x303303BC
++#define IOMUXC_SAI5_RXD3_PDM_BIT_STREAM3            0x30330154, 0x4, 0x30330540, 0x0, 0x303303BC
++#define IOMUXC_SAI5_RXD3_GPIO3_IO24                 0x30330154, 0x5, 0x00000000, 0x0, 0x303303BC
++#define IOMUXC_SAI5_MCLK_SAI5_MCLK                  0x30330158, 0x0, 0x3033052C, 0x0, 0x303303C0
++#define IOMUXC_SAI5_MCLK_SAI1_TX_BCLK               0x30330158, 0x1, 0x303304C8, 0x0, 0x303303C0
++#define IOMUXC_SAI5_MCLK_GPIO3_IO25                 0x30330158, 0x5, 0x00000000, 0x0, 0x303303C0
++#define IOMUXC_SAI1_RXFS_SAI1_RX_SYNC               0x3033015C, 0x0, 0x303304C4, 0x0, 0x303303C4
++#define IOMUXC_SAI1_RXFS_SAI5_RX_SYNC               0x3033015C, 0x1, 0x303304E4, 0x1, 0x303303C4
++#define IOMUXC_SAI1_RXFS_CORESIGHT_TRACE_CLK        0x3033015C, 0x4, 0x00000000, 0x0, 0x303303C4
++#define IOMUXC_SAI1_RXFS_GPIO4_IO00                 0x3033015C, 0x5, 0x00000000, 0x0, 0x303303C4
++#define IOMUXC_SAI1_RXC_SAI1_RX_BCLK                0x30330160, 0x0, 0x00000000, 0x0, 0x303303C8
++#define IOMUXC_SAI1_RXC_SAI5_RX_BCLK                0x30330160, 0x1, 0x303304D0, 0x1, 0x303303C8
++#define IOMUXC_SAI1_RXC_CORESIGHT_TRACE_CTL         0x30330160, 0x4, 0x00000000, 0x0, 0x303303C8
++#define IOMUXC_SAI1_RXC_GPIO4_IO01                  0x30330160, 0x5, 0x00000000, 0x0, 0x303303C8
++#define IOMUXC_SAI1_RXD0_SAI1_RX_DATA0              0x30330164, 0x0, 0x00000000, 0x0, 0x303303CC
++#define IOMUXC_SAI1_RXD0_SAI5_RX_DATA0              0x30330164, 0x1, 0x303304D4, 0x1, 0x303303CC
++#define IOMUXC_SAI1_RXD0_SAI1_TX_DATA1              0x30330164, 0x2, 0x00000000, 0x0, 0x303303CC
++#define IOMUXC_SAI1_RXD0_PDM_BIT_STREAM0            0x30330164, 0x3, 0x30330534, 0x1, 0x303303CC
++#define IOMUXC_SAI1_RXD0_CORESIGHT_TRACE0           0x30330164, 0x4, 0x00000000, 0x0, 0x303303CC
++#define IOMUXC_SAI1_RXD0_GPIO4_IO02                 0x30330164, 0x5, 0x00000000, 0x0, 0x303303CC
++#define IOMUXC_SAI1_RXD0_SRC_BOOT_CFG0              0x30330164, 0x6, 0x00000000, 0x0, 0x303303CC
++#define IOMUXC_SAI1_RXD1_SAI1_RX_DATA1              0x30330168, 0x0, 0x00000000, 0x0, 0x303303D0
++#define IOMUXC_SAI1_RXD1_SAI5_RX_DATA1              0x30330168, 0x1, 0x303304D8, 0x1, 0x303303D0
++#define IOMUXC_SAI1_RXD1_PDM_BIT_STREAM1            0x30330168, 0x3, 0x30330538, 0x1, 0x303303D0
++#define IOMUXC_SAI1_RXD1_CORESIGHT_TRACE1           0x30330168, 0x4, 0x00000000, 0x0, 0x303303D0
++#define IOMUXC_SAI1_RXD1_GPIO4_IO03                 0x30330168, 0x5, 0x00000000, 0x0, 0x303303D0
++#define IOMUXC_SAI1_RXD1_SRC_BOOT_CFG1              0x30330168, 0x6, 0x00000000, 0x0, 0x303303D0
++#define IOMUXC_SAI1_RXD2_SAI1_RX_DATA2              0x3033016C, 0x0, 0x00000000, 0x0, 0x303303D4
++#define IOMUXC_SAI1_RXD2_SAI5_RX_DATA2              0x3033016C, 0x1, 0x303304DC, 0x1, 0x303303D4
++#define IOMUXC_SAI1_RXD2_PDM_BIT_STREAM2            0x3033016C, 0x3, 0x3033053C, 0x1, 0x303303D4
++#define IOMUXC_SAI1_RXD2_CORESIGHT_TRACE2           0x3033016C, 0x4, 0x00000000, 0x0, 0x303303D4
++#define IOMUXC_SAI1_RXD2_GPIO4_IO04                 0x3033016C, 0x5, 0x00000000, 0x0, 0x303303D4
++#define IOMUXC_SAI1_RXD2_SRC_BOOT_CFG2              0x3033016C, 0x6, 0x00000000, 0x0, 0x303303D4
++#define IOMUXC_SAI1_RXD3_SAI1_RX_DATA3              0x30330170, 0x0, 0x00000000, 0x0, 0x303303D8
++#define IOMUXC_SAI1_RXD3_SAI5_RX_DATA3              0x30330170, 0x1, 0x303304E0, 0x1, 0x303303D8
++#define IOMUXC_SAI1_RXD3_PDM_BIT_STREAM3            0x30330170, 0x3, 0x30330540, 0x1, 0x303303D8
++#define IOMUXC_SAI1_RXD3_CORESIGHT_TRACE3           0x30330170, 0x4, 0x00000000, 0x0, 0x303303D8
++#define IOMUXC_SAI1_RXD3_GPIO4_IO05                 0x30330170, 0x5, 0x00000000, 0x0, 0x303303D8
++#define IOMUXC_SAI1_RXD3_SRC_BOOT_CFG3              0x30330170, 0x6, 0x00000000, 0x0, 0x303303D8
++#define IOMUXC_SAI1_RXD4_SAI1_RX_DATA4              0x30330174, 0x0, 0x00000000, 0x0, 0x303303DC
++#define IOMUXC_SAI1_RXD4_SAI6_TX_BCLK               0x30330174, 0x1, 0x3033051C, 0x0, 0x303303DC
++#define IOMUXC_SAI1_RXD4_SAI6_RX_BCLK               0x30330174, 0x2, 0x30330510, 0x0, 0x303303DC
++#define IOMUXC_SAI1_RXD4_CORESIGHT_TRACE4           0x30330174, 0x4, 0x00000000, 0x0, 0x303303DC
++#define IOMUXC_SAI1_RXD4_GPIO4_IO06                 0x30330174, 0x5, 0x00000000, 0x0, 0x303303DC
++#define IOMUXC_SAI1_RXD4_SRC_BOOT_CFG4              0x30330174, 0x6, 0x00000000, 0x0, 0x303303DC
++#define IOMUXC_SAI1_RXD5_SAI1_RX_DATA5              0x30330178, 0x0, 0x00000000, 0x0, 0x303303E0
++#define IOMUXC_SAI1_RXD5_SAI6_TX_DATA0              0x30330178, 0x1, 0x00000000, 0x0, 0x303303E0
++#define IOMUXC_SAI1_RXD5_SAI6_RX_DATA0              0x30330178, 0x2, 0x30330514, 0x0, 0x303303E0
++#define IOMUXC_SAI1_RXD5_SAI1_RX_SYNC               0x30330178, 0x3, 0x303304C4, 0x1, 0x303303E0
++#define IOMUXC_SAI1_RXD5_CORESIGHT_TRACE5           0x30330178, 0x4, 0x00000000, 0x0, 0x303303E0
++#define IOMUXC_SAI1_RXD5_GPIO4_IO07                 0x30330178, 0x5, 0x00000000, 0x0, 0x303303E0
++#define IOMUXC_SAI1_RXD5_SRC_BOOT_CFG5              0x30330178, 0x6, 0x00000000, 0x0, 0x303303E0
++#define IOMUXC_SAI1_RXD6_SAI1_RX_DATA6              0x3033017C, 0x0, 0x00000000, 0x0, 0x303303E4
++#define IOMUXC_SAI1_RXD6_SAI6_TX_SYNC               0x3033017C, 0x1, 0x30330520, 0x0, 0x303303E4
++#define IOMUXC_SAI1_RXD6_SAI6_RX_SYNC               0x3033017C, 0x2, 0x30330518, 0x0, 0x303303E4
++#define IOMUXC_SAI1_RXD6_CORESIGHT_TRACE6           0x3033017C, 0x4, 0x00000000, 0x0, 0x303303E4
++#define IOMUXC_SAI1_RXD6_GPIO4_IO08                 0x3033017C, 0x5, 0x00000000, 0x0, 0x303303E4
++#define IOMUXC_SAI1_RXD6_SRC_BOOT_CFG6              0x3033017C, 0x6, 0x00000000, 0x0, 0x303303E4
++#define IOMUXC_SAI1_RXD7_SAI1_RX_DATA7              0x30330180, 0x0, 0x00000000, 0x0, 0x303303E8
++#define IOMUXC_SAI1_RXD7_SAI6_MCLK                  0x30330180, 0x1, 0x30330530, 0x0, 0x303303E8
++#define IOMUXC_SAI1_RXD7_SAI1_TX_SYNC               0x30330180, 0x2, 0x303304CC, 0x4, 0x303303E8
++#define IOMUXC_SAI1_RXD7_SAI1_TX_DATA4              0x30330180, 0x3, 0x00000000, 0x0, 0x303303E8
++#define IOMUXC_SAI1_RXD7_CORESIGHT_TRACE7           0x30330180, 0x4, 0x00000000, 0x0, 0x303303E8
++#define IOMUXC_SAI1_RXD7_GPIO4_IO09                 0x30330180, 0x5, 0x00000000, 0x0, 0x303303E8
++#define IOMUXC_SAI1_RXD7_SRC_BOOT_CFG7              0x30330180, 0x6, 0x00000000, 0x0, 0x303303E8
++#define IOMUXC_SAI1_TXFS_SAI1_TX_SYNC               0x30330184, 0x0, 0x303304CC, 0x3, 0x303303EC
++#define IOMUXC_SAI1_TXFS_SAI5_TX_SYNC               0x30330184, 0x1, 0x303304EC, 0x1, 0x303303EC
++#define IOMUXC_SAI1_TXFS_CORESIGHT_EVENTO           0x30330184, 0x4, 0x00000000, 0x0, 0x303303EC
++#define IOMUXC_SAI1_TXFS_GPIO4_IO10                 0x30330184, 0x5, 0x00000000, 0x0, 0x303303EC
++#define IOMUXC_SAI1_TXC_SAI1_TX_BCLK                0x30330188, 0x0, 0x303304C8, 0x1, 0x303303F0
++#define IOMUXC_SAI1_TXC_SAI5_TX_BCLK                0x30330188, 0x1, 0x303304E8, 0x1, 0x303303F0
++#define IOMUXC_SAI1_TXC_CORESIGHT_EVENTI            0x30330188, 0x4, 0x00000000, 0x0, 0x303303F0
++#define IOMUXC_SAI1_TXC_GPIO4_IO11                  0x30330188, 0x5, 0x00000000, 0x0, 0x303303F0
++#define IOMUXC_SAI1_TXD0_SAI1_TX_DATA0              0x3033018C, 0x0, 0x00000000, 0x0, 0x303303F4
++#define IOMUXC_SAI1_TXD0_SAI5_TX_DATA0              0x3033018C, 0x1, 0x00000000, 0x0, 0x303303F4
++#define IOMUXC_SAI1_TXD0_CORESIGHT_TRACE8           0x3033018C, 0x4, 0x00000000, 0x0, 0x303303F4
++#define IOMUXC_SAI1_TXD0_GPIO4_IO12                 0x3033018C, 0x5, 0x00000000, 0x0, 0x303303F4
++#define IOMUXC_SAI1_TXD0_SRC_BOOT_CFG8              0x3033018C, 0x6, 0x00000000, 0x0, 0x303303F4
++#define IOMUXC_SAI1_TXD1_SAI1_TX_DATA1              0x30330190, 0x0, 0x00000000, 0x0, 0x303303F8
++#define IOMUXC_SAI1_TXD1_SAI5_TX_DATA1              0x30330190, 0x1, 0x00000000, 0x0, 0x303303F8
++#define IOMUXC_SAI1_TXD1_CORESIGHT_TRACE9           0x30330190, 0x4, 0x00000000, 0x0, 0x303303F8
++#define IOMUXC_SAI1_TXD1_GPIO4_IO13                 0x30330190, 0x5, 0x00000000, 0x0, 0x303303F8
++#define IOMUXC_SAI1_TXD1_SRC_BOOT_CFG9              0x30330190, 0x6, 0x00000000, 0x0, 0x303303F8
++#define IOMUXC_SAI1_TXD2_SAI1_TX_DATA2              0x30330194, 0x0, 0x00000000, 0x0, 0x303303FC
++#define IOMUXC_SAI1_TXD2_SAI5_TX_DATA2              0x30330194, 0x1, 0x00000000, 0x0, 0x303303FC
++#define IOMUXC_SAI1_TXD2_CORESIGHT_TRACE10          0x30330194, 0x4, 0x00000000, 0x0, 0x303303FC
++#define IOMUXC_SAI1_TXD2_GPIO4_IO14                 0x30330194, 0x5, 0x00000000, 0x0, 0x303303FC
++#define IOMUXC_SAI1_TXD2_SRC_BOOT_CFG10             0x30330194, 0x6, 0x00000000, 0x0, 0x303303FC
++#define IOMUXC_SAI1_TXD3_SAI1_TX_DATA3              0x30330198, 0x0, 0x00000000, 0x0, 0x30330400
++#define IOMUXC_SAI1_TXD3_SAI5_TX_DATA3              0x30330198, 0x1, 0x00000000, 0x0, 0x30330400
++#define IOMUXC_SAI1_TXD3_CORESIGHT_TRACE11          0x30330198, 0x4, 0x00000000, 0x0, 0x30330400
++#define IOMUXC_SAI1_TXD3_GPIO4_IO15                 0x30330198, 0x5, 0x00000000, 0x0, 0x30330400
++#define IOMUXC_SAI1_TXD3_SRC_BOOT_CFG11             0x30330198, 0x6, 0x00000000, 0x0, 0x30330400
++#define IOMUXC_SAI1_TXD4_SAI1_TX_DATA4              0x3033019C, 0x0, 0x00000000, 0x0, 0x30330404
++#define IOMUXC_SAI1_TXD4_SAI6_RX_BCLK               0x3033019C, 0x1, 0x30330510, 0x1, 0x30330404
++#define IOMUXC_SAI1_TXD4_SAI6_TX_BCLK               0x3033019C, 0x2, 0x3033051C, 0x1, 0x30330404
++#define IOMUXC_SAI1_TXD4_CORESIGHT_TRACE12          0x3033019C, 0x4, 0x00000000, 0x0, 0x30330404
++#define IOMUXC_SAI1_TXD4_GPIO4_IO16                 0x3033019C, 0x5, 0x00000000, 0x0, 0x30330404
++#define IOMUXC_SAI1_TXD4_SRC_BOOT_CFG12             0x3033019C, 0x6, 0x00000000, 0x0, 0x30330404
++#define IOMUXC_SAI1_TXD5_SAI1_TX_DATA5              0x303301A0, 0x0, 0x00000000, 0x0, 0x30330408
++#define IOMUXC_SAI1_TXD5_SAI6_RX_DATA0              0x303301A0, 0x1, 0x30330514, 0x1, 0x30330408
++#define IOMUXC_SAI1_TXD5_SAI6_TX_DATA0              0x303301A0, 0x2, 0x00000000, 0x0, 0x30330408
++#define IOMUXC_SAI1_TXD5_CORESIGHT_TRACE13          0x303301A0, 0x4, 0x00000000, 0x0, 0x30330408
++#define IOMUXC_SAI1_TXD5_GPIO4_IO17                 0x303301A0, 0x5, 0x00000000, 0x0, 0x30330408
++#define IOMUXC_SAI1_TXD5_SRC_BOOT_CFG13             0x303301A0, 0x6, 0x00000000, 0x0, 0x30330408
++#define IOMUXC_SAI1_TXD6_SAI1_TX_DATA6              0x303301A4, 0x0, 0x00000000, 0x0, 0x3033040C
++#define IOMUXC_SAI1_TXD6_SAI6_RX_SYNC               0x303301A4, 0x1, 0x30330518, 0x1, 0x3033040C
++#define IOMUXC_SAI1_TXD6_SAI6_TX_SYNC               0x303301A4, 0x2, 0x30330520, 0x1, 0x3033040C
++#define IOMUXC_SAI1_TXD6_CORESIGHT_TRACE14          0x303301A4, 0x4, 0x00000000, 0x0, 0x3033040C
++#define IOMUXC_SAI1_TXD6_GPIO4_IO18                 0x303301A4, 0x5, 0x00000000, 0x0, 0x3033040C
++#define IOMUXC_SAI1_TXD6_SRC_BOOT_CFG14             0x303301A4, 0x6, 0x00000000, 0x0, 0x3033040C
++#define IOMUXC_SAI1_TXD7_SAI1_TX_DATA7              0x303301A8, 0x0, 0x00000000, 0x0, 0x30330410
++#define IOMUXC_SAI1_TXD7_SAI6_MCLK                  0x303301A8, 0x1, 0x30330530, 0x1, 0x30330410
++#define IOMUXC_SAI1_TXD7_PDM_CLK                    0x303301A8, 0x3, 0x00000000, 0x0, 0x30330410
++#define IOMUXC_SAI1_TXD7_CORESIGHT_TRACE15          0x303301A8, 0x4, 0x00000000, 0x0, 0x30330410
++#define IOMUXC_SAI1_TXD7_GPIO4_IO19                 0x303301A8, 0x5, 0x00000000, 0x0, 0x30330410
++#define IOMUXC_SAI1_TXD7_SRC_BOOT_CFG15             0x303301A8, 0x6, 0x00000000, 0x0, 0x30330410
++#define IOMUXC_SAI1_MCLK_SAI1_MCLK                  0x303301AC, 0x0, 0x00000000, 0x0, 0x30330414
++#define IOMUXC_SAI1_MCLK_SAI5_MCLK                  0x303301AC, 0x1, 0x3033052C, 0x1, 0x30330414
++#define IOMUXC_SAI1_MCLK_SAI1_TX_BCLK               0x303301AC, 0x2, 0x303304C8, 0x2, 0x30330414
++#define IOMUXC_SAI1_MCLK_PDM_CLK                    0x303301AC, 0x3, 0x00000000, 0x0, 0x30330414
++#define IOMUXC_SAI1_MCLK_GPIO4_IO20                 0x303301AC, 0x5, 0x00000000, 0x0, 0x30330414
++#define IOMUXC_SAI2_RXFS_SAI2_RX_SYNC               0x303301B0, 0x0, 0x00000000, 0x0, 0x30330418
++#define IOMUXC_SAI2_RXFS_SAI5_TX_SYNC               0x303301B0, 0x1, 0x303304EC, 0x2, 0x30330418
++#define IOMUXC_SAI2_RXFS_SAI5_TX_DATA1              0x303301B0, 0x2, 0x00000000, 0x0, 0x30330418
++#define IOMUXC_SAI2_RXFS_SAI2_RX_DATA1              0x303301B0, 0x3, 0x00000000, 0x0, 0x30330418
++#define IOMUXC_SAI2_RXFS_UART1_TX                   0x303301B0, 0x4, 0x00000000, 0X0, 0x30330418
++#define IOMUXC_SAI2_RXFS_UART1_RX                   0x303301B0, 0x4, 0x303304F4, 0x2, 0x30330418
++#define IOMUXC_SAI2_RXFS_GPIO4_IO21                 0x303301B0, 0x5, 0x00000000, 0x0, 0x30330418
++#define IOMUXC_SAI2_RXC_SAI2_RX_BCLK                0x303301B4, 0x0, 0x00000000, 0x0, 0x3033041C
++#define IOMUXC_SAI2_RXC_SAI5_TX_BCLK                0x303301B4, 0x1, 0x303304E8, 0x2, 0x3033041C
++#define IOMUXC_SAI2_RXC_UART1_RX                    0x303301B4, 0x4, 0x303304F4, 0x3, 0x3033041C
++#define IOMUXC_SAI2_RXC_UART1_TX                    0x303301B4, 0x4, 0x00000000, 0X0, 0x3033041C
++#define IOMUXC_SAI2_RXC_GPIO4_IO22                  0x303301B4, 0x5, 0x00000000, 0x0, 0x3033041C
++#define IOMUXC_SAI2_RXD0_SAI2_RX_DATA0              0x303301B8, 0x0, 0x00000000, 0x0, 0x30330420
++#define IOMUXC_SAI2_RXD0_SAI5_TX_DATA0              0x303301B8, 0x1, 0x00000000, 0x0, 0x30330420
++#define IOMUXC_SAI2_RXD0_UART1_RTS_B                0x303301B8, 0x4, 0x303304F0, 0x2, 0x30330420
++#define IOMUXC_SAI2_RXD0_UART1_CTS_B                0x303301B8, 0x4, 0x00000000, 0X0, 0x30330420
++#define IOMUXC_SAI2_RXD0_GPIO4_IO23                 0x303301B8, 0x5, 0x00000000, 0x0, 0x30330420
++#define IOMUXC_SAI2_TXFS_SAI2_TX_SYNC               0x303301BC, 0x0, 0x00000000, 0x0, 0x30330424
++#define IOMUXC_SAI2_TXFS_SAI5_TX_DATA1              0x303301BC, 0x1, 0x00000000, 0x0, 0x30330424
++#define IOMUXC_SAI2_TXFS_SAI2_TX_DATA1              0x303301BC, 0x3, 0x00000000, 0x0, 0x30330424
++#define IOMUXC_SAI2_TXFS_UART1_CTS_B                0x303301BC, 0x4, 0x00000000, 0X0, 0x30330424
++#define IOMUXC_SAI2_TXFS_UART1_RTS_B                0x303301BC, 0x4, 0x303304F0, 0x3, 0x30330424
++#define IOMUXC_SAI2_TXFS_GPIO4_IO24                 0x303301BC, 0x5, 0x00000000, 0x0, 0x30330424
++#define IOMUXC_SAI2_TXC_SAI2_TX_BCLK                0x303301C0, 0x0, 0x00000000, 0x0, 0x30330428
++#define IOMUXC_SAI2_TXC_SAI5_TX_DATA2               0x303301C0, 0x1, 0x00000000, 0x0, 0x30330428
++#define IOMUXC_SAI2_TXC_GPIO4_IO25                  0x303301C0, 0x5, 0x00000000, 0x0, 0x30330428
++#define IOMUXC_SAI2_TXD0_SAI2_TX_DATA0              0x303301C4, 0x0, 0x00000000, 0x0, 0x3033042C
++#define IOMUXC_SAI2_TXD0_SAI5_TX_DATA3              0x303301C4, 0x1, 0x00000000, 0x0, 0x3033042C
++#define IOMUXC_SAI2_TXD0_GPIO4_IO26                 0x303301C4, 0x5, 0x00000000, 0x0, 0x3033042C
++#define IOMUXC_SAI2_MCLK_SAI2_MCLK                  0x303301C8, 0x0, 0x00000000, 0x0, 0x30330430
++#define IOMUXC_SAI2_MCLK_SAI5_MCLK                  0x303301C8, 0x1, 0x3033052C, 0x2, 0x30330430
++#define IOMUXC_SAI2_MCLK_GPIO4_IO27                 0x303301C8, 0x5, 0x00000000, 0x0, 0x30330430
++#define IOMUXC_SAI3_RXFS_SAI3_RX_SYNC               0x303301CC, 0x0, 0x00000000, 0x0, 0x30330434
++#define IOMUXC_SAI3_RXFS_GPT1_CAPTURE1              0x303301CC, 0x1, 0x00000000, 0x0, 0x30330434
++#define IOMUXC_SAI3_RXFS_SAI5_RX_SYNC               0x303301CC, 0x2, 0x303304E4, 0x2, 0x30330434
++#define IOMUXC_SAI3_RXFS_SAI3_RX_DATA1              0x303301CC, 0x3, 0x00000000, 0x0, 0x30330434
++#define IOMUXC_SAI3_RXFS_GPIO4_IO28                 0x303301CC, 0x5, 0x00000000, 0x0, 0x30330434
++#define IOMUXC_SAI3_RXC_SAI3_RX_BCLK                0x303301D0, 0x0, 0x00000000, 0x0, 0x30330438
++#define IOMUXC_SAI3_RXC_GPT1_CLK                    0x303301D0, 0x1, 0x00000000, 0x0, 0x30330438
++#define IOMUXC_SAI3_RXC_SAI5_RX_BCLK                0x303301D0, 0x2, 0x303304D0, 0x2, 0x30330438
++#define IOMUXC_SAI3_RXC_UART2_CTS_B                 0x303301D0, 0x4, 0x00000000, 0X0, 0x30330438
++#define IOMUXC_SAI3_RXC_UART2_RTS_B                 0x303301D0, 0x4, 0x303304F8, 0x2, 0x30330438
++#define IOMUXC_SAI3_RXC_GPIO4_IO29                  0x303301D0, 0x5, 0x00000000, 0x0, 0x30330438
++#define IOMUXC_SAI3_RXD_SAI3_RX_DATA0               0x303301D4, 0x0, 0x00000000, 0x0, 0x3033043C
++#define IOMUXC_SAI3_RXD_GPT1_COMPARE1               0x303301D4, 0x1, 0x00000000, 0x0, 0x3033043C
++#define IOMUXC_SAI3_RXD_SAI5_RX_DATA0               0x303301D4, 0x2, 0x303304D4, 0x2, 0x3033043C
++#define IOMUXC_SAI3_RXD_UART2_RTS_B                 0x303301D4, 0x4, 0x303304F8, 0x3, 0x3033043C
++#define IOMUXC_SAI3_RXD_UART2_CTS_B                 0x303301D4, 0x4, 0x00000000, 0X0, 0x3033043C
++#define IOMUXC_SAI3_RXD_GPIO4_IO30                  0x303301D4, 0x5, 0x00000000, 0x0, 0x3033043C
++#define IOMUXC_SAI3_TXFS_SAI3_TX_SYNC               0x303301D8, 0x0, 0x00000000, 0x0, 0x30330440
++#define IOMUXC_SAI3_TXFS_GPT1_CAPTURE2              0x303301D8, 0x1, 0x00000000, 0x0, 0x30330440
++#define IOMUXC_SAI3_TXFS_SAI5_RX_DATA1              0x303301D8, 0x2, 0x303304D8, 0x2, 0x30330440
++#define IOMUXC_SAI3_TXFS_SAI3_TX_DATA1              0x303301D8, 0x3, 0x00000000, 0x0, 0x30330440
++#define IOMUXC_SAI3_TXFS_UART2_RX                   0x303301D8, 0x4, 0x303304FC, 0x2, 0x30330440
++#define IOMUXC_SAI3_TXFS_UART2_TX                   0x303301D8, 0x4, 0x00000000, 0X0, 0x30330440
++#define IOMUXC_SAI3_TXFS_GPIO4_IO31                 0x303301D8, 0x5, 0x00000000, 0x0, 0x30330440
++#define IOMUXC_SAI3_TXC_SAI3_TX_BCLK                0x303301DC, 0x0, 0x00000000, 0x0, 0x30330444
++#define IOMUXC_SAI3_TXC_GPT1_COMPARE2               0x303301DC, 0x1, 0x00000000, 0x0, 0x30330444
++#define IOMUXC_SAI3_TXC_SAI5_RX_DATA2               0x303301DC, 0x2, 0x303304DC, 0x2, 0x30330444
++#define IOMUXC_SAI3_TXC_UART2_TX                    0x303301DC, 0x4, 0x00000000, 0X0, 0x30330444
++#define IOMUXC_SAI3_TXC_UART2_RX                    0x303301DC, 0x4, 0x303304FC, 0x3, 0x30330444
++#define IOMUXC_SAI3_TXC_GPIO5_IO00                  0x303301DC, 0x5, 0x00000000, 0x0, 0x30330444
++#define IOMUXC_SAI3_TXD_SAI3_TX_DATA0               0x303301E0, 0x0, 0x00000000, 0x0, 0x30330448
++#define IOMUXC_SAI3_TXD_GPT1_COMPARE3               0x303301E0, 0x1, 0x00000000, 0x0, 0x30330448
++#define IOMUXC_SAI3_TXD_SAI5_RX_DATA3               0x303301E0, 0x2, 0x303304E0, 0x2, 0x30330448
++#define IOMUXC_SAI3_TXD_GPIO5_IO01                  0x303301E0, 0x5, 0x00000000, 0x0, 0x30330448
++#define IOMUXC_SAI3_MCLK_SAI3_MCLK                  0x303301E4, 0x0, 0x00000000, 0x0, 0x3033044C
++#define IOMUXC_SAI3_MCLK_PWM4_OUT                   0x303301E4, 0x1, 0x00000000, 0x0, 0x3033044C
++#define IOMUXC_SAI3_MCLK_SAI5_MCLK                  0x303301E4, 0x2, 0x3033052C, 0x3, 0x3033044C
++#define IOMUXC_SAI3_MCLK_GPIO5_IO02                 0x303301E4, 0x5, 0x00000000, 0x0, 0x3033044C
++#define IOMUXC_SPDIF_TX_SPDIF1_OUT                  0x303301E8, 0x0, 0x00000000, 0x0, 0x30330450
++#define IOMUXC_SPDIF_TX_PWM3_OUT                    0x303301E8, 0x1, 0x00000000, 0x0, 0x30330450
++#define IOMUXC_SPDIF_TX_GPIO5_IO03                  0x303301E8, 0x5, 0x00000000, 0x0, 0x30330450
++#define IOMUXC_SPDIF_RX_SPDIF1_IN                   0x303301EC, 0x0, 0x00000000, 0x0, 0x30330454
++#define IOMUXC_SPDIF_RX_PWM2_OUT                    0x303301EC, 0x1, 0x00000000, 0x0, 0x30330454
++#define IOMUXC_SPDIF_RX_GPIO5_IO04                  0x303301EC, 0x5, 0x00000000, 0x0, 0x30330454
++#define IOMUXC_SPDIF_EXT_CLK_SPDIF1_EXT_CLK         0x303301F0, 0x0, 0x00000000, 0x0, 0x30330458
++#define IOMUXC_SPDIF_EXT_CLK_PWM1_OUT               0x303301F0, 0x1, 0x00000000, 0x0, 0x30330458
++#define IOMUXC_SPDIF_EXT_CLK_GPIO5_IO05             0x303301F0, 0x5, 0x00000000, 0x0, 0x30330458
++#define IOMUXC_ECSPI1_SCLK_ECSPI1_SCLK              0x303301F4, 0x0, 0x00000000, 0x0, 0x3033045C
++#define IOMUXC_ECSPI1_SCLK_UART3_RX                 0x303301F4, 0x1, 0x30330504, 0x0, 0x3033045C
++#define IOMUXC_ECSPI1_SCLK_UART3_TX                 0x303301F4, 0x1, 0x00000000, 0X0, 0x3033045C
++#define IOMUXC_ECSPI1_SCLK_GPIO5_IO06               0x303301F4, 0x5, 0x00000000, 0x0, 0x3033045C
++#define IOMUXC_ECSPI1_MOSI_ECSPI1_MOSI              0x303301F8, 0x0, 0x00000000, 0x0, 0x30330460
++#define IOMUXC_ECSPI1_MOSI_UART3_TX                 0x303301F8, 0x1, 0x00000000, 0X0, 0x30330460
++#define IOMUXC_ECSPI1_MOSI_UART3_RX                 0x303301F8, 0x1, 0x30330504, 0x1, 0x30330460
++#define IOMUXC_ECSPI1_MOSI_GPIO5_IO07               0x303301F8, 0x5, 0x00000000, 0x0, 0x30330460
++#define IOMUXC_ECSPI1_MISO_ECSPI1_MISO              0x303301FC, 0x0, 0x00000000, 0x0, 0x30330464
++#define IOMUXC_ECSPI1_MISO_UART3_CTS_B              0x303301FC, 0x1, 0x00000000, 0X0, 0x30330464
++#define IOMUXC_ECSPI1_MISO_UART3_RTS_B              0x303301FC, 0x1, 0x30330500, 0x0, 0x30330464
++#define IOMUXC_ECSPI1_MISO_GPIO5_IO08               0x303301FC, 0x5, 0x00000000, 0x0, 0x30330464
++#define IOMUXC_ECSPI1_SS0_ECSPI1_SS0                0x30330200, 0x0, 0x00000000, 0x0, 0x30330468
++#define IOMUXC_ECSPI1_SS0_UART3_RTS_B               0x30330200, 0x1, 0x30330500, 0x1, 0x30330468
++#define IOMUXC_ECSPI1_SS0_UART3_CTS_B               0x30330200, 0x1, 0x00000000, 0X0, 0x30330468
++#define IOMUXC_ECSPI1_SS0_GPIO5_IO09                0x30330200, 0x5, 0x00000000, 0x0, 0x30330468
++#define IOMUXC_ECSPI2_SCLK_ECSPI2_SCLK              0x30330204, 0x0, 0x00000000, 0x0, 0x3033046C
++#define IOMUXC_ECSPI2_SCLK_UART4_RX                 0x30330204, 0x1, 0x3033050C, 0x0, 0x3033046C
++#define IOMUXC_ECSPI2_SCLK_UART4_TX                 0x30330204, 0x1, 0x00000000, 0X0, 0x3033046C
++#define IOMUXC_ECSPI2_SCLK_GPIO5_IO10               0x30330204, 0x5, 0x00000000, 0x0, 0x3033046C
++#define IOMUXC_ECSPI2_MOSI_ECSPI2_MOSI              0x30330208, 0x0, 0x00000000, 0x0, 0x30330470
++#define IOMUXC_ECSPI2_MOSI_UART4_TX                 0x30330208, 0x1, 0x00000000, 0X0, 0x30330470
++#define IOMUXC_ECSPI2_MOSI_UART4_RX                 0x30330208, 0x1, 0x3033050C, 0x1, 0x30330470
++#define IOMUXC_ECSPI2_MOSI_GPIO5_IO11               0x30330208, 0x5, 0x00000000, 0x0, 0x30330470
++#define IOMUXC_ECSPI2_MISO_ECSPI2_MISO              0x3033020C, 0x0, 0x00000000, 0x0, 0x30330474
++#define IOMUXC_ECSPI2_MISO_UART4_CTS_B              0x3033020C, 0x1, 0x00000000, 0X0, 0x30330474
++#define IOMUXC_ECSPI2_MISO_UART4_RTS_B              0x3033020C, 0x1, 0x30330508, 0x0, 0x30330474
++#define IOMUXC_ECSPI2_MISO_GPIO5_IO12               0x3033020C, 0x5, 0x00000000, 0x0, 0x30330474
++#define IOMUXC_ECSPI2_SS0_ECSPI2_SS0                0x30330210, 0x0, 0x00000000, 0x0, 0x30330478
++#define IOMUXC_ECSPI2_SS0_UART4_RTS_B               0x30330210, 0x1, 0x30330508, 0x1, 0x30330478
++#define IOMUXC_ECSPI2_SS0_UART4_CTS_B               0x30330210, 0x1, 0x00000000, 0X0, 0x30330478
++#define IOMUXC_ECSPI2_SS0_GPIO5_IO13                0x30330210, 0x5, 0x00000000, 0x0, 0x30330478
++#define IOMUXC_I2C1_SCL_I2C1_SCL                    0x30330214, 0x0, 0x00000000, 0x0, 0x3033047C
++#define IOMUXC_I2C1_SCL_ENET1_MDC                   0x30330214, 0x1, 0x00000000, 0x0, 0x3033047C
++#define IOMUXC_I2C1_SCL_GPIO5_IO14                  0x30330214, 0x5, 0x00000000, 0x0, 0x3033047C
++#define IOMUXC_I2C1_SDA_I2C1_SDA                    0x30330218, 0x0, 0x00000000, 0x0, 0x30330480
++#define IOMUXC_I2C1_SDA_ENET1_MDIO                  0x30330218, 0x1, 0x303304C0, 0x2, 0x30330480
++#define IOMUXC_I2C1_SDA_GPIO5_IO15                  0x30330218, 0x5, 0x00000000, 0x0, 0x30330480
++#define IOMUXC_I2C2_SCL_I2C2_SCL                    0x3033021C, 0x0, 0x00000000, 0x0, 0x30330484
++#define IOMUXC_I2C2_SCL_ENET1_1588_EVENT1_IN        0x3033021C, 0x1, 0x00000000, 0x0, 0x30330484
++#define IOMUXC_I2C2_SCL_USDHC3_CD_B                 0x3033021C, 0x2, 0x30330544, 0x1, 0x30330484
++#define IOMUXC_I2C2_SCL_GPIO5_IO16                  0x3033021C, 0x5, 0x00000000, 0x0, 0x30330484
++#define IOMUXC_I2C2_SDA_I2C2_SDA                    0x30330220, 0x0, 0x00000000, 0x0, 0x30330488
++#define IOMUXC_I2C2_SDA_ENET1_1588_EVENT1_OUT       0x30330220, 0x1, 0x00000000, 0x0, 0x30330488
++#define IOMUXC_I2C2_SDA_USDHC3_WP                   0x30330220, 0x2, 0x30330548, 0x1, 0x30330488
++#define IOMUXC_I2C2_SDA_GPIO5_IO17                  0x30330220, 0x5, 0x00000000, 0x0, 0x30330488
++#define IOMUXC_I2C3_SCL_I2C3_SCL                    0x30330224, 0x0, 0x00000000, 0x0, 0x3033048C
++#define IOMUXC_I2C3_SCL_PWM4_OUT                    0x30330224, 0x1, 0x00000000, 0x0, 0x3033048C
++#define IOMUXC_I2C3_SCL_GPT2_CLK                    0x30330224, 0x2, 0x00000000, 0x0, 0x3033048C
++#define IOMUXC_I2C3_SCL_GPIO5_IO18                  0x30330224, 0x5, 0x00000000, 0x0, 0x3033048C
++#define IOMUXC_I2C3_SDA_I2C3_SDA                    0x30330228, 0x0, 0x00000000, 0x0, 0x30330490
++#define IOMUXC_I2C3_SDA_PWM3_OUT                    0x30330228, 0x1, 0x00000000, 0x0, 0x30330490
++#define IOMUXC_I2C3_SDA_GPT3_CLK                    0x30330228, 0x2, 0x00000000, 0x0, 0x30330490
++#define IOMUXC_I2C3_SDA_GPIO5_IO19                  0x30330228, 0x5, 0x00000000, 0x0, 0x30330490
++#define IOMUXC_I2C4_SCL_I2C4_SCL                    0x3033022C, 0x0, 0x00000000, 0x0, 0x30330494
++#define IOMUXC_I2C4_SCL_PWM2_OUT                    0x3033022C, 0x1, 0x00000000, 0x0, 0x30330494
++#define IOMUXC_I2C4_SCL_PCIE1_CLKREQ_B              0x3033022C, 0x2, 0x30330524, 0x0, 0x30330494
++#define IOMUXC_I2C4_SCL_GPIO5_IO20                  0x3033022C, 0x5, 0x00000000, 0x0, 0x30330494
++#define IOMUXC_I2C4_SDA_I2C4_SDA                    0x30330230, 0x0, 0x00000000, 0x0, 0x30330498
++#define IOMUXC_I2C4_SDA_PWM1_OUT                    0x30330230, 0x1, 0x00000000, 0x0, 0x30330498
++#define IOMUXC_I2C4_SDA_GPIO5_IO21                  0x30330230, 0x5, 0x00000000, 0x0, 0x30330498
++#define IOMUXC_UART1_RXD_UART1_RX                   0x30330234, 0x0, 0x303304F4, 0x0, 0x3033049C
++#define IOMUXC_UART1_RXD_UART1_TX                   0x30330234, 0x0, 0x00000000, 0X0, 0x3033049C
++#define IOMUXC_UART1_RXD_ECSPI3_SCLK                0x30330234, 0x1, 0x00000000, 0x0, 0x3033049C
++#define IOMUXC_UART1_RXD_GPIO5_IO22                 0x30330234, 0x5, 0x00000000, 0x0, 0x3033049C
++#define IOMUXC_UART1_TXD_UART1_TX                   0x30330238, 0x0, 0x00000000, 0X0, 0x303304A0
++#define IOMUXC_UART1_TXD_UART1_RX                   0x30330238, 0x0, 0x303304F4, 0x1, 0x303304A0
++#define IOMUXC_UART1_TXD_ECSPI3_MOSI                0x30330238, 0x1, 0x00000000, 0x0, 0x303304A0
++#define IOMUXC_UART1_TXD_GPIO5_IO23                 0x30330238, 0x5, 0x00000000, 0x0, 0x303304A0
++#define IOMUXC_UART2_RXD_UART2_RX                   0x3033023C, 0x0, 0x303304FC, 0x0, 0x303304A4
++#define IOMUXC_UART2_RXD_UART2_TX                   0x3033023C, 0x0, 0x00000000, 0X0, 0x303304A4
++#define IOMUXC_UART2_RXD_ECSPI3_MISO                0x3033023C, 0x1, 0x00000000, 0x0, 0x303304A4
++#define IOMUXC_UART2_RXD_GPIO5_IO24                 0x3033023C, 0x5, 0x00000000, 0x0, 0x303304A4
++#define IOMUXC_UART2_TXD_UART2_TX                   0x30330240, 0x0, 0x00000000, 0X0, 0x303304A8
++#define IOMUXC_UART2_TXD_UART2_RX                   0x30330240, 0x0, 0x303304FC, 0x1, 0x303304A8
++#define IOMUXC_UART2_TXD_ECSPI3_SS0                 0x30330240, 0x1, 0x00000000, 0x0, 0x303304A8
++#define IOMUXC_UART2_TXD_GPIO5_IO25                 0x30330240, 0x5, 0x00000000, 0x0, 0x303304A8
++#define IOMUXC_UART3_RXD_UART3_RX                   0x30330244, 0x0, 0x30330504, 0x2, 0x303304AC
++#define IOMUXC_UART3_RXD_UART3_TX                   0x30330244, 0x0, 0x00000000, 0X0, 0x303304AC
++#define IOMUXC_UART3_RXD_UART1_CTS_B                0x30330244, 0x1, 0x00000000, 0X0, 0x303304AC
++#define IOMUXC_UART3_RXD_UART1_RTS_B                0x30330244, 0x1, 0x303304F0, 0x0, 0x303304AC
++#define IOMUXC_UART3_RXD_USDHC3_RESET_B             0x30330244, 0x2, 0x00000000, 0x0, 0x303304AC
++#define IOMUXC_UART3_RXD_GPIO5_IO26                 0x30330244, 0x5, 0x00000000, 0x0, 0x303304AC
++#define IOMUXC_UART3_TXD_UART3_TX                   0x30330248, 0x0, 0x00000000, 0X0, 0x303304B0
++#define IOMUXC_UART3_TXD_UART3_RX                   0x30330248, 0x0, 0x30330504, 0x3, 0x303304B0
++#define IOMUXC_UART3_TXD_UART1_RTS_B                0x30330248, 0x1, 0x303304F0, 0x1, 0x303304B0
++#define IOMUXC_UART3_TXD_UART1_CTS_B                0x30330248, 0x1, 0x00000000, 0X0, 0x303304B0
++#define IOMUXC_UART3_TXD_USDHC3_VSELECT             0x30330248, 0x2, 0x00000000, 0x0, 0x303304B0
++#define IOMUXC_UART3_TXD_GPIO5_IO27                 0x30330248, 0x5, 0x00000000, 0x0, 0x303304B0
++#define IOMUXC_UART4_RXD_UART4_RX                   0x3033024C, 0x0, 0x3033050C, 0x2, 0x303304B4
++#define IOMUXC_UART4_RXD_UART4_TX                   0x3033024C, 0x0, 0x00000000, 0X0, 0x303304B4
++#define IOMUXC_UART4_RXD_UART2_CTS_B                0x3033024C, 0x1, 0x00000000, 0X0, 0x303304B4
++#define IOMUXC_UART4_RXD_UART2_RTS_B                0x3033024C, 0x1, 0x303304F8, 0x0, 0x303304B4
++#define IOMUXC_UART4_RXD_PCIE1_CLKREQ_B             0x3033024C, 0x2, 0x30330524, 0x1, 0x303304B4
++#define IOMUXC_UART4_RXD_GPIO5_IO28                 0x3033024C, 0x5, 0x00000000, 0x0, 0x303304B4
++#define IOMUXC_UART4_TXD_UART4_TX                   0x30330250, 0x0, 0x00000000, 0X0, 0x303304B8
++#define IOMUXC_UART4_TXD_UART4_RX                   0x30330250, 0x0, 0x3033050C, 0x3, 0x303304B8
++#define IOMUXC_UART4_TXD_UART2_RTS_B                0x30330250, 0x1, 0x303304F8, 0x1, 0x303304B8
++#define IOMUXC_UART4_TXD_UART2_CTS_B                0x30330250, 0x1, 0x00000000, 0X0, 0x303304B8
++#define IOMUXC_UART4_TXD_GPIO5_IO29                 0x30330250, 0x5, 0x00000000, 0x0, 0x303304B8
++#define IOMUXC_TEST_MODE                            0x00000000, 0x0, 0x00000000, 0x0, 0x30330254
++#define IOMUXC_BOOT_MODE0                           0x00000000, 0x0, 0x00000000, 0x0, 0x30330258
++#define IOMUXC_BOOT_MODE1                           0x00000000, 0x0, 0x00000000, 0x0, 0x3033025C
++#define IOMUXC_JTAG_MOD                             0x00000000, 0x0, 0x00000000, 0x0, 0x30330260
++#define IOMUXC_JTAG_TRST_B                          0x00000000, 0x0, 0x00000000, 0x0, 0x30330264
++#define IOMUXC_JTAG_TDI                             0x00000000, 0x0, 0x00000000, 0x0, 0x30330268
++#define IOMUXC_JTAG_TMS                             0x00000000, 0x0, 0x00000000, 0x0, 0x3033026C
++#define IOMUXC_JTAG_TCK                             0x00000000, 0x0, 0x00000000, 0x0, 0x30330270
++#define IOMUXC_JTAG_TDO                             0x00000000, 0x0, 0x00000000, 0x0, 0x30330274
++#define IOMUXC_RTC                                  0x00000000, 0x0, 0x00000000, 0x0, 0x30330278
++
++/*@}*/
++
++#if defined(__cplusplus)
++extern "C" {
++#endif /*__cplusplus */
++
++/*! @name Configuration */
++/*@{*/
++
++/*!
++ * @brief Sets the IOMUXC pin mux mode.
++ * @note The first five parameters can be filled with the pin function ID macros.
++ *
++ * This is an example to set the I2C4_SDA as the pwm1_OUT:
++ * @code
++ * IOMUXC_SetPinMux(IOMUXC_I2C4_SDA_PWM1_OUT, 0);
++ * @endcode
++ *
++ *
++ * @param muxRegister    The pin mux register_
++ * @param muxMode        The pin mux mode_
++ * @param inputRegister  The select input register_
++ * @param inputDaisy     The input daisy_
++ * @param configRegister The config register_
++ * @param inputOnfield   The pad->module input inversion_
++ */
++static inline void IOMUXC_SetPinMux(uint32_t muxRegister,
++                                    uint32_t muxMode,
++                                    uint32_t inputRegister,
++                                    uint32_t inputDaisy,
++                                    uint32_t configRegister,
++                                    uint32_t inputOnfield)
++{
++    *((volatile uint32_t *)muxRegister) =
++        IOMUXC_SW_MUX_CTL_PAD_MUX_MODE(muxMode) | IOMUXC_SW_MUX_CTL_PAD_SION(inputOnfield);
++
++    if (inputRegister)
++    {
++        *((volatile uint32_t *)inputRegister) = IOMUXC_SELECT_INPUT_DAISY(inputDaisy);
++    }
++}
++/*!
++ * @brief Sets the IOMUXC pin configuration.
++ * @note The previous five parameters can be filled with the pin function ID macros.
++ *
++ * This is an example to set pin configuration for IOMUXC_I2C4_SDA_PWM1_OUT:
++ * @code
++ * IOMUXC_SetPinConfig(IOMUXC_I2C4_SDA_PWM1_OUT, IOMUXC_SW_PAD_CTL_PAD_ODE_MASK | IOMUXC0_SW_PAD_CTL_PAD_DSE(2U))
++ * @endcode
++ *
++ * @param muxRegister    The pin mux register_
++ * @param muxMode        The pin mux mode_
++ * @param inputRegister  The select input register_
++ * @param inputDaisy     The input daisy_
++ * @param configRegister The config register_
++ * @param configValue    The pin config value_
++ */
++static inline void IOMUXC_SetPinConfig(uint32_t muxRegister,
++                                       uint32_t muxMode,
++                                       uint32_t inputRegister,
++                                       uint32_t inputDaisy,
++                                       uint32_t configRegister,
++                                       uint32_t configValue)
++{
++    if (configRegister)
++    {
++        *((volatile uint32_t *)configRegister) = configValue;
++    }
++}
++/*@}*/
++
++#if defined(__cplusplus)
++}
++#endif /*__cplusplus */
++
++/*! @}*/
++
++#endif /* _FSL_IOMUXC_H_ */
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/main_remote.c b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/main_remote.c
+new file mode 100644
+index 000000000..9b1cb34ba
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/main_remote.c
+@@ -0,0 +1,123 @@
++/*
++ * Copyright 2022 NXP
++ * All rights reserved.
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++#include "FreeRTOS.h"
++#include "task.h"
++
++#include "pin_mux.h"
++#include "clock_config.h"
++#include "board.h"
++#include "app_srtm.h"
++#include "fsl_gpc.h"
++#include "fsl_debug_console.h"
++#include "fsl_rdc.h"
++/*******************************************************************************
++ * Definitions
++ ******************************************************************************/
++#define RDC_DISABLE_A53_ACCESS 0xFC
++#define RDC_DISABLE_M4_ACCESS  0xF3
++
++#define APP_PowerUpSlot (5U)
++#define APP_PowerDnSlot (6U)
++/*******************************************************************************
++ * Prototypes
++ ******************************************************************************/
++extern volatile app_srtm_state_t srtmState;
++
++/*******************************************************************************
++ * Code
++ ******************************************************************************/
++void Peripheral_RdcSetting(void)
++{
++    rdc_domain_assignment_t assignment = {0};
++    rdc_periph_access_config_t periphConfig;
++
++    assignment.domainId = BOARD_DOMAIN_ID;
++
++    /* Only configure the RDC if the RDC peripheral write access is allowed. */
++    if ((0x1U & RDC_GetPeriphAccessPolicy(RDC, kRDC_Periph_RDC, assignment.domainId)) != 0U)
++    {
++        RDC_SetMasterDomainAssignment(RDC, kRDC_Master_SDMA3_PERIPH, &assignment);
++        RDC_SetMasterDomainAssignment(RDC, kRDC_Master_SDMA3_BURST, &assignment);
++        RDC_SetMasterDomainAssignment(RDC, kRDC_Master_SDMA3_SPBA2, &assignment);
++
++        RDC_GetDefaultPeriphAccessConfig(&periphConfig);
++        /* Do not allow the A53 domain(domain0) to access the following peripherals. */
++        periphConfig.periph = kRDC_Periph_UART3;
++        RDC_SetPeriphAccessConfig(RDC, &periphConfig);
++        periphConfig.periph = kRDC_Periph_UART4;
++        RDC_SetPeriphAccessConfig(RDC, &periphConfig);
++    }
++}
++
++void MainTask(void *pvParameters)
++{
++    /*
++     * Wait For A core Side Become Ready
++     */
++    PRINTF("********************************\r\n");
++    PRINTF(" Wait the Linux kernel boot up to create the link between M core and A core.\r\n");
++    PRINTF("\r\n");
++    PRINTF("********************************\r\n");
++    while (srtmState != APP_SRTM_StateLinkedUp)
++        ;
++    PRINTF("The rpmsg channel between M core and A core created!\r\n");
++    PRINTF("********************************\r\n");
++    PRINTF("\r\n");
++
++    /* Configure GPC */
++    GPC_Init(BOARD_GPC_BASEADDR, APP_PowerUpSlot, APP_PowerDnSlot);
++    GPC_EnableIRQ(BOARD_GPC_BASEADDR, BOARD_MU_IRQ_NUM);
++    while (true)
++    {
++        /* Use App task logic to replace vTaskDelay */
++        PRINTF("\r\nTask %s is working now.\r\n", (char *)pvParameters);
++        vTaskDelay(portMAX_DELAY);
++    }
++}
++/*!
++ * @brief Main function
++ */
++int main(void)
++{
++    char *taskID = "A";
++
++    BOARD_RdcInit();
++    Peripheral_RdcSetting();
++    BOARD_InitBootPins();
++    BOARD_BootClockRUN();
++    BOARD_InitDebugConsole();
++    BOARD_InitMemory();
++    /* Setup clock for uart3 */
++    CLOCK_SetRootMux(kCLOCK_RootUart3, kCLOCK_UartRootmuxSysPll1Div10); /* Set UART source to SysPLL1 Div10 80MHZ */
++    CLOCK_SetRootDivider(kCLOCK_RootUart3, 1U, 1U);                     /* Set root clock to 80MHZ/ 1= 80MHZ */
++    CLOCK_EnableClock(kCLOCK_Uart3);
++
++    PRINTF("\r\n####################  RPMSG UART SHARING DEMO  ####################\n\r\n");
++    PRINTF("    Build Time: %s--%s \r\n", __DATE__, __TIME__);
++
++    APP_SRTM_Init();
++
++    if (xTaskCreate(MainTask, "Main Task", 256U, (void *)taskID, tskIDLE_PRIORITY + 1U, NULL) != pdPASS)
++    {
++        PRINTF("Task creation failed!.\r\n");
++        while (1)
++            ;
++    }
++
++    /* Start FreeRTOS scheduler. */
++    vTaskStartScheduler();
++
++    /* Application should never reach this point. */
++    for (;;)
++    {
++    }
++}
++void vApplicationMallocFailedHook(void)
++{
++    PRINTF("Malloc Failed!!!\r\n");
++}
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/pin_mux.c b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/pin_mux.c
+new file mode 100644
+index 000000000..ef188945c
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/pin_mux.c
+@@ -0,0 +1,85 @@
++/*
++ * Copyright 2022 NXP
++ * All rights reserved.
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++/***********************************************************************************************************************
++ * This file was generated by the MCUXpresso Config Tools. Any manual edits made to this file
++ * will be overwritten if the respective MCUXpresso Config Tools is used to update this file.
++ **********************************************************************************************************************/
++
++/*
++ * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
++!!GlobalInfo
++product: Pins v10.0
++processor: MIMX8MM6xxxLZ
++package_id: MIMX8MM6DVTLZ
++mcu_data: ksdk2_0
++processor_version: 0.10.12
++ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
++ */
++
++#include "fsl_common.h"
++#include "fsl_iomuxc.h"
++#include "pin_mux.h"
++
++/* FUNCTION ************************************************************************************************************
++ *
++ * Function Name : BOARD_InitBootPins
++ * Description   : Calls initialization functions.
++ *
++ * END ****************************************************************************************************************/
++void BOARD_InitBootPins(void)
++{
++    BOARD_InitPins();
++}
++
++/*
++ * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
++BOARD_InitPins:
++- options: {callFromInitBoot: 'true', prefix: BOARD_, coreID: cm4}
++- pin_list:
++  - {pin_num: F19, peripheral: UART4, signal: uart_rx, pin_signal: UART4_RXD, PE: Disabled, PUE: Enabled, DSE: X6_0}
++  - {pin_num: F18, peripheral: UART4, signal: uart_tx, pin_signal: UART4_TXD, PE: Disabled, PUE: Enabled, DSE: X6_0}
++  - {pin_num: D6, peripheral: UART3, signal: uart_rx, pin_signal: ECSPI1_SCLK, PUE: Enabled}
++  - {pin_num: B7, peripheral: UART3, signal: uart_tx, pin_signal: ECSPI1_MOSI, PUE: Enabled}
++ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
++ */
++
++/* FUNCTION ************************************************************************************************************
++ *
++ * Function Name : BOARD_InitPins
++ * Description   : Configures pin routing and optionally pin electrical features.
++ *
++ * END ****************************************************************************************************************/
++void BOARD_InitPins(void) {                                /*!< Function assigned for the core: Cortex-M4[cm4] */
++    IOMUXC_SetPinMux(IOMUXC_UART4_RXD_UART4_RX, 0U);
++    IOMUXC_SetPinConfig(IOMUXC_UART4_RXD_UART4_RX, 
++                        IOMUXC_SW_PAD_CTL_PAD_DSE(6U) |
++                        IOMUXC_SW_PAD_CTL_PAD_FSEL(2U) |
++                        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK);
++    IOMUXC_SetPinMux(IOMUXC_UART4_TXD_UART4_TX, 0U);
++    IOMUXC_SetPinConfig(IOMUXC_UART4_TXD_UART4_TX, 
++                        IOMUXC_SW_PAD_CTL_PAD_DSE(6U) |
++                        IOMUXC_SW_PAD_CTL_PAD_FSEL(2U) |
++                        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK);
++
++    IOMUXC_SetPinMux(IOMUXC_ECSPI1_MOSI_UART3_TX, 0U);
++    IOMUXC_SetPinConfig(IOMUXC_ECSPI1_MOSI_UART3_TX,
++                        IOMUXC_SW_PAD_CTL_PAD_DSE(6U) |
++                        IOMUXC_SW_PAD_CTL_PAD_FSEL(2U) |
++                        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
++                        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
++    IOMUXC_SetPinMux(IOMUXC_ECSPI1_SCLK_UART3_RX, 0U);
++    IOMUXC_SetPinConfig(IOMUXC_ECSPI1_SCLK_UART3_RX,
++                        IOMUXC_SW_PAD_CTL_PAD_DSE(6U) |
++                        IOMUXC_SW_PAD_CTL_PAD_FSEL(2U) |
++                        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
++                        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
++}
++
++/***********************************************************************************************************************
++ * EOF
++ **********************************************************************************************************************/
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/pin_mux.h b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/pin_mux.h
+new file mode 100644
+index 000000000..ab81a81d9
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/pin_mux.h
+@@ -0,0 +1,55 @@
++/*
++ * Copyright 2022 NXP
++ * All rights reserved.
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++
++#ifndef _PIN_MUX_H_
++#define _PIN_MUX_H_
++
++#include "board.h"
++
++/***********************************************************************************************************************
++ * Definitions
++ **********************************************************************************************************************/
++
++/*!
++ * @addtogroup pin_mux
++ * @{
++ */
++
++/***********************************************************************************************************************
++ * API
++ **********************************************************************************************************************/
++
++#if defined(__cplusplus)
++extern "C" {
++#endif
++
++
++/*!
++ * @brief Calls initialization functions.
++ *
++ */
++void BOARD_InitBootPins(void);
++
++/*!
++ * @brief Configures pin routing and optionally pin electrical features.
++ *
++ */
++void BOARD_InitPins(void);                                 /*!< Function assigned for the core: Cortex-M4[cm4] */
++
++#if defined(__cplusplus)
++}
++#endif
++
++/*!
++ * @}
++ */
++#endif /* _PIN_MUX_H_ */
++
++/***********************************************************************************************************************
++ * EOF
++ **********************************************************************************************************************/
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/readme.txt b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/readme.txt
+new file mode 100644
+index 000000000..642338ba2
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/readme.txt
+@@ -0,0 +1,67 @@
++Overview
++========
++In this demo, A core decoded music data and put it to DDR buffer and informs M core with the related information. 
++Then M core will take the ownership of consuming the buffer, it will copy buffer from DDR to TCM, manipulating SDMA to transfer the data to SAI and codec for playback. 
++It gives DDR and A core opportunity to do power saving for rather long time frame. M core will also take ownership of codec initialization.
++SRTM(Simplified Real Time Messaging) protocol is used to communicate between A core and M core. 
++The protocol provides various commands for A core and M core to communicate with each other. 
++If there is no audio palyback, M core will enter the STOP mode, and the whole SOC system would enter deep sleep mode(DSM) once A core enter low power status.
++
++Toolchain supported
++===================
++- GCC ARM Embedded  10.2.1
++
++Hardware requirements
++=====================
++- Micro USB cable
++- MIMX8MM6-EVK  board
++- J-Link Debug Probe
++- 12V power supply
++- Personal Computer
++- Headphone
++
++Board settings
++==============
++No special settings are required.
++
++#### Note! ####
++1.  This case does not support ddr and flash target. 
++2.  This case runs together with Linux and the Linux release version should be not lower than 5.10.72-2.2.0.
++
++Prepare the Demo
++================
++1.  Connect 12V power supply and J-Link Debug Probe to the board, switch SW101 to power on the board
++2.  Connect a USB cable between the host PC and the J901 USB port on the target board.
++3.  Open a serial terminal with the following settings:
++    - 115200 baud rate
++    - 8 data bits
++    - No parity
++    - One stop bit
++    - No flow control
++4.  Download the program to the target board.
++5.  Launch the debugger in your IDE to begin running the demo.
++
++******************
++NOTE
++******************
++1.  After M core running, please boot the linux kernel to create the rpmsg channel between A core and M core.
++    Make sure the FDT file is correctly set before booting the linux kernel. The following command can be used to set FDT file in uboot console:
++	u-boot=>setenv fdtfile imx8mm-evk-rpmsg.dtb 
++    u-boot=>saveenv
++
++Running the demo
++================
++When the demo runs successfully, the log would be seen on the terminal like:
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++####################  RPMSG UART SHARING DEMO  ####################
++
++    Build Time: May 31 2022--20:19:21
++    ********************************
++     Wait the Linux kernel boot up to create the link between M core and A core.
++
++    ********************************
++    The rpmsg channel between M core and A core created!
++    ********************************
++
++
++    Task A is working now.
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/remoteproc.h b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/remoteproc.h
+new file mode 100644
+index 000000000..7dad9c9eb
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/remoteproc.h
+@@ -0,0 +1,372 @@
++/*
++ * Remoteproc Framework
++ *
++ * Copyright 2020 NXP.
++ * Copyright(c) 2018 Xilinx Ltd.
++ * Copyright(c) 2011 Texas Instruments, Inc.
++ * Copyright(c) 2011 Google, Inc.
++ * All rights reserved.
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++#ifndef REMOTEPROC_H
++#define REMOTEPROC_H
++
++#include <stdint.h>
++
++#if defined __cplusplus
++extern "C" {
++#endif
++
++#define RSC_NOTIFY_ID_ANY 0xFFFFFFFFUL
++
++#define RPROC_MAX_NAME_LEN 32
++
++/* IAR ARM build tools */
++#if defined(__ICCARM__)
++
++#ifndef METAL_PACKED_BEGIN
++#define METAL_PACKED_BEGIN __packed
++#endif
++
++#ifndef METAL_PACKED_END
++#define METAL_PACKED_END
++#endif
++
++/* GNUC */
++#elif defined(__GNUC__)
++
++#ifndef METAL_PACKED_BEGIN
++#define METAL_PACKED_BEGIN
++#endif
++
++#ifndef METAL_PACKED_END
++#define METAL_PACKED_END __attribute__((__packed__))
++#endif
++
++/* ARMCC */
++#elif defined(__CC_ARM) || defined(__ARMCC_VERSION)
++
++#ifndef METAL_PACKED_BEGIN
++#define METAL_PACKED_BEGIN _Pragma("pack(1U)")
++#endif
++
++#ifndef METAL_PACKED_END
++#define METAL_PACKED_END _Pragma("pack()")
++#endif
++
++#else
++/* There is no default definition here to avoid wrong structures packing in case of not supported compiler */
++#error Please implement the structure packing macros for your compiler here!
++#endif
++
++/**
++ * struct resource_table - firmware resource table header
++ * @ver: version number
++ * @num: number of resource entries
++ * @reserved: reserved (must be zero)
++ * @offset: array of offsets pointing at the various resource entries
++ *
++ * A resource table is essentially a list of system resources required
++ * by the remote remoteproc. It may also include configuration entries.
++ * If needed, the remote remoteproc firmware should contain this table
++ * as a dedicated ".resource_table" ELF section.
++ *
++ * Some resources entries are mere announcements, where the host is informed
++ * of specific remoteproc configuration. Other entries require the host to
++ * do something (e.g. allocate a system resource). Sometimes a negotiation
++ * is expected, where the firmware requests a resource, and once allocated,
++ * the host should provide back its details (e.g. address of an allocated
++ * memory region).
++ *
++ * The header of the resource table, as expressed by this structure,
++ * contains a version number (should we need to change this format in the
++ * future), the number of available resource entries, and their offsets
++ * in the table.
++ *
++ * Immediately following this header are the resource entries themselves,
++ * each of which begins with a resource entry header (as described below).
++ */
++METAL_PACKED_BEGIN
++struct resource_table
++{
++    uint32_t ver;
++    uint32_t num;
++    uint32_t reserved[2];
++    uint32_t offset[0];
++} METAL_PACKED_END;
++
++/**
++ * struct fw_rsc_hdr - firmware resource entry header
++ * @type: resource type
++ * @data: resource data
++ *
++ * Every resource entry begins with a 'struct fw_rsc_hdr' header providing
++ * its @type. The content of the entry itself will immediately follow
++ * this header, and it should be parsed according to the resource type.
++ */
++METAL_PACKED_BEGIN
++struct fw_rsc_hdr
++{
++    uint32_t type;
++    uint8_t data[0];
++} METAL_PACKED_END;
++
++/**
++ * enum fw_resource_type - types of resource entries
++ *
++ * @RSC_CARVEOUT:   request for allocation of a physically contiguous
++ *          memory region.
++ * @RSC_DEVMEM:     request to iommu_map a memory-based peripheral.
++ * @RSC_TRACE:      announces the availability of a trace buffer into which
++ *          the remote remoteproc will be writing logs.
++ * @RSC_VDEV:       declare support for a virtio device, and serve as its
++ *          virtio header.
++ * @RSC_VENDOR_START: start of the vendor specific resource types range
++ * @RSC_VENDOR_END  : end of the vendor specific resource types range
++ * @RSC_LAST:       just keep this one at the end
++ *
++ * For more details regarding a specific resource type, please see its
++ * dedicated structure below.
++ *
++ * Please note that these values are used as indices to the rproc_handle_rsc
++ * lookup table, so please keep them sane. Moreover, @RSC_LAST is used to
++ * check the validity of an index before the lookup table is accessed, so
++ * please update it as needed.
++ */
++enum fw_resource_type
++{
++    RSC_CARVEOUT     = 0,
++    RSC_DEVMEM       = 1,
++    RSC_TRACE        = 2,
++    RSC_VDEV         = 3,
++    RSC_LAST         = 4,
++    RSC_VENDOR_START = 128,
++    RSC_VENDOR_END   = 512,
++};
++
++#define FW_RSC_U64_ADDR_ANY 0xFFFFFFFFFFFFFFFFUL
++#define FW_RSC_U32_ADDR_ANY 0xFFFFFFFFUL
++
++/**
++ * struct fw_rsc_carveout - physically contiguous memory request
++ * @da: device address
++ * @pa: physical address
++ * @len: length (in bytes)
++ * @flags: iommu protection flags
++ * @reserved: reserved (must be zero)
++ * @name: human-readable name of the requested memory region
++ *
++ * This resource entry requests the host to allocate a physically contiguous
++ * memory region.
++ *
++ * These request entries should precede other firmware resource entries,
++ * as other entries might request placing other data objects inside
++ * these memory regions (e.g. data/code segments, trace resource entries, ...).
++ *
++ * Allocating memory this way helps utilizing the reserved physical memory
++ * (e.g. CMA) more efficiently, and also minimizes the number of TLB entries
++ * needed to map it (in case @rproc is using an IOMMU). Reducing the TLB
++ * pressure is important; it may have a substantial impact on performance.
++ *
++ * If the firmware is compiled with static addresses, then @da should specify
++ * the expected device address of this memory region. If @da is set to
++ * FW_RSC_ADDR_ANY, then the host will dynamically allocate it, and then
++ * overwrite @da with the dynamically allocated address.
++ *
++ * We will always use @da to negotiate the device addresses, even if it
++ * isn't using an iommu. In that case, though, it will obviously contain
++ * physical addresses.
++ *
++ * Some remote remoteprocs needs to know the allocated physical address
++ * even if they do use an iommu. This is needed, e.g., if they control
++ * hardware accelerators which access the physical memory directly (this
++ * is the case with OMAP4 for instance). In that case, the host will
++ * overwrite @pa with the dynamically allocated physical address.
++ * Generally we don't want to expose physical addresses if we don't have to
++ * (remote remoteprocs are generally _not_ trusted), so we might want to
++ * change this to happen _only_ when explicitly required by the hardware.
++ *
++ * @flags is used to provide IOMMU protection flags, and @name should
++ * (optionally) contain a human readable name of this carveout region
++ * (mainly for debugging purposes).
++ */
++METAL_PACKED_BEGIN
++struct fw_rsc_carveout
++{
++    uint32_t type;
++    uint32_t da;
++    uint32_t pa;
++    uint32_t len;
++    uint32_t flags;
++    uint32_t reserved;
++    uint8_t name[RPROC_MAX_NAME_LEN];
++} METAL_PACKED_END;
++
++/**
++ * struct fw_rsc_devmem - iommu mapping request
++ * @da: device address
++ * @pa: physical address
++ * @len: length (in bytes)
++ * @flags: iommu protection flags
++ * @reserved: reserved (must be zero)
++ * @name: human-readable name of the requested region to be mapped
++ *
++ * This resource entry requests the host to iommu map a physically contiguous
++ * memory region. This is needed in case the remote remoteproc requires
++ * access to certain memory-based peripherals; _never_ use it to access
++ * regular memory.
++ *
++ * This is obviously only needed if the remote remoteproc is accessing memory
++ * via an iommu.
++ *
++ * @da should specify the required device address, @pa should specify
++ * the physical address we want to map, @len should specify the size of
++ * the mapping and @flags is the IOMMU protection flags. As always, @name may
++ * (optionally) contain a human readable name of this mapping (mainly for
++ * debugging purposes).
++ *
++ * Note: at this point we just "trust" those devmem entries to contain valid
++ * physical addresses, but this isn't safe and will be changed: eventually we
++ * want remoteproc implementations to provide us ranges of physical addresses
++ * the firmware is allowed to request, and not allow firmwares to request
++ * access to physical addresses that are outside those ranges.
++ */
++METAL_PACKED_BEGIN
++struct fw_rsc_devmem
++{
++    uint32_t type;
++    uint32_t da;
++    uint32_t pa;
++    uint32_t len;
++    uint32_t flags;
++    uint32_t reserved;
++    uint8_t name[RPROC_MAX_NAME_LEN];
++} METAL_PACKED_END;
++
++/**
++ * struct fw_rsc_trace - trace buffer declaration
++ * @da: device address
++ * @len: length (in bytes)
++ * @reserved: reserved (must be zero)
++ * @name: human-readable name of the trace buffer
++ *
++ * This resource entry provides the host information about a trace buffer
++ * into which the remote remoteproc will write log messages.
++ *
++ * @da specifies the device address of the buffer, @len specifies
++ * its size, and @name may contain a human readable name of the trace buffer.
++ *
++ * After booting the remote remoteproc, the trace buffers are exposed to the
++ * user via debugfs entries (called trace0, trace1, etc..).
++ */
++METAL_PACKED_BEGIN
++struct fw_rsc_trace
++{
++    uint32_t type;
++    uint32_t da;
++    uint32_t len;
++    uint32_t reserved;
++    uint8_t name[RPROC_MAX_NAME_LEN];
++} METAL_PACKED_END;
++
++/**
++ * struct fw_rsc_vdev_vring - vring descriptor entry
++ * @da: device address
++ * @align: the alignment between the consumer and producer parts of the vring
++ * @num: num of buffers supported by this vring (must be power of two)
++ * @notifyid is a unique rproc-wide notify index for this vring. This notify
++ * index is used when kicking a remote remoteproc, to let it know that this
++ * vring is triggered.
++ * @reserved: reserved (must be zero)
++ *
++ * This descriptor is not a resource entry by itself; it is part of the
++ * vdev resource type (see below).
++ *
++ * Note that @da should either contain the device address where
++ * the remote remoteproc is expecting the vring, or indicate that
++ * dynamically allocation of the vring's device address is supported.
++ */
++METAL_PACKED_BEGIN
++struct fw_rsc_vdev_vring
++{
++    uint32_t da;
++    uint32_t align;
++    uint32_t num;
++    uint32_t notifyid;
++    uint32_t reserved;
++} METAL_PACKED_END;
++
++/**
++ * struct fw_rsc_vdev - virtio device header
++ * @id: virtio device id (as in virtio_ids.h)
++ * @notifyid is a unique rproc-wide notify index for this vdev. This notify
++ * index is used when kicking a remote remoteproc, to let it know that the
++ * status/features of this vdev have changes.
++ * @dfeatures specifies the virtio device features supported by the firmware
++ * @gfeatures is a place holder used by the host to write back the
++ * negotiated features that are supported by both sides.
++ * @config_len is the size of the virtio config space of this vdev. The config
++ * space lies in the resource table immediate after this vdev header.
++ * @status is a place holder where the host will indicate its virtio progress.
++ * @num_of_vrings indicates how many vrings are described in this vdev header
++ * @reserved: reserved (must be zero)
++ * @vring is an array of @num_of_vrings entries of 'struct fw_rsc_vdev_vring'.
++ *
++ * This resource is a virtio device header: it provides information about
++ * the vdev, and is then used by the host and its peer remote remoteprocs
++ * to negotiate and share certain virtio properties.
++ *
++ * By providing this resource entry, the firmware essentially asks remoteproc
++ * to statically allocate a vdev upon registration of the rproc (dynamic vdev
++ * allocation is not yet supported).
++ *
++ * Note: unlike virtualization systems, the term 'host' here means
++ * the Linux side which is running remoteproc to control the remote
++ * remoteprocs. We use the name 'gfeatures' to comply with virtio's terms,
++ * though there isn't really any virtualized guest OS here: it's the host
++ * which is responsible for negotiating the final features.
++ * Yeah, it's a bit confusing.
++ *
++ * Note: immediately following this structure is the virtio config space for
++ * this vdev (which is specific to the vdev; for more info, read the virtio
++ * spec). the size of the config space is specified by @config_len.
++ */
++METAL_PACKED_BEGIN
++struct fw_rsc_vdev
++{
++    uint32_t type;
++    uint32_t id;
++    uint32_t notifyid;
++    uint32_t dfeatures;
++    uint32_t gfeatures;
++    uint32_t config_len;
++    uint8_t status;
++    uint8_t num_of_vrings;
++    uint8_t reserved[2];
++    struct fw_rsc_vdev_vring vring[0];
++} METAL_PACKED_END;
++
++/**
++ * struct fw_rsc_vendor - remote processor vendor specific resource
++ * @len: length of the resource
++ *
++ * This resource entry tells the host the vendor specific resource
++ * required by the remote.
++ *
++ * These request entries should precede other shared resource entries
++ * such as vdevs, vrings.
++ */
++METAL_PACKED_BEGIN
++struct fw_rsc_vendor
++{
++    uint32_t type;
++    uint32_t len;
++} METAL_PACKED_END;
++
++#if defined __cplusplus
++}
++#endif
++
++#endif /* REMOTEPROC_H_ */
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/rpmsg_config.h b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/rpmsg_config.h
+new file mode 100644
+index 000000000..ff0f400a8
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/rpmsg_config.h
+@@ -0,0 +1,86 @@
++/*
++ * Copyright (c) 2014, Mentor Graphics Corporation
++ * Copyright (c) 2015 Xilinx, Inc.
++ * Copyright (c) 2016 Freescale Semiconductor, Inc.
++ * Copyright 2016-2021 NXP
++ * All rights reserved.
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++#ifndef RPMSG_CONFIG_H_
++#define RPMSG_CONFIG_H_
++
++/*!
++ * @addtogroup config
++ * @{
++ * @file
++ */
++
++//! @name Configuration options
++//@{
++
++//! @def RL_MS_PER_INTERVAL
++//!
++//! Delay in milliseconds used in non-blocking API functions for polling.
++//! The default value is 1.
++#define RL_MS_PER_INTERVAL (1)
++
++//! @def RL_BUFFER_PAYLOAD_SIZE
++//!
++//! Size of the buffer payload, it must be equal to (240, 496, 1008, ...)
++//! [2^n - 16]. Ensure the same value is defined on both sides of rpmsg
++//! communication. The default value is 496U.
++#define RL_BUFFER_PAYLOAD_SIZE (496U)
++
++//! @def RL_BUFFER_COUNT
++//!
++//! Number of the buffers, it must be power of two (2, 4, ...).
++//! The default value is 2U.
++//! Note this value defines the buffer count for one direction of the rpmsg
++//! communication only, i.e. if the default value of 2 is used
++//! in rpmsg_config.h files for the master and the remote side, 4 buffers
++//! in total are created in the shared memory.
++#define RL_BUFFER_COUNT (256U)
++
++//! @def RL_API_HAS_ZEROCOPY
++//!
++//! Zero-copy API functions enabled/disabled.
++//! The default value is 1 (enabled).
++#define RL_API_HAS_ZEROCOPY (1)
++
++//! @def RL_USE_STATIC_API
++//!
++//! Static API functions (no dynamic allocation) enabled/disabled.
++//! The default value is 0 (static API disabled).
++#define RL_USE_STATIC_API (0)
++
++//! @def RL_CLEAR_USED_BUFFERS
++//!
++//! Clearing used buffers before returning back to the pool of free buffers
++//! enabled/disabled.
++//! The default value is 0 (disabled).
++#define RL_CLEAR_USED_BUFFERS (0)
++
++//! @def RL_USE_MCMGR_IPC_ISR_HANDLER
++//!
++//! When enabled IPC interrupts are managed by the Multicore Manager (IPC
++//! interrupts router), when disabled RPMsg-Lite manages IPC interrupts
++//! by itself.
++//! The default value is 0 (no MCMGR IPC ISR handler used).
++#define RL_USE_MCMGR_IPC_ISR_HANDLER (0)
++
++//! @def RL_USE_ENVIRONMENT_CONTEXT
++//!
++//! When enabled the environment layer uses its own context.
++//! Added for QNX port mainly, but can be used if required.
++//! The default value is 0 (no context, saves some RAM).
++#define RL_USE_ENVIRONMENT_CONTEXT (0)
++
++//! @def RL_DEBUG_CHECK_BUFFERS
++//!
++//! Do not use in RPMsg-Lite to Linux configuration
++#define RL_DEBUG_CHECK_BUFFERS (0)
++//@}
++
++#endif /* RPMSG_CONFIG_H_ */
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/rsc_table.c b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/rsc_table.c
+new file mode 100644
+index 000000000..793b82ac0
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/rsc_table.c
+@@ -0,0 +1,74 @@
++/*
++ * Copyright (c) 2014, Mentor Graphics Corporation
++ * All rights reserved.
++ * Copyright (c) 2015 Xilinx, Inc. All rights reserved.
++ * Copyright 2020,2022 NXP.
++ * All rights reserved.
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++/* This file populates resource table for BM remote
++ * for use by the Linux Master */
++
++#include "board.h"
++#include "rsc_table.h"
++#include "rpmsg_lite.h"
++#include <string.h>
++
++#define NUM_VRINGS 0x02
++
++/* Place resource table in special ELF section */
++#if defined(__ARMCC_VERSION) || defined(__GNUC__)
++__attribute__((section(".resource_table")))
++#elif defined(__ICCARM__)
++#pragma location = ".resource_table"
++#else
++#error Compiler not supported!
++#endif
++
++const struct remote_resource_table resources = {
++    /* Version */
++    1,
++
++    /* NUmber of table entries */
++    NO_RESOURCE_ENTRIES,
++    /* reserved fields */
++    {
++        0,
++        0,
++    },
++
++    /* Offsets of rsc entries */
++    {
++        offsetof(struct remote_resource_table, user_vdev),
++    },
++
++    /* SRTM virtio device entry */
++    {
++        RSC_VDEV,
++        7,
++        0,
++        RSC_VDEV_FEATURE_NS,
++        0,
++        0,
++        0,
++        NUM_VRINGS,
++        {0, 0},
++    },
++
++    /* Vring rsc entry - part of vdev rsc entry */
++    {VDEV0_VRING_BASE, VRING_ALIGN, RL_BUFFER_COUNT, 0, 0},
++    {VDEV0_VRING_BASE + VRING_SIZE, VRING_ALIGN, RL_BUFFER_COUNT, 1, 0},
++};
++
++void copyResourceTable(void)
++{
++    /*
++     * Resource table should be copied to VDEV0_VRING_BASE + RESOURCE_TABLE_OFFSET.
++     * VDEV0_VRING_BASE is temperorily kept for backward compatibility, will be
++     * removed in future release
++     */
++    memcpy((void *)VDEV0_VRING_BASE, &resources, sizeof(resources));
++    memcpy((void *)(VDEV0_VRING_BASE + RESOURCE_TABLE_OFFSET), &resources, sizeof(resources));
++}
+diff --git a/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/rsc_table.h b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/rsc_table.h
+new file mode 100644
+index 000000000..9562f6911
+--- /dev/null
++++ b/evkmimx8mm/multicore_examples/rpmsg_lite_uart_sharing_rtos/rsc_table.h
+@@ -0,0 +1,52 @@
++/*
++ * Copyright (c) 2014, Mentor Graphics Corporation
++ * All rights reserved.
++ * Copyright (c) 2015 Xilinx, Inc. All rights reserved.
++ * Copyright 2020 NXP.
++ * All rights reserved.
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++/* This file populates resource table for BM remote
++ * for use by the Linux Master */
++
++#ifndef RSC_TABLE_H_
++#define RSC_TABLE_H_
++
++#include <stddef.h>
++#include <remoteproc.h>
++
++#if defined __cplusplus
++extern "C" {
++#endif
++
++#define NO_RESOURCE_ENTRIES (1)
++#define RSC_VDEV_FEATURE_NS (1) /* Support name service announcement */
++
++/* Resource table for the given remote */
++METAL_PACKED_BEGIN
++struct remote_resource_table
++{
++    uint32_t version;
++    uint32_t num;
++    uint32_t reserved[2];
++    uint32_t offset[NO_RESOURCE_ENTRIES];
++
++    /* rpmsg vdev entry for user app communication */
++    struct fw_rsc_vdev user_vdev;
++    struct fw_rsc_vdev_vring user_vring0;
++    struct fw_rsc_vdev_vring user_vring1;
++} METAL_PACKED_END;
++
++/*
++ * Copy resource table to shared memory base for early M4 boot case.
++ * In M4 early boot case, Linux kernel need to get resource table before file system gets loaded.
++ */
++void copyResourceTable(void);
++
++#if defined __cplusplus
++}
++#endif
++
++#endif /* RSC_TABLE_H_ */
+-- 
+2.25.1
+
