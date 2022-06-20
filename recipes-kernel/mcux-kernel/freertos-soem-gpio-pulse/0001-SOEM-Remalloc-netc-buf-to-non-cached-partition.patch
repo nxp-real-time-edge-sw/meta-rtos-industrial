@@ -1,0 +1,31 @@
+From 2e880b90d9b769b22dbdfcec89893d14c73e56cb Mon Sep 17 00:00:00 2001
+From: Wenbin Song <wenbin.song@nxp.com>
+Date: Thu, 16 Jun 2022 12:28:29 +0800
+Subject: [PATCH 1/2] SOEM: Remalloc netc buf to non-cached partition
+
+Fix the freertos_soem_gpio_pulse example don't work for DDR release.
+
+Signed-off-by: Wenbin Song <wenbin.song@nxp.com>
+---
+ .../rtos_examples/freertos_soem_gpio_pulse/soem_gpio_pulse.c  | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/evkmimx8mm/rtos_examples/freertos_soem_gpio_pulse/soem_gpio_pulse.c b/evkmimx8mm/rtos_examples/freertos_soem_gpio_pulse/soem_gpio_pulse.c
+index 4ee17738c..5dc614bde 100644
+--- a/evkmimx8mm/rtos_examples/freertos_soem_gpio_pulse/soem_gpio_pulse.c
++++ b/evkmimx8mm/rtos_examples/freertos_soem_gpio_pulse/soem_gpio_pulse.c
+@@ -195,9 +195,9 @@ AT_NONCACHEABLE_SECTION_ALIGN(enet_tx_bd_struct_t g_txBuffDescrip[ENET_TXBD_NUM]
+  * If use cacheable region, the alignment size should be the maximum size of "CACHE LINE SIZE" and "ENET_BUFF_ALIGNMENT"
+  * If use non-cache region, the alignment size is the "ENET_BUFF_ALIGNMENT".
+  */
+-SDK_ALIGN(uint8_t g_rxDataBuff[ENET_RXBD_NUM][SDK_SIZEALIGN(ENET_RXBUFF_SIZE, ENET_BUFF_ALIGNMENT)],
++AT_NONCACHEABLE_SECTION_ALIGN(uint8_t g_rxDataBuff[ENET_RXBD_NUM][SDK_SIZEALIGN(ENET_RXBUFF_SIZE, ENET_BUFF_ALIGNMENT)],
+           ENET_BUFF_ALIGNMENT);
+-SDK_ALIGN(uint8_t g_txDataBuff[ENET_TXBD_NUM][SDK_SIZEALIGN(ENET_TXBUFF_SIZE, ENET_BUFF_ALIGNMENT)],
++AT_NONCACHEABLE_SECTION_ALIGN(uint8_t g_txDataBuff[ENET_TXBD_NUM][SDK_SIZEALIGN(ENET_TXBUFF_SIZE, ENET_BUFF_ALIGNMENT)],
+           ENET_BUFF_ALIGNMENT);
+ 
+ enet_buffer_config_t buffConfig[] = {{
+-- 
+2.17.1
+
