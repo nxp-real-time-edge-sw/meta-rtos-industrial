@@ -43,7 +43,7 @@ SRC_URI = "\
 S = "${WORKDIR}/git"
 
 # Default to a stable version
-PREFERRED_VERSION_MCUX-SDK ??= "2.11.0"
+PREFERRED_VERSION_MCUX-SDK ??= "2.12.0"
 require mcux-sdk-src-${PREFERRED_VERSION_MCUX-SDK}.inc
 
 PACKAGES = "${PN}"
