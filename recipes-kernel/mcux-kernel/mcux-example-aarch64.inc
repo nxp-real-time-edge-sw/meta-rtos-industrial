@@ -20,9 +20,9 @@ INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 DEPENDS = "gcc-aarch64-none-elf-native"
-ARMGCC_DIR ?= "${WORKDIR}/recipe-sysroot-native${datadir}/arm-aarch64-none-elf"
+ARMGCC_DIR ?= "${WORKDIR}/recipe-sysroot-native${libexecdir}/gcc-aarch64-none-elf"
 
-EXAMPLE_ARMGCC_DIR = "${S}/${MCUX_EXAMPLE_DIR}/armgcc"
+EXAMPLE_ARMGCC_DIR = "${S}/${MCUX_EXAMPLE_DIR}/armgcc_aarch64"
 
 do_compile() {
     export ARMGCC_DIR="${ARMGCC_DIR}"
