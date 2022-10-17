@@ -2,7 +2,7 @@
 
 SRCREV_mcux-sdk = "19e670b706de37ab0e41605b725f99440033ae4b"
 SRCREV_mcux-sdk-examples = "5901bbe992f4130946a8139a4ba0c516efd1fbab"
-SRCREV_FreeRTOS-Kernel = "74257173e164e893ceaeddd4b176fb28bfd7c20a"
+SRCREV_FreeRTOS-Kernel = "14dba01da5623497f76748bca6ccc7fb58ee6d36"
 SRCREV_mcux-sdk-middleware-sdmmc = "2338b397bd387c28c7bab73a58b3b6a09868881c"
 SRCREV_mcux-sdk-middleware-multicore = "070e9e645bee2cfa3257200b70c2c1ef6cc09440"
 SRCREV_rpmsg-lite = "84edc37b1c4155c0c51f3b01b83ea01f1b026f35"
