@@ -1,11 +1,11 @@
-From 8c58b638f829c9968aab5df503ccb616b69775ab Mon Sep 17 00:00:00 2001
+From 9efc5fcfe7fca1091698b47fd2912dfdfe5fdaec Mon Sep 17 00:00:00 2001
 From: Wenbin Song <wenbin.song@nxp.com>
 Date: Thu, 25 Aug 2022 23:06:01 +0800
-Subject: [PATCH 1/2] Uart: Add 9bit_uart_interrupt_transfer example
+Subject: [PATCH] Uart: Add 9bit_iuart_interrupt_transfer example
 
 Signed-off-by: Wenbin Song <wenbin.song@nxp.com>
 ---
- .../9bit_uart_interrupt_transfer.c            | 218 ++++++
+ .../9bit_iuart_interrupt_transfer.c           | 218 ++++++
  .../armgcc/CMakeLists.txt                     | 101 +++
  .../armgcc/MIMX8MM6xxxxx_cm4_ddr_ram.ld       | 228 ++++++
  .../armgcc/MIMX8MM6xxxxx_cm4_flash.ld         | 228 ++++++
@@ -34,7 +34,7 @@ Signed-off-by: Wenbin Song <wenbin.song@nxp.com>
  .../uart/9bit_interrupt_transfer/pin_mux.h    |  55 ++
  .../uart/9bit_interrupt_transfer/readme.txt   |  56 ++
  28 files changed, 2637 insertions(+)
- create mode 100644 evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/9bit_uart_interrupt_transfer.c
+ create mode 100644 evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/9bit_iuart_interrupt_transfer.c
  create mode 100644 evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/CMakeLists.txt
  create mode 100644 evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/MIMX8MM6xxxxx_cm4_ddr_ram.ld
  create mode 100644 evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/MIMX8MM6xxxxx_cm4_flash.ld
@@ -63,11 +63,11 @@ Signed-off-by: Wenbin Song <wenbin.song@nxp.com>
  create mode 100644 evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/pin_mux.h
  create mode 100644 evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/readme.txt
 
-diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/9bit_uart_interrupt_transfer.c b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/9bit_uart_interrupt_transfer.c
+diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/9bit_iuart_interrupt_transfer.c b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/9bit_iuart_interrupt_transfer.c
 new file mode 100644
-index 0000000000..c0e5439dcb
+index 000000000..c0e5439dc
 --- /dev/null
-+++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/9bit_uart_interrupt_transfer.c
++++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/9bit_iuart_interrupt_transfer.c
 @@ -0,0 +1,218 @@
 +/*
 + * Copyright (c) 2015, Freescale Semiconductor, Inc.
@@ -289,7 +289,7 @@ index 0000000000..c0e5439dcb
 +}
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/CMakeLists.txt b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/CMakeLists.txt
 new file mode 100644
-index 0000000000..8de3e7215e
+index 000000000..f3c4ec5dd
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/CMakeLists.txt
 @@ -0,0 +1,101 @@
@@ -326,7 +326,7 @@ index 0000000000..8de3e7215e
 +include(${ProjDirPath}/config.cmake)
 +
 +add_executable(${MCUX_SDK_PROJECT_NAME} 
-+"${ProjDirPath}/../9bit_uart_interrupt_transfer.c"
++"${ProjDirPath}/../9bit_iuart_interrupt_transfer.c"
 +"${ProjDirPath}/../pin_mux.c"
 +"${ProjDirPath}/../pin_mux.h"
 +"${ProjDirPath}/../../../../../../core/boards/evkmimx8mm/board.c"
@@ -396,7 +396,7 @@ index 0000000000..8de3e7215e
 +
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/MIMX8MM6xxxxx_cm4_ddr_ram.ld b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/MIMX8MM6xxxxx_cm4_ddr_ram.ld
 new file mode 100644
-index 0000000000..13a695433c
+index 000000000..13a695433
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/MIMX8MM6xxxxx_cm4_ddr_ram.ld
 @@ -0,0 +1,228 @@
@@ -630,7 +630,7 @@ index 0000000000..13a695433c
 +
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/MIMX8MM6xxxxx_cm4_flash.ld b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/MIMX8MM6xxxxx_cm4_flash.ld
 new file mode 100644
-index 0000000000..6e69dec2d5
+index 000000000..6e69dec2d
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/MIMX8MM6xxxxx_cm4_flash.ld
 @@ -0,0 +1,228 @@
@@ -864,7 +864,7 @@ index 0000000000..6e69dec2d5
 +
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/MIMX8MM6xxxxx_cm4_ram.ld b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/MIMX8MM6xxxxx_cm4_ram.ld
 new file mode 100644
-index 0000000000..82ef572a4d
+index 000000000..82ef572a4
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/MIMX8MM6xxxxx_cm4_ram.ld
 @@ -0,0 +1,227 @@
@@ -1097,7 +1097,7 @@ index 0000000000..82ef572a4d
 +
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_all.bat b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_all.bat
 new file mode 100644
-index 0000000000..c393b45dfb
+index 000000000..c393b45df
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_all.bat
 @@ -0,0 +1,43 @@
@@ -1146,7 +1146,7 @@ index 0000000000..c393b45dfb
 +IF "%1" == "" ( pause )
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_all.sh b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_all.sh
 new file mode 100755
-index 0000000000..03394e0811
+index 000000000..03394e081
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_all.sh
 @@ -0,0 +1,43 @@
@@ -1195,7 +1195,7 @@ index 0000000000..03394e0811
 +
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_ddr_debug.bat b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_ddr_debug.bat
 new file mode 100644
-index 0000000000..811ca97ef3
+index 000000000..811ca97ef
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_ddr_debug.bat
 @@ -0,0 +1,6 @@
@@ -1207,7 +1207,7 @@ index 0000000000..811ca97ef3
 +mingw32-make -j 2> build_log.txt 
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_ddr_debug.sh b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_ddr_debug.sh
 new file mode 100755
-index 0000000000..540c585dea
+index 000000000..540c585de
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_ddr_debug.sh
 @@ -0,0 +1,7 @@
@@ -1220,7 +1220,7 @@ index 0000000000..540c585dea
 +make -j 2>&1 | tee build_log.txt
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_ddr_release.bat b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_ddr_release.bat
 new file mode 100644
-index 0000000000..3e0267a94e
+index 000000000..3e0267a94
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_ddr_release.bat
 @@ -0,0 +1,6 @@
@@ -1232,7 +1232,7 @@ index 0000000000..3e0267a94e
 +mingw32-make -j 2> build_log.txt 
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_ddr_release.sh b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_ddr_release.sh
 new file mode 100755
-index 0000000000..9e37466a99
+index 000000000..9e37466a9
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_ddr_release.sh
 @@ -0,0 +1,7 @@
@@ -1245,7 +1245,7 @@ index 0000000000..9e37466a99
 +make -j 2>&1 | tee build_log.txt
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_debug.bat b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_debug.bat
 new file mode 100644
-index 0000000000..7ab2a281f5
+index 000000000..7ab2a281f
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_debug.bat
 @@ -0,0 +1,6 @@
@@ -1257,7 +1257,7 @@ index 0000000000..7ab2a281f5
 +mingw32-make -j 2> build_log.txt 
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_debug.sh b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_debug.sh
 new file mode 100755
-index 0000000000..71fefbd13f
+index 000000000..71fefbd13
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_debug.sh
 @@ -0,0 +1,7 @@
@@ -1270,7 +1270,7 @@ index 0000000000..71fefbd13f
 +make -j 2>&1 | tee build_log.txt
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_flash_debug.bat b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_flash_debug.bat
 new file mode 100644
-index 0000000000..aebc73e076
+index 000000000..aebc73e07
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_flash_debug.bat
 @@ -0,0 +1,6 @@
@@ -1282,7 +1282,7 @@ index 0000000000..aebc73e076
 +mingw32-make -j 2> build_log.txt 
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_flash_debug.sh b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_flash_debug.sh
 new file mode 100755
-index 0000000000..b1da55ce70
+index 000000000..b1da55ce7
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_flash_debug.sh
 @@ -0,0 +1,7 @@
@@ -1295,7 +1295,7 @@ index 0000000000..b1da55ce70
 +make -j 2>&1 | tee build_log.txt
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_flash_release.bat b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_flash_release.bat
 new file mode 100644
-index 0000000000..a766ab7036
+index 000000000..a766ab703
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_flash_release.bat
 @@ -0,0 +1,6 @@
@@ -1307,7 +1307,7 @@ index 0000000000..a766ab7036
 +mingw32-make -j 2> build_log.txt 
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_flash_release.sh b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_flash_release.sh
 new file mode 100755
-index 0000000000..c54cdd8432
+index 000000000..c54cdd843
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_flash_release.sh
 @@ -0,0 +1,7 @@
@@ -1320,7 +1320,7 @@ index 0000000000..c54cdd8432
 +make -j 2>&1 | tee build_log.txt
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_release.bat b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_release.bat
 new file mode 100644
-index 0000000000..40f6a04909
+index 000000000..40f6a0490
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_release.bat
 @@ -0,0 +1,6 @@
@@ -1332,7 +1332,7 @@ index 0000000000..40f6a04909
 +mingw32-make -j 2> build_log.txt 
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_release.sh b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_release.sh
 new file mode 100755
-index 0000000000..106969c833
+index 000000000..106969c83
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/build_release.sh
 @@ -0,0 +1,7 @@
@@ -1345,7 +1345,7 @@ index 0000000000..106969c833
 +make -j 2>&1 | tee build_log.txt
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/clean.bat b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/clean.bat
 new file mode 100644
-index 0000000000..d7474444f5
+index 000000000..d7474444f
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/clean.bat
 @@ -0,0 +1,3 @@
@@ -1354,7 +1354,7 @@ index 0000000000..d7474444f5
 +pause
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/clean.sh b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/clean.sh
 new file mode 100755
-index 0000000000..c438211d7d
+index 000000000..c438211d7
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/clean.sh
 @@ -0,0 +1,3 @@
@@ -1363,7 +1363,7 @@ index 0000000000..c438211d7d
 +rm -rf Makefile cmake_install.cmake CMakeCache.txt
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/config.cmake b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/config.cmake
 new file mode 100755
-index 0000000000..8d62f5017a
+index 000000000..8d62f5017
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/config.cmake
 @@ -0,0 +1,3 @@
@@ -1372,7 +1372,7 @@ index 0000000000..8d62f5017a
 +set(MCUX_DEVICE "MIMX8MM6")
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/flags.cmake b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/flags.cmake
 new file mode 100755
-index 0000000000..329f3fa662
+index 000000000..329f3fa66
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/armgcc/flags.cmake
 @@ -0,0 +1,566 @@
@@ -1944,7 +1944,7 @@ index 0000000000..329f3fa662
 +")
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/empty_rsc_table.c b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/empty_rsc_table.c
 new file mode 100644
-index 0000000000..37bb8dc0b9
+index 000000000..37bb8dc0b
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/empty_rsc_table.c
 @@ -0,0 +1,41 @@
@@ -1991,7 +1991,7 @@ index 0000000000..37bb8dc0b9
 +    0, 0};
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/fsl_iomuxc.h b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/fsl_iomuxc.h
 new file mode 100644
-index 0000000000..3c77cf1e52
+index 000000000..3c77cf1e5
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/fsl_iomuxc.h
 @@ -0,0 +1,660 @@
@@ -2657,7 +2657,7 @@ index 0000000000..3c77cf1e52
 +#endif /* _FSL_IOMUXC_H_ */
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/pin_mux.c b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/pin_mux.c
 new file mode 100644
-index 0000000000..f60e1b3c15
+index 000000000..f60e1b3c1
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/pin_mux.c
 @@ -0,0 +1,84 @@
@@ -2747,7 +2747,7 @@ index 0000000000..f60e1b3c15
 + **********************************************************************************************************************/
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/pin_mux.h b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/pin_mux.h
 new file mode 100644
-index 0000000000..bdb5a9350c
+index 000000000..bdb5a9350
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/pin_mux.h
 @@ -0,0 +1,55 @@
@@ -2808,7 +2808,7 @@ index 0000000000..bdb5a9350c
 + **********************************************************************************************************************/
 diff --git a/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/readme.txt b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/readme.txt
 new file mode 100644
-index 0000000000..fca920d4a9
+index 000000000..fca920d4a
 --- /dev/null
 +++ b/evkmimx8mm/driver_examples/uart/9bit_interrupt_transfer/readme.txt
 @@ -0,0 +1,56 @@
@@ -2869,5 +2869,5 @@ index 0000000000..fca920d4a9
 +  All data matches!
 +
 -- 
-2.17.1
+2.25.1
 

@@ -8,5 +8,5 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI += " \
     file://0001-iuart-Add-9bit-support.patch;patchdir=core \
-    file://0002-Uart-Add-9bit_uart_polling-example.patch;patchdir=examples \
+    file://0001-Uart-Add-9bit_iuart_polling-example.patch;patchdir=examples \
 "
