@@ -14,12 +14,12 @@ NXP_BASE = "github.com/NXP"
 SRCREV_FORMAT = "mcux-sdk"
 
 SRC_URI = "\
-    git://bitbucket.sw.nxp.com/dnind/mcux-sdk.git;protocol=ssh;nobranch=1;destsuffix=git/core;name=mcux-sdk \
-    git://bitbucket.sw.nxp.com/dnind/mcux-sdk-examples;protocol=ssh;nobranch=1;destsuffix=git/examples;name=mcux-sdk-examples \
+    git://${NXPMICRO_BASE}/mcux-sdk.git;protocol=https;nobranch=1;destsuffix=git/core;name=mcux-sdk \
+    git://${NXPMICRO_BASE}/mcux-sdk-examples;protocol=https;nobranch=1;destsuffix=git/examples;name=mcux-sdk-examples \
     git://${NXPMICRO_BASE}/FreeRTOS-Kernel.git;protocol=https;nobranch=1;destsuffix=git/rtos/freertos/freertos_kernel;name=FreeRTOS-Kernel \
     git://${NXPMICRO_BASE}/mcux-sdk-middleware-sdmmc.git;protocol=https;nobranch=1;destsuffix=git/middleware/sdmmc;name=mcux-sdk-middleware-sdmmc \
-    git://bitbucket.sw.nxp.com/dnind/mcux-sdk-middleware-multicore.git;protocol=ssh;nobranch=1;destsuffix=git/middleware/multicore;name=mcux-sdk-middleware-multicore \
-    git://bitbucket.sw.nxp.com/dnind/rpmsg-lite-github.git;protocol=ssh;nobranch=1;destsuffix=git/middleware/multicore/rpmsg_lite;name=rpmsg-lite \
+    git://${NXPMICRO_BASE}/mcux-sdk-middleware-multicore.git;protocol=https;nobranch=1;destsuffix=git/middleware/multicore;name=mcux-sdk-middleware-multicore \
+    git://${NXPMICRO_BASE}/rpmsg-lite.git;protocol=https;nobranch=1;destsuffix=git/middleware/multicore/rpmsg_lite;name=rpmsg-lite \
     git://github.com/EmbeddedRPC/erpc;protocol=https;nobranch=1;destsuffix=git/middleware/multicore/erpc;name=erpc \
     git://${NXPMICRO_BASE}/mcux-soc-svd.git;protocol=https;nobranch=1;destsuffix=git/svd;name=mcux-soc-svd \
     git://${NXPMICRO_BASE}/fatfs.git;protocol=https;nobranch=1;destsuffix=git/middleware/fatfs;name=fatfs \
