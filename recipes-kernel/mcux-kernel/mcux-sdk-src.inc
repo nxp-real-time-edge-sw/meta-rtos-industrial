@@ -8,8 +8,9 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7ca
 # find the patch(es) in SRC_URI.
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-NXPMICRO_BASE = "github.com/NXPmicro"
+NXPMICRO_BASE = "github.com/nxp-mcuxpresso"
 NXP_BASE = "github.com/NXP"
+NXP_REAL_TIME_EDGE_BASE="github.com/nxp-real-time-edge-sw"
 
 SRCREV_FORMAT = "mcux-sdk"
 
@@ -37,7 +38,7 @@ SRC_URI = "\
     git://${NXP_BASE}/netxduo.git;protocol=https;nobranch=1;destsuffix=git/rtos/azure-rtos/netduo;name=netxduo \
     git://${NXP_BASE}/usbx.git;protocol=https;nobranch=1;destsuffix=git/rtos/azure-rtos/usbx;name=usbx \
     git://${NXP_BASE}/guix.git;protocol=https;nobranch=1;destsuffix=git/rtos/azure-rtos/guix;name=guix \
-    git://${NXPMICRO_BASE}/soem.git;protocol=https;nobranch=1;destsuffix=git/core/components/SOEM;name=SOEM \
+    git://${NXP_REAL_TIME_EDGE_BASE}/soem.git;protocol=https;nobranch=1;destsuffix=git/core/components/SOEM;name=SOEM \
     "
 
 S = "${WORKDIR}/git"
