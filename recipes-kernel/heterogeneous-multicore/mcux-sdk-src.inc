@@ -11,12 +11,13 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 DNIND_BASE = "git@bitbucket.sw.nxp.com/dnind"
 NXPMICRO_BASE = "github.com/NXPmicro"
 MCUX_SDK_BRANCH = "feature/heterogeneous_multicore"
+FREERTOS_BRANCH = "feature/aarch64_support"
 
 SRCREV_FORMAT = "mcux-sdk"
 
 SRC_URI = "\
     git://${DNIND_BASE}/mcux-sdk.git;protocol=ssh;branch=${MCUX_SDK_BRANCH};destsuffix=git/mcux-sdk;name=mcux-sdk \
-    git://${NXPMICRO_BASE}/FreeRTOS-Kernel.git;protocol=https;nobranch=1;destsuffix=git/FreeRTOS-Kernel;name=FreeRTOS-Kernel \
+    git://${DNIND_BASE}/FreeRTOS-Kernel.git;protocol=ssh;branch=${FREERTOS_BRANCH};destsuffix=git/FreeRTOS-Kernel;name=FreeRTOS-Kernel \
     "
 
 S = "${WORKDIR}/git"
