@@ -369,8 +369,8 @@ index 000000000..13a695433
 +**         Linker file for the GNU C Compiler
 +**
 +**     Copyright 2016 Freescale Semiconductor, Inc.
-+**     Copyright 2016-2020 NXP
-+**     All rights reserved.
++**     Copyright 2016-2020, 2023 NXP
++**     
 +**
 +**     SPDX-License-Identifier: BSD-3-Clause
 +**
@@ -603,8 +603,8 @@ index 000000000..6e69dec2d
 +**         Linker file for the GNU C Compiler
 +**
 +**     Copyright 2016 Freescale Semiconductor, Inc.
-+**     Copyright 2016-2020 NXP
-+**     All rights reserved.
++**     Copyright 2016-2020, 2023 NXP
++**     
 +**
 +**     SPDX-License-Identifier: BSD-3-Clause
 +**
@@ -837,8 +837,8 @@ index 000000000..82ef572a4
 +**         Linker file for the GNU C Compiler
 +**
 +**     Copyright 2016 Freescale Semiconductor, Inc.
-+**     Copyright 2016-2020 NXP
-+**     All rights reserved.
++**     Copyright 2016-2020, 2023 NXP
++**     
 +**
 +**     SPDX-License-Identifier: BSD-3-Clause
 +**
@@ -1906,8 +1906,8 @@ index 000000000..37b70af3f
 +++ b/evkmimx8mm/rtos_examples/freertos_soem_gpio_pulse/pin_mux.c
 @@ -0,0 +1,98 @@
 +/*
-+ * Copyright 2022 NXP
-+ * All rights reserved.
++ * Copyright 2022-2023 NXP
++ * 
 + *
 + * SPDX-License-Identifier: BSD-3-Clause
 + *
@@ -2010,8 +2010,8 @@ index 000000000..592a0dac6
 +++ b/evkmimx8mm/rtos_examples/freertos_soem_gpio_pulse/pin_mux.h
 @@ -0,0 +1,54 @@
 +/*
-+ * Copyright 2022 NXP
-+ * All rights reserved.
++ * Copyright 2022-2023 NXP
++ * 
 + *
 + * SPDX-License-Identifier: BSD-3-Clause
 + *
@@ -2117,7 +2117,7 @@ index 000000000..f194c85bb
 +
 +~~~~~~~~~~~~~~~~~~~~~
 +SHELL build: Sep 27 2020
-+Copyright  2020  NXP
++Copyright  2020, 2023  NXP
 +
 +LOG SHELL>> installbackend debugconsole
 +LOG SHELL>> log error
@@ -2208,8 +2208,8 @@ index 000000000..c136dc69f
 @@ -0,0 +1,394 @@
 +/*
 + * Copyright (c) 2015, Freescale Semiconductor, Inc.
-+ * Copyright 2016-2020 NXP
-+ * All rights reserved.
++ * Copyright 2016-2020, 2023 NXP
++ * 
 + *
 + * SPDX-License-Identifier: BSD-3-Clause
 + */
