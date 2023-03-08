@@ -1,9 +1,10 @@
-From 22abee89fd70a0fdee57fb916a00492ab2ea7e43 Mon Sep 17 00:00:00 2001
-From: Wenbin Song <wenbin.song@nxp.com>
-Date: Tue, 4 Jan 2022 14:17:33 +0800
-Subject: [PATCH 1/2] SOEM: add soem_gpio_pulse example to evkmimx8mp platform
+From c06512dd6597f05abcb36547cf72ade7b156ba3e Mon Sep 17 00:00:00 2001
+From: qizhang <jony.zhang@nxp.com>
+Date: Thu, 9 Mar 2023 01:27:49 +0800
+Subject: [PATCH] SOEM: add soem_gpio_pulse example to evkmimx8mp platform
 
 Signed-off-by: Wenbin Song <wenbin.song@nxp.com>
+Signed-off-by: qizhang <jony.zhang@nxp.com>
 ---
  .../soem_gpio_pulse/armgcc/CMakeLists.txt     | 114 ++++
  .../armgcc/MIMX8ML8xxxxx_cm7_ddr_ram.ld       | 230 +++++++
@@ -30,8 +31,8 @@ Signed-off-by: Wenbin Song <wenbin.song@nxp.com>
  .../demo_apps/soem_gpio_pulse/pin_mux.c       | 146 +++++
  .../demo_apps/soem_gpio_pulse/pin_mux.h       |  56 ++
  .../demo_apps/soem_gpio_pulse/soem_config.h   |  50 ++
- .../soem_gpio_pulse/soem_gpio_pulse.c         | 330 ++++++++++
- 26 files changed, 2130 insertions(+)
+ .../soem_gpio_pulse/soem_gpio_pulse.c         | 334 ++++++++++
+ 26 files changed, 2134 insertions(+)
  create mode 100644 evkmimx8mp/demo_apps/soem_gpio_pulse/armgcc/CMakeLists.txt
  create mode 100644 evkmimx8mp/demo_apps/soem_gpio_pulse/armgcc/MIMX8ML8xxxxx_cm7_ddr_ram.ld
  create mode 100644 evkmimx8mp/demo_apps/soem_gpio_pulse/armgcc/MIMX8ML8xxxxx_cm7_flash.ld
@@ -1741,7 +1742,7 @@ index 000000000..0db61d8d8
 +")
 diff --git a/evkmimx8mp/demo_apps/soem_gpio_pulse/pin_mux.c b/evkmimx8mp/demo_apps/soem_gpio_pulse/pin_mux.c
 new file mode 100644
-index 000000000..cc275b0af
+index 000000000..cf9e4cede
 --- /dev/null
 +++ b/evkmimx8mp/demo_apps/soem_gpio_pulse/pin_mux.c
 @@ -0,0 +1,146 @@
@@ -1893,7 +1894,7 @@ index 000000000..cc275b0af
 + **********************************************************************************************************************/
 diff --git a/evkmimx8mp/demo_apps/soem_gpio_pulse/pin_mux.h b/evkmimx8mp/demo_apps/soem_gpio_pulse/pin_mux.h
 new file mode 100644
-index 000000000..971278287
+index 000000000..f2cfa5992
 --- /dev/null
 +++ b/evkmimx8mp/demo_apps/soem_gpio_pulse/pin_mux.h
 @@ -0,0 +1,56 @@
@@ -2011,10 +2012,10 @@ index 000000000..2e1eb44bb
 +#endif
 diff --git a/evkmimx8mp/demo_apps/soem_gpio_pulse/soem_gpio_pulse.c b/evkmimx8mp/demo_apps/soem_gpio_pulse/soem_gpio_pulse.c
 new file mode 100644
-index 000000000..11e4207c9
+index 000000000..76a474024
 --- /dev/null
 +++ b/evkmimx8mp/demo_apps/soem_gpio_pulse/soem_gpio_pulse.c
-@@ -0,0 +1,330 @@
+@@ -0,0 +1,334 @@
 +/*
 + * Copyright (c) 2015, Freescale Semiconductor, Inc.
 + * Copyright 2016-2020 NXP
@@ -2328,11 +2329,15 @@ index 000000000..11e4207c9
 +    CLOCK_SetRootDivider(kCLOCK_RootEnetTimer, 1U, 1U);
 +    CLOCK_SetRootMux(kCLOCK_RootEnetTimer, kCLOCK_EnetTimerRootmuxSysPll2Div10); /* SYSTEM PLL2 divided by 10: 100Mhz */
 +
++    /* mii/rgmii interface clock */
++    CLOCK_SetRootDivider(kCLOCK_RootEnetRef, 1U, 1U);
++    CLOCK_SetRootMux(kCLOCK_RootEnetRef, kCLOCK_EnetRefRootmuxSysPll2Div8); /* SYSTEM PLL2 divided by 8: 125MHz */
++
 +    gpio_pin_config_t gpio_config = {kGPIO_DigitalOutput, 0, kGPIO_NoIntmode};
 +
 +    GPIO_PinInit(GPIO4, 2, &gpio_config);
 +
-+	GPIO_WritePinOutput(GPIO4, 2, 0);
++    GPIO_WritePinOutput(GPIO4, 2, 0);
 +    SDK_DelayAtLeastUs(10000, SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY);
 +    GPIO_WritePinOutput(GPIO4, 2, 1);
 +    SDK_DelayAtLeastUs(30000, SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY);
@@ -2346,5 +2351,5 @@ index 000000000..11e4207c9
 +    return 0;
 +}
 -- 
-2.17.1
+2.25.1
 
