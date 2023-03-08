@@ -1,5 +1,5 @@
 Release Name: Yocto layer NXP RTOS Industrial
-Release Version: 2.4
+Release Version: 2.5
 Package License: LA_OPT_NXP_Software_License.txt - Additional Distribution License granted, license in Section 2.3 applies
 
 SDK_Peripheral_Driver      Name: SDK Peripheral Driver
@@ -278,5 +278,5 @@ soem                       Name: soem
                            License File: gpl-2.0.txt
                            Format: source
                            Description: Simple Open EtherCAT Master Library
-                           Location: https://github.com/NXPmicro/soem.git
+                           Location: https://github.com/nxp-real-time-edge-sw/soem.git
                            Origin: OpenEtherCATsociety (GPL-2.0) - https://github.com/OpenEtherCATsociety/SOEM
