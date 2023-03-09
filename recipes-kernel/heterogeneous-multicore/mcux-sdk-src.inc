@@ -8,16 +8,13 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7ca
 # find the patch(es) in SRC_URI.
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-DNIND_BASE = "git@bitbucket.sw.nxp.com/dnind"
-NXPMICRO_BASE = "github.com/NXPmicro"
-MCUX_SDK_BRANCH = "feature/heterogeneous_multicore"
-FREERTOS_BRANCH = "feature/aarch64_support"
+NXPMICRO_BASE = "github.com/nxp-mcuxpresso"
 
 SRCREV_FORMAT = "mcux-sdk"
 
 SRC_URI = "\
-    git://${DNIND_BASE}/mcux-sdk.git;protocol=ssh;branch=${MCUX_SDK_BRANCH};destsuffix=git/mcux-sdk;name=mcux-sdk \
-    git://${DNIND_BASE}/FreeRTOS-Kernel.git;protocol=ssh;branch=${FREERTOS_BRANCH};destsuffix=git/FreeRTOS-Kernel;name=FreeRTOS-Kernel \
+    git://${NXPMICRO_BASE}/mcux-sdk.git;protocol=https;nobranch=1;destsuffix=git/mcux-sdk;name=mcux-sdk \
+    git://${NXPMICRO_BASE}/FreeRTOS-Kernel.git;protocol=https;nobranch=1;destsuffix=git/FreeRTOS-Kernel;name=FreeRTOS-Kernel \
     "
 
 S = "${WORKDIR}/git"
