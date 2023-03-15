@@ -1,7 +1,7 @@
-From d0ec5ad1639edcb07c29c5044c90cdb7a1af8019 Mon Sep 17 00:00:00 2001
+From 79f56259fe09eb67492714d505efc112a0e23777 Mon Sep 17 00:00:00 2001
 From: Tao Yang <Tao.Yang1@nxp.com>
-Date: Mon, 13 Feb 2023 19:58:53 +0800
-Subject: [PATCH 2/3] REL_2.13.1_IMX93_PRC2_RC1_0: move structure to header
+Date: Tue, 14 Mar 2023 13:13:59 +0800
+Subject: [PATCH 2/3] REL_2.13.1_IMX93_PRC2_RC3_0: move structure to header
 
 Signed-off-by: Tao Yang <Tao.Yang1@nxp.com>
 ---
@@ -126,5 +126,5 @@ index 37e05de..65abb97 100644
   * a different interface is used, when the local processor is the MASTER
   * and when it is the REMOTE.
 -- 
-2.17.1
+2.25.1
 

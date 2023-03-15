@@ -9,9 +9,9 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI = " \
     file://SDK_2_13_1_MCIMX93-EVK.tar.gz \
-    file://0001-REL_2.13.1_IMX93_PRC2_RC1_0-add-srtm-uart-service.patch \
-    file://0002-REL_2.13.1_IMX93_PRC2_RC1_0-move-structure-to-header.patch \
-    file://0003-REL_2.13.1_IMX93_PRC2_RC1_0-add-demo-rpmsg_lite_uart.patch \
+    file://0001-REL_2.13.1_IMX93_PRC2_RC3_0-add-srtm-uart-service.patch \
+    file://0002-REL_2.13.1_IMX93_PRC2_RC3_0-move-structure-to-header.patch \
+    file://0003-REL_2.13.1_IMX93_PRC2_RC3_0-add-rpmsg_lite_uart_shar.patch \
 "
 
 MCUX_EXAMPLE_DIR = "boards/${RTOS-INDUSTRIAL-BOARD}/multicore_examples/rpmsg_lite_uart_sharing_rtos"

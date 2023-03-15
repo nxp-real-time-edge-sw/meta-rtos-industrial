@@ -1,8 +1,8 @@
-From 1b294f34d03376ab54c385ae9155010b3760dfe3 Mon Sep 17 00:00:00 2001
+From 24c9b8890133437ae3f9337ab0b272c3fd7c5452 Mon Sep 17 00:00:00 2001
 From: Tao Yang <Tao.Yang1@nxp.com>
-Date: Mon, 13 Feb 2023 19:59:32 +0800
-Subject: [PATCH 3/3] REL_2.13.1_IMX93_PRC2_RC1_0: add demo
- rpmsg_lite_uart_sharing_rtos
+Date: Tue, 14 Mar 2023 13:23:20 +0800
+Subject: [PATCH 3/3] REL_2.13.1_IMX93_PRC2_RC3_0: add
+ rpmsg_lite_uart_sharing_rtos demo
 
 Signed-off-by: Tao Yang <Tao.Yang1@nxp.com>
 ---
@@ -2975,5 +2975,5 @@ index 0000000..793e6bb
 +#endif
 +#endif /* _SRTM_CONFIG_H */
 -- 
-2.17.1
+2.25.1
 
