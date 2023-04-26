@@ -1,6 +1,0 @@
-# Copyright 2022-2023 NXP
-
-SRCREV_mcux-sdk = "75c2e671a2128ba95f733b83184ef4c997dd5c54"
-SRCREV_FreeRTOS-Kernel = "27bb9bb8ab283f2d802e28b485d4ca0531f66ba6"
-
-PV = "2.12.0"

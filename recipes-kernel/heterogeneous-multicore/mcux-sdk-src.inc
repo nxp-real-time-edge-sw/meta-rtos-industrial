@@ -8,19 +8,18 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7ca
 # find the patch(es) in SRC_URI.
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-NXPMICRO_BASE = "github.com/nxp-mcuxpresso"
-
 SRCREV_FORMAT = "mcux-sdk"
 
-SRC_URI = "\
-    git://${NXPMICRO_BASE}/mcux-sdk.git;protocol=https;nobranch=1;destsuffix=git/mcux-sdk;name=mcux-sdk \
-    git://${NXPMICRO_BASE}/FreeRTOS-Kernel.git;protocol=https;nobranch=1;destsuffix=git/FreeRTOS-Kernel;name=FreeRTOS-Kernel \
-    "
+SRC_URI = " \
+    ${MCUX_SDK_SRC};destsuffix=git/mcux-sdk;name=mcux-sdk \
+    ${CMSIS_SRC};destsuffix=git/mcux-sdk/CMSIS;name=CMSIS \
+    ${FREERTOS_KERNEL_SRC};destsuffix=git/FreeRTOS-Kernel;name=FreeRTOS-Kernel \
+"
+
+SRCREV_mcux-sdk = "${AUTOREV}"
+SRCREV_CMSIS = "${AUTOREV}"
+SRCREV_FreeRTOS-Kernel = "${AUTOREV}"
 
 S = "${WORKDIR}/git"
-
-# Default to a stable version
-PREFERRED_VERSION_MCUX-SDK ??= "2.12.0"
-require mcux-sdk-src-${PREFERRED_VERSION_MCUX-SDK}.inc
 
 PACKAGES = "${PN}"
