@@ -8,19 +8,17 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7ca
 # find the patch(es) in SRC_URI.
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-NXPMICRO_BASE = "github.com/nxp-mcuxpresso"
-NXP_BASE = "github.com/NXP"
-NXP_REAL_TIME_EDGE_BASE="github.com/nxp-real-time-edge-sw"
-
 SRCREV_FORMAT = "mcux-sdk"
 
 SRC_URI = "\
-    git://${NXPMICRO_BASE}/mcux-sdk.git;protocol=https;nobranch=1;destsuffix=git/core;name=mcux-sdk \
-    git://${NXPMICRO_BASE}/mcux-sdk-examples;protocol=https;nobranch=1;destsuffix=git/examples;name=mcux-sdk-examples \
-    git://${NXPMICRO_BASE}/FreeRTOS-Kernel.git;protocol=https;nobranch=1;destsuffix=git/rtos/freertos/freertos_kernel;name=FreeRTOS-Kernel \
+    ${MCUX_SDK_SRC};destsuffix=git/core;name=mcux-sdk \
+    ${MCUX_SDK_EXAMPLES_SRC};destsuffix=git/examples;name=mcux-sdk-examples \
+    ${CMSIS_SRC};destsuffix=git/core/CMSIS;name=CMSIS \
+    ${FREERTOS_KERNEL_SRC};destsuffix=git/rtos/freertos/freertos_kernel;name=FreeRTOS-Kernel \
+    ${MCUX_SDK_MIDDLEWARE_MULTICORE_SRC};destsuffix=git/middleware/multicore;name=mcux-sdk-middleware-multicore \
+    ${RPMSG_LITE_SRC};destsuffix=git/middleware/multicore/rpmsg_lite;name=rpmsg-lite \
+    ${SOEM_SRC};destsuffix=git/core/components/SOEM;name=SOEM \
     git://${NXPMICRO_BASE}/mcux-sdk-middleware-sdmmc.git;protocol=https;nobranch=1;destsuffix=git/middleware/sdmmc;name=mcux-sdk-middleware-sdmmc \
-    git://${NXPMICRO_BASE}/mcux-sdk-middleware-multicore.git;protocol=https;nobranch=1;destsuffix=git/middleware/multicore;name=mcux-sdk-middleware-multicore \
-    git://${NXPMICRO_BASE}/rpmsg-lite.git;protocol=https;nobranch=1;destsuffix=git/middleware/multicore/rpmsg_lite;name=rpmsg-lite \
     git://github.com/EmbeddedRPC/erpc;protocol=https;nobranch=1;destsuffix=git/middleware/multicore/erpc;name=erpc \
     git://${NXPMICRO_BASE}/mcux-soc-svd.git;protocol=https;nobranch=1;destsuffix=git/svd;name=mcux-soc-svd \
     git://${NXPMICRO_BASE}/fatfs.git;protocol=https;nobranch=1;destsuffix=git/middleware/fatfs;name=fatfs \
@@ -38,13 +36,21 @@ SRC_URI = "\
     git://${NXP_BASE}/netxduo.git;protocol=https;nobranch=1;destsuffix=git/rtos/azure-rtos/netduo;name=netxduo \
     git://${NXP_BASE}/usbx.git;protocol=https;nobranch=1;destsuffix=git/rtos/azure-rtos/usbx;name=usbx \
     git://${NXP_BASE}/guix.git;protocol=https;nobranch=1;destsuffix=git/rtos/azure-rtos/guix;name=guix \
-    git://${NXP_REAL_TIME_EDGE_BASE}/soem.git;protocol=https;nobranch=1;destsuffix=git/core/components/SOEM;name=SOEM \
-    "
+    git://${NXPMICRO_BASE}/mbedtls.git;protocol=https;nobranch=1;destsuffix=git/middleware/mbedtls;name=mbedtls \
+    git://${NXP_BASE}/wifi_nxp.git;protocol=https;nobranch=1;destsuffix=git/middleware/wifi_nxp;name=wifi-nxp \
+    git://${NXPMICRO_BASE}/lwip.git;protocol=https;nobranch=1;destsuffix=git/middleware/lwip;name=lwip \
+    git://${NXPMICRO_BASE}/littlefs.git;protocol=https;nobranch=1;destsuffix=git/middleware/littlefs;name=littlefs \
+    git://${NXPMICRO_BASE}/maestro.git;protocol=https;nobranch=1;destsuffix=git/middleware/maestro;name=maestro \
+    git://${NXP_ZEPHYR_BASE}/mcuboot.git;protocol=https;nobranch=1;destsuffix=git/middleware/mcuboot_opensource;name=mcuboot \
+    git://${NXPMICRO_BASE}/EAP.git;protocol=https;nobranch=1;destsuffix=git/middleware/EAP;name=EAP \
+    git://${NXPMICRO_BASE}/vit.git;protocol=https;nobranch=1;destsuffix=git/middleware/vit;name=vit \
+    git://${NXPMICRO_BASE}/VoiceSeeker.git;protocol=https;nobranch=1;destsuffix=git/middleware/voice_seeker;name=VoiceSeeker \
+"
 
 S = "${WORKDIR}/git"
 
 # Default to a stable version
-PREFERRED_VERSION_MCUX-SDK ??= "2.12.0"
+PREFERRED_VERSION_MCUX-SDK ??= "2.13.1"
 require mcux-sdk-src-${PREFERRED_VERSION_MCUX-SDK}.inc
 
 PACKAGES = "${PN}"
