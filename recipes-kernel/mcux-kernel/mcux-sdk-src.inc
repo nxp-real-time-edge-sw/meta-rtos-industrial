@@ -14,7 +14,7 @@ SRC_URI = "\
     ${MCUX_SDK_SRC};destsuffix=git/core;name=mcux-sdk \
     ${MCUX_SDK_EXAMPLES_SRC};destsuffix=git/examples;name=mcux-sdk-examples \
     ${CMSIS_SRC};destsuffix=git/core/CMSIS;name=CMSIS \
-    ${FREERTOS_KERNEL_SRC};destsuffix=git/rtos/freertos/freertos_kernel;name=FreeRTOS-Kernel \
+    ${FREERTOS_KERNEL_SRC};destsuffix=git/rtos/freertos/freertos-kernel;name=FreeRTOS-Kernel \
     ${MCUX_SDK_MIDDLEWARE_MULTICORE_SRC};destsuffix=git/middleware/multicore;name=mcux-sdk-middleware-multicore \
     ${RPMSG_LITE_SRC};destsuffix=git/middleware/multicore/rpmsg_lite;name=rpmsg-lite \
     ${SOEM_SRC};destsuffix=git/core/components/SOEM;name=SOEM \
