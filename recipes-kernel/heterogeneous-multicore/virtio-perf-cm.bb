@@ -2,4 +2,4 @@
 
 include hmc-example.inc
 
-HMC_EXAMPLE_DIR = "heterogeneous-multicore/apps/virtio_perf/freertos/boards/${RTOS-INDUSTRIAL-BOARD}_cm4"
+HMC_EXAMPLE_DIR = "heterogeneous-multicore/apps/virtio_perf/freertos/boards/${RTOS-INDUSTRIAL-BOARD-CM}"
