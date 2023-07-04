@@ -24,6 +24,8 @@ ARMGCC_DIR ?= "${WORKDIR}/recipe-sysroot-native${libexecdir}/gcc-arm-none-eabi"
 
 EXAMPLE_ARMGCC_DIR = "${S}/${MCUX_EXAMPLE_DIR}/armgcc"
 
+EXAMPLE_INSTALL_DIR = "examples/mcux-sdk"
+
 do_compile() {
     export ARMGCC_DIR="${ARMGCC_DIR}"
     echo "Start to compile example with ${ARMGCC_DIR}"
@@ -46,21 +48,21 @@ do_compile() {
 FILES:${PN} += "/examples/*"
 
 do_install () {
-    install -d ${D}/examples/${PN}
+    install -d ${D}/${EXAMPLE_INSTALL_DIR}/${PN}
 
     for target in ${EXAMPLE_TARGET_TYPE}; do
         if [ -d "${EXAMPLE_ARMGCC_DIR}/${target}" ]; then
-            cp -r ${EXAMPLE_ARMGCC_DIR}/${target}  ${D}/examples/${PN}
+            cp -r ${EXAMPLE_ARMGCC_DIR}/${target}  ${D}/${EXAMPLE_INSTALL_DIR}/${PN}
         fi
     done
 }
 
 do_deploy () {
-    install -d ${DEPLOYDIR}/examples/${PN}
+    install -d ${DEPLOYDIR}/${EXAMPLE_INSTALL_DIR}/${PN}
 
     for target in ${EXAMPLE_TARGET_TYPE}; do
         if [ -d "${EXAMPLE_ARMGCC_DIR}/${target}" ]; then
-            cp -r ${EXAMPLE_ARMGCC_DIR}/${target}  ${DEPLOYDIR}/examples/${PN}
+            cp -r ${EXAMPLE_ARMGCC_DIR}/${target}  ${DEPLOYDIR}/${EXAMPLE_INSTALL_DIR}/${PN}
         fi
     done
 }
