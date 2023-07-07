@@ -7,4 +7,4 @@ NXP_REAL_TIME_EDGE_BASE="github.com/nxp-real-time-edge-sw"
 SRC_URI += "${HETEROGENEOUS_MULTICORE_SRC};destsuffix=git/heterogeneous-multicore;name=heterogeneous-multicore"
 
 SRCREV_FORMAT:append = "_heterogeneous-multicore"
-SRCREV_heterogeneous-multicore = "ca9b3b09f4b7bb4f3becbd2d64baee49137a978e"
+SRCREV_heterogeneous-multicore = "33f240780cc992be41b73203c5185db26aa4b9a6"
