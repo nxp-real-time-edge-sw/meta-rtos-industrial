@@ -1,12 +1,12 @@
 # Copyright 2022-2023 NXP
 
-SRCREV_mcux-sdk = "${AUTOREV}"
-SRCREV_CMSIS = "${AUTOREV}"
-SRCREV_mcux-sdk-examples = "${AUTOREV}"
-SRCREV_FreeRTOS-Kernel = "${AUTOREV}"
-SRCREV_mcux-sdk-middleware-multicore = "${AUTOREV}"
-SRCREV_rpmsg-lite = "${AUTOREV}"
-SRCREV_SOEM = "${AUTOREV}"
+SRCREV_mcux-sdk = "6f07efa02e9a449e98971e032ec8a480c693a17c"
+SRCREV_CMSIS = "43707031e8a26930a14b4c63be877d30661b3d82"
+SRCREV_mcux-sdk-examples = "becd507dd75323456d98c10898d5c7d4368204a2"
+SRCREV_FreeRTOS-Kernel = "2236f887ee773c267515b17d023c77e305efb0f1"
+SRCREV_mcux-sdk-middleware-multicore = "2d89233a3be1f9533bd948f33dd6d0275d72cedd"
+SRCREV_rpmsg-lite = "b1e81b1aac8804119d552b6f4f813bea330f90cb"
+SRCREV_SOEM = "3674cf1ab98d3fa0baf76e1ece2fb87f85c700d2"
 
 SRCREV_mcux-sdk-middleware-sdmmc = "4d28a2853f95467f637a6a3f42187a9ecd7df5ed"
 SRCREV_erpc = "c4dadeab4a60dc9c302d85eceedb81b85a5f991d"
