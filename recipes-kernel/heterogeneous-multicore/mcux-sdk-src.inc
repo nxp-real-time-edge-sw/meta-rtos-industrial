@@ -16,9 +16,9 @@ SRC_URI = " \
     ${FREERTOS_KERNEL_SRC};destsuffix=git/FreeRTOS-Kernel;name=FreeRTOS-Kernel \
 "
 
-SRCREV_mcux-sdk = "6f07efa02e9a449e98971e032ec8a480c693a17c"
-SRCREV_CMSIS = "43707031e8a26930a14b4c63be877d30661b3d82"
-SRCREV_FreeRTOS-Kernel = "2236f887ee773c267515b17d023c77e305efb0f1"
+SRCREV_mcux-sdk = "${AUTOREV}"
+SRCREV_CMSIS = "${AUTOREV}"
+SRCREV_FreeRTOS-Kernel = "${AUTOREV}"
 
 S = "${WORKDIR}/git"
 
