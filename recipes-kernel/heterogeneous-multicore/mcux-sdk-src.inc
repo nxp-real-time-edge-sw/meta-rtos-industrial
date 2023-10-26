@@ -16,6 +16,7 @@ SRC_URI = " \
     ${FREERTOS_KERNEL_SRC};destsuffix=git/FreeRTOS-Kernel;name=FreeRTOS-Kernel \
     ${RPMSG_LITE_SRC};destsuffix=git/middleware/multicore/rpmsg_lite;name=rpmsg-lite \
     ${LWIP_SRC};destsuffix=git/middleware/lwip;name=lwip \
+    ${MCUX_SDK_MIDDLEWARE_MULTICORE_SRC};destsuffix=git/middleware/multicore;name=mcux-sdk-middleware-multicore \
 "
 
 SRCREV_mcux-sdk = "${AUTOREV}"
@@ -23,6 +24,7 @@ SRCREV_CMSIS = "${AUTOREV}"
 SRCREV_FreeRTOS-Kernel = "${AUTOREV}"
 SRCREV_rpmsg-lite = "${AUTOREV}"
 SRCREV_lwip = "${AUTOREV}"
+SRCREV_mcux-sdk-middleware-multicore = "${AUTOREV}"
 
 S = "${WORKDIR}/git"
 
