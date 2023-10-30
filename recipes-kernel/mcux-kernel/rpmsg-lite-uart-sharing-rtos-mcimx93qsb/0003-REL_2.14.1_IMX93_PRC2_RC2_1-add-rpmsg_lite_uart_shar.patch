@@ -1,0 +1,3510 @@
+From 92d49402b0922efddb1a2277c8d72e4d2d284da7 Mon Sep 17 00:00:00 2001
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Date: Tue, 14 Mar 2023 13:23:20 +0800
+Subject: [PATCH 3/3] REL_2.14.1_IMX93_PRC2_RC2_1: add
+ rpmsg_lite_uart_sharing_rtos demo
+
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+---
+ .../FreeRTOSConfig.h                          | 183 +++++
+ .../rpmsg_lite_uart_sharing_rtos/app_srtm.c   | 352 +++++++++
+ .../rpmsg_lite_uart_sharing_rtos/app_srtm.h   |  76 ++
+ .../armgcc/CMakeLists.txt                     |  90 +++
+ .../armgcc/MIMX9322_cm33_ram.ld               | 243 ++++++
+ .../armgcc/build_all.bat                      |  15 +
+ .../armgcc/build_all.sh                       |  15 +
+ .../armgcc/build_debug.bat                    |   6 +
+ .../armgcc/build_debug.sh                     |   7 +
+ .../armgcc/build_release.bat                  |   6 +
+ .../armgcc/build_release.sh                   |   7 +
+ .../armgcc/clean.bat                          |   3 +
+ .../armgcc/clean.sh                           |   3 +
+ .../armgcc/config.cmake                       |  43 +
+ .../armgcc/flags.cmake                        | 203 +++++
+ .../rpmsg_lite_uart_sharing_rtos/board.c      | 746 ++++++++++++++++++
+ .../rpmsg_lite_uart_sharing_rtos/board.h      | 235 ++++++
+ .../clock_config.c                            |  96 +++
+ .../clock_config.h                            |  28 +
+ .../main_remote.c                             |  96 +++
+ .../rpmsg_lite_uart_sharing_rtos/pin_mux.c    |  72 ++
+ .../rpmsg_lite_uart_sharing_rtos/pin_mux.h    |  53 ++
+ .../rpmsg_lite_uart_sharing_rtos/readme.txt   |  78 ++
+ .../rpmsg_lite_uart_sharing_rtos/remoteproc.h | 372 +++++++++
+ .../rpmsg_config.h                            |  78 ++
+ .../rpmsg_lite_uart_sharing_rtos/rsc_table.c  |  84 ++
+ .../rpmsg_lite_uart_sharing_rtos/rsc_table.h  |  55 ++
+ .../srtm_config.h                             |  28 +
+ 28 files changed, 3273 insertions(+)
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/FreeRTOSConfig.h
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/app_srtm.c
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/app_srtm.h
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/CMakeLists.txt
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/MIMX9322_cm33_ram.ld
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_all.bat
+ create mode 100755 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_all.sh
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_debug.bat
+ create mode 100755 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_debug.sh
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_release.bat
+ create mode 100755 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_release.sh
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/clean.bat
+ create mode 100755 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/clean.sh
+ create mode 100755 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/config.cmake
+ create mode 100755 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/flags.cmake
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/board.c
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/board.h
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/clock_config.c
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/clock_config.h
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/main_remote.c
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/pin_mux.c
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/pin_mux.h
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/readme.txt
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/remoteproc.h
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/rpmsg_config.h
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/rsc_table.c
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/rsc_table.h
+ create mode 100644 boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/srtm_config.h
+
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/FreeRTOSConfig.h b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/FreeRTOSConfig.h
+new file mode 100644
+index 0000000..41e92e1
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/FreeRTOSConfig.h
+@@ -0,0 +1,183 @@
++/*
++ * FreeRTOS Kernel V10.4.3
++ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a copy of
++ * this software and associated documentation files (the "Software"), to deal in
++ * the Software without restriction, including without limitation the rights to
++ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
++ * the Software, and to permit persons to whom the Software is furnished to do so,
++ * subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice shall be included in all
++ * copies or substantial portions of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
++ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
++ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
++ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
++ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++ *
++ * https://www.FreeRTOS.org
++ * https://github.com/FreeRTOS
++ *
++ * Copyright 2023 NXP
++ *
++ */
++
++#ifndef FREERTOS_CONFIG_H
++#define FREERTOS_CONFIG_H
++
++/*-----------------------------------------------------------
++ * Application specific definitions.
++ *
++ * These definitions should be adjusted for your particular hardware and
++ * application requirements.
++ *
++ * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
++ * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
++ *
++ * See http://www.freertos.org/a00110.html.
++ *----------------------------------------------------------*/
++
++#define configUSE_PREEMPTION                    1
++#define configUSE_TICKLESS_IDLE                 0
++#define configCPU_CLOCK_HZ                      (SystemCoreClock)
++#define configTICK_RATE_HZ                      ((TickType_t)1000)
++#define configMAX_PRIORITIES                    5
++#define configMINIMAL_STACK_SIZE                ((unsigned short)90)
++#define configMAX_TASK_NAME_LEN                 10
++#define configUSE_16_BIT_TICKS                  0
++#define configIDLE_SHOULD_YIELD                 1
++#define configUSE_TASK_NOTIFICATIONS            1
++#define configUSE_MUTEXES                       1
++#define configUSE_RECURSIVE_MUTEXES             1
++#define configUSE_COUNTING_SEMAPHORES           1
++#define configUSE_ALTERNATIVE_API               0 /* Deprecated! */
++#define configQUEUE_REGISTRY_SIZE               8
++#define configUSE_QUEUE_SETS                    0
++#define configUSE_TIME_SLICING                  0
++#define configUSE_NEWLIB_REENTRANT              0
++#define configENABLE_BACKWARD_COMPATIBILITY     0
++#define configNUM_THREAD_LOCAL_STORAGE_POINTERS 5
++
++/* Used memory allocation (heap_x.c) */
++#define configFRTOS_MEMORY_SCHEME               4
++/* Tasks.c additions (e.g. Thread Aware Debug capability) */
++#define configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H 1
++
++/* Memory allocation related definitions. */
++#define configSUPPORT_STATIC_ALLOCATION         0
++#define configSUPPORT_DYNAMIC_ALLOCATION        1
++#define configAPPLICATION_ALLOCATED_HEAP        0
++
++/* Hook function related definitions. */
++#define configUSE_IDLE_HOOK                     0
++#define configUSE_TICK_HOOK                     0
++#define configCHECK_FOR_STACK_OVERFLOW          0
++#define configUSE_MALLOC_FAILED_HOOK            0
++#define configUSE_DAEMON_TASK_STARTUP_HOOK      0
++
++/* Run time and task stats gathering related definitions. */
++#define configGENERATE_RUN_TIME_STATS           0
++#define configUSE_TRACE_FACILITY                1
++#define configUSE_STATS_FORMATTING_FUNCTIONS    0
++
++/* Task aware debugging. */
++#define configRECORD_STACK_HIGH_ADDRESS         1
++
++/* Co-routine related definitions. */
++#define configUSE_CO_ROUTINES                   0
++#define configMAX_CO_ROUTINE_PRIORITIES         2
++
++/* Software timer related definitions. */
++#define configUSE_TIMERS                        1
++#define configTIMER_TASK_PRIORITY               2
++#define configTIMER_QUEUE_LENGTH                10
++#define configTIMER_TASK_STACK_DEPTH            (configMINIMAL_STACK_SIZE * 2)
++
++#define configASSERT_BOOL(x) if(( x) == 0) {taskDISABLE_INTERRUPTS(); for (;;);}
++#define configASSERT(x) configASSERT_BOOL((x)!=0)
++
++/* Optional functions - most linkers will remove unused functions anyway. */
++#define INCLUDE_vTaskPrioritySet                1
++#define INCLUDE_uxTaskPriorityGet               1
++#define INCLUDE_vTaskDelete                     1
++#define INCLUDE_vTaskSuspend                    1
++#define INCLUDE_vTaskDelayUntil                 1
++#define INCLUDE_vTaskDelay                      1
++#define INCLUDE_xTaskGetSchedulerState          1
++#define INCLUDE_xTaskGetCurrentTaskHandle       1
++#define INCLUDE_uxTaskGetStackHighWaterMark     0
++#define INCLUDE_xTaskGetIdleTaskHandle          0
++#define INCLUDE_eTaskGetState                   0
++#define INCLUDE_xTimerPendFunctionCall          1
++#define INCLUDE_xTaskAbortDelay                 0
++#define INCLUDE_xTaskGetHandle                  0
++#define INCLUDE_xTaskResumeFromISR              1
++
++
++
++#if defined(__ICCARM__)||defined(__CC_ARM)||defined(__GNUC__)
++    /* Clock manager provides in this variable system core clock frequency */
++    #include <stdint.h>
++    extern uint32_t SystemCoreClock;
++#endif
++
++
++#ifndef configENABLE_FPU
++  #define configENABLE_FPU                        1
++#endif
++#ifndef configENABLE_MPU
++  #define configENABLE_MPU                        0
++#endif
++#ifndef configENABLE_TRUSTZONE
++  #define configENABLE_TRUSTZONE                  0
++#endif
++#ifndef configRUN_FREERTOS_SECURE_ONLY
++  #define configRUN_FREERTOS_SECURE_ONLY          1
++#endif
++
++/* Redefine: Mutex is needed for SRTM communication */
++#undef configUSE_MUTEXES
++#define configUSE_MUTEXES                       1
++
++#ifndef configTOTAL_HEAP_SIZE
++#define configTOTAL_HEAP_SIZE ((size_t)(40 * 1024))
++#endif
++
++/* Interrupt nesting behaviour configuration. Cortex-M specific. */
++#ifdef __NVIC_PRIO_BITS
++/* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
++#define configPRIO_BITS __NVIC_PRIO_BITS
++#else
++#define configPRIO_BITS 3 /* 7 priority levels */
++#endif
++
++#define configSTACK_DEPTH_TYPE uint32_t
++
++/* The lowest interrupt priority that can be used in a call to a "set priority"
++function. */
++#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY ((1U << (configPRIO_BITS)) - 1)
++
++/* The highest interrupt priority that can be used by any interrupt service
++routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL
++INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER
++PRIORITY THAN THIS! (higher priorities are lower numeric values. */
++#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY 2
++
++/* Interrupt priorities used by the kernel port layer itself.  These are generic
++to all Cortex-M ports, and do not rely on any particular library functions. */
++#define configKERNEL_INTERRUPT_PRIORITY (configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS))
++/* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
++See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
++#define configMAX_SYSCALL_INTERRUPT_PRIORITY (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS))
++
++/* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
++standard names. */
++#define vPortSVCHandler SVC_Handler
++#define vPortPendSVHandler PendSV_Handler
++#define vPortSysTickHandler SysTick_Handler
++
++#endif /* FREERTOS_CONFIG_H */
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/app_srtm.c b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/app_srtm.c
+new file mode 100644
+index 0000000..7709c1e
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/app_srtm.c
+@@ -0,0 +1,352 @@
++/*
++ * Copyright 2023 NXP
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++#include "FreeRTOS.h"
++#include "task.h"
++#include "timers.h"
++#include "semphr.h"
++
++#include "srtm_dispatcher.h"
++#include "srtm_peercore.h"
++#include "srtm_message.h"
++#include "srtm_rpmsg_endpoint.h"
++#include "srtm_uart_adapter.h"
++#include "srtm_uart_service.h"
++
++#include "app_srtm.h"
++#include "board.h"
++#include "rsc_table.h"
++#include "fsl_mu.h"
++#include "fsl_debug_console.h"
++
++/*******************************************************************************
++ * Definitions
++ ******************************************************************************/
++
++/*******************************************************************************
++ * Prototypes
++ ******************************************************************************/
++
++/*******************************************************************************
++ * Variables
++ ******************************************************************************/
++
++static srtm_dispatcher_t disp;
++static srtm_peercore_t core;
++static srtm_service_t uartService = NULL;
++static srtm_uart_adapter_t uartAdapter = NULL;
++static SemaphoreHandle_t monSig;
++volatile app_srtm_state_t srtmState;
++static struct rpmsg_lite_instance *rpmsgHandle;
++static app_rpmsg_monitor_t rpmsgMonitor;
++static void *rpmsgMonitorParam;
++static TimerHandle_t linkupTimer;
++
++static SERIAL_MANAGER_HANDLE_DEFINE(serialHandle5);
++static SERIAL_MANAGER_WRITE_HANDLE_DEFINE(serialWriteHandle5);
++static SERIAL_MANAGER_READ_HANDLE_DEFINE(serialReadHandle5);
++/* don't have LPUART0, so +1 to skip LPUART0(seq is start from 1, such as: LPUART1, LPUART2...) */
++static serial_handle_t serialHandles[FSL_FEATURE_SOC_LPUART_COUNT + 1] = { NULL, NULL, NULL, NULL, NULL, (serial_handle_t)serialHandle5, NULL, NULL, NULL}; /* lpuart5 is used */
++static serial_write_handle_t serialWriteHandles[FSL_FEATURE_SOC_LPUART_COUNT + 1] = { NULL, NULL, NULL, NULL, NULL, (serial_write_handle_t)serialWriteHandle5, NULL, NULL, NULL}; /* lpuart5 is used */
++static serial_read_handle_t serialReadHandles[FSL_FEATURE_SOC_LPUART_COUNT + 1] = { NULL, NULL, NULL, NULL, NULL, (serial_read_handle_t)serialReadHandle5, NULL, NULL, NULL}; /* lpuart5 is used */
++static uint8_t s_ringBuffer[APP_SRTM_UART_SERIAL_MANAGER_RING_BUFFER_SIZE];
++
++/*******************************************************************************
++ * Code
++ ******************************************************************************/
++
++void APP_SRTM_SetRpmsgMonitor(app_rpmsg_monitor_t monitor, void *param)
++{
++    rpmsgMonitor      = monitor;
++    rpmsgMonitorParam = param;
++}
++
++static srtm_status_t APP_SRTM_InitUartDevice(void)
++{
++    srtm_status_t error = SRTM_Status_Error;
++    serial_port_uart_config_t uartConfig[ARRAY_SIZE(serialHandles)] = {0};
++    serial_manager_config_t serialManagerConfig[ARRAY_SIZE(serialHandles)] = {0};
++    int i = 0;
++
++    uartConfig[APP_SRTM_LPUART5_INSTANCE].clockRate = APP_SRTM_LPUART5_CLK_FREQ;
++    uartConfig[APP_SRTM_LPUART5_INSTANCE].baudRate = APP_SRTM_LPUART5_BAUDRATE;
++    uartConfig[APP_SRTM_LPUART5_INSTANCE].parityMode = kSerialManager_UartParityDisabled;
++    uartConfig[APP_SRTM_LPUART5_INSTANCE].stopBitCount = kSerialManager_UartOneStopBit;
++    uartConfig[APP_SRTM_LPUART5_INSTANCE].enableRx = 1;
++    uartConfig[APP_SRTM_LPUART5_INSTANCE].enableTx = 1;
++    uartConfig[APP_SRTM_LPUART5_INSTANCE].enableRxRTS = 0;
++    uartConfig[APP_SRTM_LPUART5_INSTANCE].enableTxCTS = 0;
++    uartConfig[APP_SRTM_LPUART5_INSTANCE].instance = APP_SRTM_LPUART5_INSTANCE;
++
++    serialManagerConfig[APP_SRTM_LPUART5_INSTANCE].type = APP_SRTM_UART_TYPE;
++    serialManagerConfig[APP_SRTM_LPUART5_INSTANCE].ringBuffer = &s_ringBuffer[0];
++    serialManagerConfig[APP_SRTM_LPUART5_INSTANCE].ringBufferSize = sizeof(s_ringBuffer);
++    serialManagerConfig[APP_SRTM_LPUART5_INSTANCE].blockType = APP_SRTM_UART_SERIAL_MANAGER_BLOCK_TYPE;
++    serialManagerConfig[APP_SRTM_LPUART5_INSTANCE].portConfig = (serial_port_uart_config_t *)&uartConfig[APP_SRTM_LPUART5_INSTANCE];
++
++    for (i = APP_SRTM_FIRST_UART_INSTANCE; i < ARRAY_SIZE(serialHandles); i++)
++    {
++        if (serialHandles[i] != NULL)
++        {
++            do {
++                if (SerialManager_Init((serial_handle_t)serialHandles[i], &serialManagerConfig[i]) != kStatus_SerialManager_Success)
++                    break;
++                if (SerialManager_OpenWriteHandle((serial_handle_t)serialHandles[i], (serial_write_handle_t)serialWriteHandles[i]) != kStatus_SerialManager_Success)
++                    break;
++                if (SerialManager_OpenReadHandle((serial_handle_t)serialHandles[i], (serial_read_handle_t)serialReadHandles[i]) != kStatus_SerialManager_Success)
++                    break;
++                if (SerialManager_InstallRxCallback((serial_read_handle_t)serialReadHandles[i], SRTM_Uart_RxCallBack, serialReadHandles[i]) != kStatus_SerialManager_Success)
++                    break;
++                if (SerialManager_InstallTxCallback((serial_write_handle_t)serialWriteHandles[i], SRTM_Uart_TxCallBack, serialWriteHandles[i]) != kStatus_SerialManager_Success)
++                    break;
++                error = SRTM_Status_Success;
++            } while(0);
++        }
++    }
++    return error;
++}
++
++static void APP_SRTM_InitUartService(void)
++{
++    if (SRTM_Status_Success == APP_SRTM_InitUartDevice())
++    {
++        uartAdapter = SRTM_UartAdapter_Create(serialHandles, serialWriteHandles, serialReadHandles, ARRAY_SIZE(serialHandles));
++        assert(uartAdapter);
++
++        /* Create and register serial service */
++        uartService = SRTM_UartService_Create(uartAdapter);
++        SRTM_Dispatcher_RegisterService(disp, uartService);
++    }
++    else
++    {
++        PRINTF("%s: %d Failed to Do Init SRTM Serial Service\r\n", __func__, __LINE__);
++    }
++}
++
++static void APP_SRTM_PollLinkup(srtm_dispatcher_t dispatcher, void *param1, void *param2)
++{
++    if (srtmState == APP_SRTM_StateRun)
++    {
++        if (rpmsg_lite_is_link_up(rpmsgHandle))
++        {
++            srtmState = APP_SRTM_StateLinkedUp;
++            xSemaphoreGive(monSig);
++        }
++        else
++        {
++            /* Start timer to poll linkup status. */
++            xTimerStart(linkupTimer, portMAX_DELAY);
++        }
++    }
++}
++
++static void APP_LinkupTimerCallback(TimerHandle_t xTimer)
++{
++    srtm_procedure_t proc = SRTM_Procedure_Create(APP_SRTM_PollLinkup, NULL, NULL);
++
++    if (proc)
++    {
++        SRTM_Dispatcher_PostProc(disp, proc);
++    }
++}
++
++static void APP_SRTM_Linkup(void)
++{
++    uint8_t uart_id = 0;
++    srtm_channel_t chan;
++    srtm_rpmsg_endpoint_config_t rpmsgConfig;
++
++    /* Create SRTM peer core */
++    core = SRTM_PeerCore_Create(PEER_CORE_ID);
++    /* Set peer core state to activated */
++    SRTM_PeerCore_SetState(core, SRTM_PeerCore_State_Activated);
++
++    /* Common RPMsg channel config */
++    rpmsgConfig.localAddr   = RL_ADDR_ANY;
++    rpmsgConfig.peerAddr    = RL_ADDR_ANY;
++    rpmsgConfig.rpmsgHandle = rpmsgHandle;
++
++    /* Create and add SRTM UART channel to peer core*/
++    rpmsgConfig.epName = APP_SRTM_UART_CHANNEL_NAME;
++    for (uart_id = 0; uart_id < APP_SRTM_UART_ENDPOINT_MAX_NUM; uart_id++)
++    {
++        chan = SRTM_RPMsgEndpoint_Create(&rpmsgConfig);
++        uartAdapter->bindChanByUartId(chan, SRTM_UART_INVALID_BUS_ID, 0U, uart_id);
++        SRTM_PeerCore_AddChannel(core, chan);
++    }
++
++    SRTM_Dispatcher_AddPeerCore(disp, core);
++}
++
++static void APP_SRTM_NotifyPeerCoreReady(struct rpmsg_lite_instance *rpmsgHandle, bool ready)
++{
++    /* deinit and init app task(str_echo/pingpong rpmsg) in APP_SRTM_StateReboot only */
++    if (rpmsgMonitor && (srtmState == APP_SRTM_StateReboot))
++    {
++        rpmsgMonitor(rpmsgHandle, ready, rpmsgMonitorParam);
++    }
++}
++
++static void APP_SRTM_InitPeerCore(void)
++{
++    copyResourceTable();
++
++    rpmsgHandle = rpmsg_lite_remote_init((void *)RPMSG_LITE_SRTM_SHMEM_BASE, RPMSG_LITE_SRTM_LINK_ID, RL_NO_FLAGS);
++    assert(rpmsgHandle);
++
++    APP_SRTM_NotifyPeerCoreReady(rpmsgHandle, true);
++
++    if (rpmsg_lite_is_link_up(rpmsgHandle))
++    {
++        APP_SRTM_Linkup();
++    }
++    else
++    {
++        /* Start timer to poll linkup status. */
++        xTimerStart(linkupTimer, portMAX_DELAY);
++    }
++}
++
++static void APP_SRTM_ResetServices(void)
++{
++    /* When A Core resets, we need to avoid async event to send to A Core, to do in here */
++}
++
++static void APP_SRTM_DeinitPeerCore(void)
++{
++    /* Stop linkupTimer if it's started. */
++    xTimerStop(linkupTimer, portMAX_DELAY);
++
++    /* Notify application for the peer core disconnection. */
++    APP_SRTM_NotifyPeerCoreReady(rpmsgHandle, false);
++
++    if (core)
++    {
++        /* Need to let services know peer core is now down. */
++        APP_SRTM_ResetServices();
++
++        SRTM_Dispatcher_RemovePeerCore(disp, core);
++        SRTM_PeerCore_Destroy(core);
++        core = NULL;
++    }
++
++    if (rpmsgHandle)
++    {
++        rpmsg_lite_deinit(rpmsgHandle);
++        rpmsgHandle = NULL;
++    }
++}
++
++static void APP_SRTM_InitServices(void)
++{
++    APP_SRTM_InitUartService();
++}
++
++static void SRTM_DispatcherTask(void *pvParameters)
++{
++    SRTM_Dispatcher_Run(disp);
++}
++
++static void SRTM_MonitorTask(void *pvParameters)
++{
++    app_srtm_state_t state = APP_SRTM_StateShutdown;
++
++    /* Initialize services and add to dispatcher */
++    APP_SRTM_InitServices();
++
++    /* Start SRTM dispatcher */
++    SRTM_Dispatcher_Start(disp);
++
++    /* Monitor peer core state change */
++    while (true)
++    {
++        xSemaphoreTake(monSig, portMAX_DELAY);
++
++        if (state == srtmState)
++        {
++            continue;
++        }
++
++        switch (srtmState)
++        {
++            case APP_SRTM_StateRun:
++                assert(state == APP_SRTM_StateShutdown);
++                PRINTF("Start SRTM communication\r\n");
++                SRTM_Dispatcher_Stop(disp);
++
++                APP_SRTM_InitPeerCore();
++                SRTM_Dispatcher_Start(disp);
++                state = APP_SRTM_StateRun;
++                break;
++
++            case APP_SRTM_StateLinkedUp:
++                if (state == APP_SRTM_StateRun)
++                {
++                    PRINTF("Handle Peer Core Linkup\r\n");
++                    SRTM_Dispatcher_Stop(disp);
++                    APP_SRTM_Linkup();
++                    SRTM_Dispatcher_Start(disp);
++                }
++                break;
++
++            case APP_SRTM_StateReboot:
++                assert(state == APP_SRTM_StateRun);
++
++                PRINTF("Handle Peer Core Reboot\r\n");
++
++                SRTM_Dispatcher_Stop(disp);
++                /* Remove peer core from dispatcher */
++                APP_SRTM_DeinitPeerCore();
++
++                /* enable clock of MU before accessing registers of MU */
++                MU_Init(RPMSG_LITE_M33_A55_MU);
++
++                /* Relase core */
++                MU_BootOtherCore(RPMSG_LITE_M33_A55_MU, (mu_core_boot_mode_t)0);
++
++                /* Initialize peer core and add to dispatcher */
++                APP_SRTM_InitPeerCore();
++
++                /* Restore srtmState to Run. */
++                srtmState = APP_SRTM_StateRun;
++
++                SRTM_Dispatcher_Start(disp);
++
++                /* hold A core for next reboot */
++		/* NOTE: MIMX9352 MU does not support hold the other core reset. */
++                //MU_HoldOtherCoreReset(RPMSG_LITE_M33_A55_MU);
++
++                /* Do not need to change state. It's still Run. */
++                break;
++
++            default:
++                assert(false);
++                break;
++        }
++    }
++}
++
++void APP_SRTM_Init(void)
++{
++    monSig = xSemaphoreCreateBinary();
++    assert(monSig);
++
++    linkupTimer =
++        xTimerCreate("Linkup", pdMS_TO_TICKS(APP_LINKUP_TIMER_PERIOD_MS), pdFALSE, NULL, APP_LinkupTimerCallback);
++    assert(linkupTimer);
++
++    /* Create SRTM dispatcher */
++    disp = SRTM_Dispatcher_Create();
++
++    xTaskCreate(SRTM_MonitorTask, "SRTM monitor", 256U, NULL, APP_SRTM_MONITOR_TASK_PRIO, NULL);
++    xTaskCreate(SRTM_DispatcherTask, "SRTM dispatcher", 512U, NULL, APP_SRTM_DISPATCHER_TASK_PRIO, NULL);
++}
++
++void APP_SRTM_StartCommunication(void)
++{
++    srtmState = APP_SRTM_StateRun;
++    xSemaphoreGive(monSig);
++}
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/app_srtm.h b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/app_srtm.h
+new file mode 100644
+index 0000000..9d9276e
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/app_srtm.h
+@@ -0,0 +1,76 @@
++/*
++ * Copyright 2023 NXP
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++#ifndef _APP_SRTM_H_
++#define _APP_SRTM_H_
++
++#include "rpmsg_lite.h"
++
++/*******************************************************************************
++ * Definitions
++ ******************************************************************************/
++#define APP_MS2TICK(ms) ((ms + portTICK_PERIOD_MS - 1) / portTICK_PERIOD_MS)
++
++#define APP_SRTM_LPUART5_CLK_FREQ CLOCK_GetIpFreq(kCLOCK_Root_Lpuart5)
++#define APP_SRTM_LPUART5_BAUDRATE (115200U)
++#define APP_SRTM_LPUART5_INSTANCE (5U)
++#define APP_SRTM_FIRST_UART_INSTANCE (1U)
++#define APP_SRTM_UART_SERIAL_MANAGER_RING_BUFFER_SIZE (1024U)
++#define APP_SRTM_UART_SERIAL_MANAGER_BLOCK_TYPE (kSerialManager_NonBlocking)
++#define APP_SRTM_UART_TYPE (kSerialPort_Uart)
++#define APP_SRTM_UART_RECEIVER_TASK_PRIO (3U)
++
++/* IRQ handler priority definition, bigger number stands for lower priority */
++
++/* Task priority definition, bigger number stands for higher priority */
++#define APP_SRTM_MONITOR_TASK_PRIO    (4U)
++#define APP_SRTM_DISPATCHER_TASK_PRIO (3U)
++
++/* Define the timeout ms to polling the A Core link up status */
++#define APP_LINKUP_TIMER_PERIOD_MS (10U)
++
++#define RPMSG_LITE_SRTM_SHMEM_BASE (VDEV0_VRING_BASE)
++#define RPMSG_LITE_SRTM_LINK_ID    (0U)
++
++/* for srtm uart service */
++#define APP_SRTM_UART_ENDPOINT_MAX_NUM (0x0BU) /* 11 endpoints are binded to srtm uart channel */
++#define APP_SRTM_UART_CHANNEL_NAME "srtm-uart-channel"
++
++#define PEER_CORE_ID (1U)
++
++typedef void (*app_rpmsg_monitor_t)(struct rpmsg_lite_instance *rpmsgHandle, bool ready, void *param);
++typedef void (*app_irq_handler_t)(IRQn_Type irq, void *param);
++
++/*******************************************************************************
++ * API
++ ******************************************************************************/
++
++#if defined(__cplusplus)
++extern "C" {
++#endif
++
++typedef enum
++{
++    APP_SRTM_StateRun = 0x0U,
++    APP_SRTM_StateLinkedUp,
++    APP_SRTM_StateReboot,
++    APP_SRTM_StateShutdown,
++} app_srtm_state_t;
++
++/* Initialize SRTM contexts */
++void APP_SRTM_Init(void);
++
++/* Create RPMsg channel and start SRTM communication */
++void APP_SRTM_StartCommunication(void);
++
++/* Set RPMsg channel init/deinit monitor */
++void APP_SRTM_SetRpmsgMonitor(app_rpmsg_monitor_t monitor, void *param);
++
++#if defined(__cplusplus)
++}
++#endif
++
++#endif /* _APP_SRTM_H_ */
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/CMakeLists.txt b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/CMakeLists.txt
+new file mode 100644
+index 0000000..df0abfd
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/CMakeLists.txt
+@@ -0,0 +1,90 @@
++# CROSS COMPILER SETTING
++SET(CMAKE_SYSTEM_NAME Generic)
++CMAKE_MINIMUM_REQUIRED (VERSION 3.10.0)
++
++# THE VERSION NUMBER
++SET (MCUXPRESSO_CMAKE_FORMAT_MAJOR_VERSION 2)
++SET (MCUXPRESSO_CMAKE_FORMAT_MINOR_VERSION 0)
++
++if(CMAKE_SCRIPT_MODE_FILE)
++  message("${MCUXPRESSO_CMAKE_FORMAT_MAJOR_VERSION}")
++  return()
++endif()
++
++
++# ENABLE ASM
++ENABLE_LANGUAGE(ASM)
++
++SET(CMAKE_STATIC_LIBRARY_PREFIX)
++SET(CMAKE_STATIC_LIBRARY_SUFFIX)
++
++SET(CMAKE_EXECUTABLE_LIBRARY_PREFIX)
++SET(CMAKE_EXECUTABLE_LIBRARY_SUFFIX)
++
++# CURRENT DIRECTORY
++SET(ProjDirPath ${CMAKE_CURRENT_SOURCE_DIR})
++
++SET(EXECUTABLE_OUTPUT_PATH ${ProjDirPath}/${CMAKE_BUILD_TYPE})
++SET(LIBRARY_OUTPUT_PATH ${ProjDirPath}/${CMAKE_BUILD_TYPE})
++
++
++project(rpmsg_lite_uart_sharing_rtos_imxcm33)
++
++set(MCUX_BUILD_TYPES debug release)
++
++set(MCUX_SDK_PROJECT_NAME rpmsg_lite_uart_sharing_rtos_imxcm33.elf)
++
++if (NOT DEFINED SdkRootDirPath)
++    SET(SdkRootDirPath ${ProjDirPath}/../../../../..)
++endif()
++
++include(${ProjDirPath}/flags.cmake)
++
++include(${ProjDirPath}/config.cmake)
++
++add_executable(${MCUX_SDK_PROJECT_NAME} 
++"${ProjDirPath}/../main_remote.c"
++"${ProjDirPath}/../FreeRTOSConfig.h"
++"${ProjDirPath}/../pin_mux.c"
++"${ProjDirPath}/../pin_mux.h"
++"${ProjDirPath}/../rpmsg_config.h"
++"${ProjDirPath}/../rsc_table.c"
++"${ProjDirPath}/../rsc_table.h"
++"${ProjDirPath}/../remoteproc.h"
++"${ProjDirPath}/../board.c"
++"${ProjDirPath}/../board.h"
++"${ProjDirPath}/../clock_config.c"
++"${ProjDirPath}/../clock_config.h"
++"${ProjDirPath}/../app_srtm.c"
++"${ProjDirPath}/../app_srtm.h"
++"${SdkRootDirPath}/components/srtm/channels/srtm_rpmsg_endpoint.h"
++"${SdkRootDirPath}/components/srtm/channels/srtm_rpmsg_endpoint.c"
++"${SdkRootDirPath}/components/srtm/services/srtm_uart_adapter.h"
++"${SdkRootDirPath}/components/srtm/services/srtm_uart_adapter.c"
++"${SdkRootDirPath}/components/srtm/services/srtm_uart_service.h"
++"${SdkRootDirPath}/components/srtm/services/srtm_uart_service.c"
++)
++
++target_include_directories(${MCUX_SDK_PROJECT_NAME} PUBLIC
++    ${ProjDirPath}/..
++    ${SdkRootDirPath}/components/srtm/services
++    ${SdkRootDirPath}/components/srtm/channels
++)
++
++set_source_files_properties("${ProjDirPath}/../FreeRTOSConfig.h" PROPERTIES COMPONENT_CONFIG_FILE "middleware_freertos-kernel_template")
++
++include(${SdkRootDirPath}/devices/MIMX9322/all_lib_device.cmake)
++
++IF(NOT DEFINED TARGET_LINK_SYSTEM_LIBRARIES)  
++    SET(TARGET_LINK_SYSTEM_LIBRARIES "-lm -lc -lgcc -lnosys")  
++ENDIF()  
++
++TARGET_LINK_LIBRARIES(${MCUX_SDK_PROJECT_NAME} PRIVATE -Wl,--start-group)
++
++target_link_libraries(${MCUX_SDK_PROJECT_NAME} PRIVATE ${TARGET_LINK_SYSTEM_LIBRARIES})
++
++TARGET_LINK_LIBRARIES(${MCUX_SDK_PROJECT_NAME} PRIVATE -Wl,--end-group)
++
++ADD_CUSTOM_COMMAND(TARGET ${MCUX_SDK_PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_OBJCOPY}
++-Obinary ${EXECUTABLE_OUTPUT_PATH}/${MCUX_SDK_PROJECT_NAME} ${EXECUTABLE_OUTPUT_PATH}/rpmsg_lite_uart_sharing_rtos.bin)
++
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/MIMX9322_cm33_ram.ld b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/MIMX9322_cm33_ram.ld
+new file mode 100644
+index 0000000..0809d58
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/MIMX9322_cm33_ram.ld
+@@ -0,0 +1,243 @@
++/*
++** ###################################################################
++**     Processors:          MIMX9322CVWXM_cm33
++**                          MIMX9322DVWXM_cm33
++**                          MIMX9322XVWXM_cm33
++**
++**     Compiler:            GNU C Compiler
++**     Reference manual:    IMX93RM, Internal, November. 2021
++**     Version:             rev. 1.0, 2021-11-16
++**     Build:               b230905
++**
++**     Abstract:
++**         Linker file for the GNU C Compiler
++**
++**     Copyright 2016 Freescale Semiconductor, Inc.
++**     Copyright 2016-2023 NXP
++**     SPDX-License-Identifier: BSD-3-Clause
++**
++**     http:                 www.nxp.com
++**     mail:                 support@nxp.com
++**
++** ###################################################################
++*/
++
++/* Entry Point */
++ENTRY(Reset_Handler)
++
++HEAP_SIZE  = DEFINED(__heap_size__)  ? __heap_size__  : 0x400;
++STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x400;
++M_VECTOR_RAM_SIZE = DEFINED(__ram_vector_table__) ? 0x0478 : 0x0;
++
++/* Specify the memory areas */
++MEMORY
++{
++  m_interrupts          (RX)  : ORIGIN = 0x0FFE0000, LENGTH = 0x00000478
++  m_text                (RX)  : ORIGIN = 0x0FFE0478, LENGTH = 0x0001FB88
++  m_m33_suspend_ram     (RW)  : ORIGIN = 0x20000000, LENGTH = 0x00002000
++  m_a55_suspend_ram     (RW)  : ORIGIN = 0x20002000, LENGTH = 0x00001000
++  m_data                (RW)  : ORIGIN = 0x20003000, LENGTH = 0x0001B000
++  m_rsc_tbl             (RW)  : ORIGIN = 0x2001E000, LENGTH = 0x00001000
++}
++
++/* Define output sections */
++SECTIONS
++{
++  /* The startup code goes first into internal RAM */
++  .interrupts :
++  {
++    __VECTOR_TABLE = .;
++    __Vectors = .;
++    . = ALIGN(4);
++    KEEP(*(.isr_vector))     /* Startup code */
++    . = ALIGN(4);
++  } > m_interrupts
++
++  .resource_table :
++  {
++    . = ALIGN(8);
++    KEEP(*(.resource_table)) /* Resource table */
++    . = ALIGN(8);
++  } > m_text
++
++  /* The program code and other data goes into internal RAM */
++  .text :
++  {
++    . = ALIGN(4);
++    *(.text)                 /* .text sections (code) */
++    *(.text*)                /* .text* sections (code) */
++    __quickcodeaccess_start__ = .;
++    . = ALIGN(32);
++    *(CodeQuickAccess)
++    . = ALIGN(32);
++    __quickcodeaccess_end__ = .;
++    *(.rodata)               /* .rodata sections (constants, strings, etc.) */
++    *(.rodata*)              /* .rodata* sections (constants, strings, etc.) */
++    *(.glue_7)               /* glue arm to thumb code */
++    *(.glue_7t)              /* glue thumb to arm code */
++    *(.eh_frame)
++    KEEP (*(.init))
++    KEEP (*(.fini))
++    . = ALIGN(4);
++  } > m_text
++
++  .ARM.extab :
++  {
++    *(.ARM.extab* .gnu.linkonce.armextab.*)
++  } > m_text
++
++  .ARM :
++  {
++    __exidx_start = .;
++    *(.ARM.exidx*)
++    __exidx_end = .;
++  } > m_text
++
++ .ctors :
++  {
++    __CTOR_LIST__ = .;
++    /* gcc uses crtbegin.o to find the start of
++       the constructors, so we make sure it is
++       first.  Because this is a wildcard, it
++       doesn't matter if the user does not
++       actually link against crtbegin.o; the
++       linker won't look for a file to match a
++       wildcard.  The wildcard also means that it
++       doesn't matter which directory crtbegin.o
++       is in.  */
++    KEEP (*crtbegin.o(.ctors))
++    KEEP (*crtbegin?.o(.ctors))
++    /* We don't want to include the .ctor section from
++       from the crtend.o file until after the sorted ctors.
++       The .ctor section from the crtend file contains the
++       end of ctors marker and it must be last */
++    KEEP (*(EXCLUDE_FILE(*crtend?.o *crtend.o) .ctors))
++    KEEP (*(SORT(.ctors.*)))
++    KEEP (*(.ctors))
++    __CTOR_END__ = .;
++  } > m_text
++
++  .dtors :
++  {
++    __DTOR_LIST__ = .;
++    KEEP (*crtbegin.o(.dtors))
++    KEEP (*crtbegin?.o(.dtors))
++    KEEP (*(EXCLUDE_FILE(*crtend?.o *crtend.o) .dtors))
++    KEEP (*(SORT(.dtors.*)))
++    KEEP (*(.dtors))
++    __DTOR_END__ = .;
++  } > m_text
++
++  .preinit_array :
++  {
++    PROVIDE_HIDDEN (__preinit_array_start = .);
++    KEEP (*(.preinit_array*))
++    PROVIDE_HIDDEN (__preinit_array_end = .);
++  } > m_text
++
++  .init_array :
++  {
++    PROVIDE_HIDDEN (__init_array_start = .);
++    KEEP (*(SORT(.init_array.*)))
++    KEEP (*(.init_array*))
++    PROVIDE_HIDDEN (__init_array_end = .);
++  } > m_text
++
++  .fini_array :
++  {
++    PROVIDE_HIDDEN (__fini_array_start = .);
++    KEEP (*(SORT(.fini_array.*)))
++    KEEP (*(.fini_array*))
++    PROVIDE_HIDDEN (__fini_array_end = .);
++  } > m_text
++
++  __etext = .;    /* define a global symbol at end of code */
++  __DATA_ROM = .; /* Symbol is used by startup for data initialization */
++
++  .interrupts_ram :
++  {
++    . = ALIGN(4);
++    __VECTOR_RAM__ = .;
++    __interrupts_ram_start__ = .; /* Create a global symbol at data start */
++    *(.m_interrupts_ram)     /* This is a user defined section */
++    . += M_VECTOR_RAM_SIZE;
++    . = ALIGN(4);
++    __interrupts_ram_end__ = .; /* Define a global symbol at data end */
++  } > m_data
++
++  __VECTOR_RAM = DEFINED(__ram_vector_table__) ? __VECTOR_RAM__ : ORIGIN(m_interrupts);
++  __RAM_VECTOR_TABLE_SIZE_BYTES = DEFINED(__ram_vector_table__) ? (__interrupts_ram_end__ - __interrupts_ram_start__) : 0x0;
++
++  .data : AT(__DATA_ROM)
++  {
++    . = ALIGN(4);
++    __DATA_RAM = .;
++    __data_start__ = .;      /* create a global symbol at data start */
++    __quickdataaccess_start__ = .;
++    . = ALIGN(32);
++    *(DataQuickAccess)
++    . = ALIGN(32);
++    __quickdataaccess_end__ = .;
++    *(.data)                 /* .data sections */
++    *(.data*)                /* .data* sections */
++    KEEP(*(.jcr*))
++    . = ALIGN(4);
++    __data_end__ = .;        /* define a global symbol at data end */
++  } > m_data
++
++  __DATA_END = __DATA_ROM + (__data_end__ - __data_start__);
++  text_end = ORIGIN(m_text) + LENGTH(m_text);
++  ASSERT(__DATA_END <= text_end, "region m_text overflowed with text and data")
++
++  /* Uninitialized data section */
++  .bss :
++  {
++    /* This is used by the startup in order to initialize the .bss section */
++    . = ALIGN(4);
++    __START_BSS = .;
++    __bss_start__ = .;
++    *(.bss)
++    *(.bss*)
++    *(COMMON)
++    . = ALIGN(4);
++    __bss_end__ = .;
++    __END_BSS = .;
++  } > m_data
++
++  .m33_suspend :
++  {
++    *(M33SuspendRam)
++    . = ALIGN(4);
++  } > m_m33_suspend_ram
++
++  .heap :
++  {
++    . = ALIGN(8);
++    __end__ = .;
++    PROVIDE(end = .);
++    __HeapBase = .;
++    . += HEAP_SIZE;
++    __HeapLimit = .;
++    __heap_limit = .; /* Add for _sbrk */
++  } > m_data
++
++  .stack :
++  {
++    . = ALIGN(8);
++    . += STACK_SIZE;
++  } > m_data
++
++  /* Initializes stack on the end of block */
++  __StackTop   = ORIGIN(m_data) + LENGTH(m_data);
++  __StackLimit = __StackTop - STACK_SIZE;
++  PROVIDE(__stack = __StackTop);
++
++  /* For Resource table region */
++  __RscTblStart = ORIGIN(m_rsc_tbl);
++  __RscTblEnd = ORIGIN(m_rsc_tbl) + LENGTH(m_rsc_tbl);
++
++  .ARM.attributes 0 : { *(.ARM.attributes) }
++
++  ASSERT(__StackLimit >= __HeapLimit, "region m_data overflowed with stack and heap")
++}
++
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_all.bat b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_all.bat
+new file mode 100644
+index 0000000..a16d8ae
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_all.bat
+@@ -0,0 +1,15 @@
++if exist CMakeFiles (RD /s /Q CMakeFiles)
++if exist Makefile (DEL /s /Q /F Makefile)
++if exist cmake_install.cmake (DEL /s /Q /F cmake_install.cmake)
++if exist CMakeCache.txt (DEL /s /Q /F CMakeCache.txt)
++cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../tools/cmake_toolchain_files/armgcc.cmake" -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=debug  .
++mingw32-make -j
++
++if exist CMakeFiles (RD /s /Q CMakeFiles)
++if exist Makefile (DEL /s /Q /F Makefile)
++if exist cmake_install.cmake (DEL /s /Q /F cmake_install.cmake)
++if exist CMakeCache.txt (DEL /s /Q /F CMakeCache.txt)
++cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../tools/cmake_toolchain_files/armgcc.cmake" -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=release  .
++mingw32-make -j
++
++IF "%1" == "" ( pause )
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_all.sh b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_all.sh
+new file mode 100755
+index 0000000..2536930
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_all.sh
+@@ -0,0 +1,15 @@
++#!/bin/sh
++if [ -d "CMakeFiles" ];then rm -rf CMakeFiles; fi
++if [ -f "Makefile" ];then rm -f Makefile; fi
++if [ -f "cmake_install.cmake" ];then rm -f cmake_install.cmake; fi
++if [ -f "CMakeCache.txt" ];then rm -f CMakeCache.txt; fi
++cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../tools/cmake_toolchain_files/armgcc.cmake" -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=debug  .
++make -j
++
++if [ -d "CMakeFiles" ];then rm -rf CMakeFiles; fi
++if [ -f "Makefile" ];then rm -f Makefile; fi
++if [ -f "cmake_install.cmake" ];then rm -f cmake_install.cmake; fi
++if [ -f "CMakeCache.txt" ];then rm -f CMakeCache.txt; fi
++cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../tools/cmake_toolchain_files/armgcc.cmake" -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=release  .
++make -j
++
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_debug.bat b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_debug.bat
+new file mode 100644
+index 0000000..1512338
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_debug.bat
+@@ -0,0 +1,6 @@
++if exist CMakeFiles (RD /s /Q CMakeFiles)
++if exist Makefile (DEL /s /Q /F Makefile)
++if exist cmake_install.cmake (DEL /s /Q /F cmake_install.cmake)
++if exist CMakeCache.txt (DEL /s /Q /F CMakeCache.txt)
++cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../tools/cmake_toolchain_files/armgcc.cmake" -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=debug  .
++mingw32-make -j 2> build_log.txt 
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_debug.sh b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_debug.sh
+new file mode 100755
+index 0000000..4280376
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_debug.sh
+@@ -0,0 +1,7 @@
++#!/bin/sh
++if [ -d "CMakeFiles" ];then rm -rf CMakeFiles; fi
++if [ -f "Makefile" ];then rm -f Makefile; fi
++if [ -f "cmake_install.cmake" ];then rm -f cmake_install.cmake; fi
++if [ -f "CMakeCache.txt" ];then rm -f CMakeCache.txt; fi
++cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../tools/cmake_toolchain_files/armgcc.cmake" -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=debug  .
++make -j 2>&1 | tee build_log.txt
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_release.bat b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_release.bat
+new file mode 100644
+index 0000000..a88e3d6
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_release.bat
+@@ -0,0 +1,6 @@
++if exist CMakeFiles (RD /s /Q CMakeFiles)
++if exist Makefile (DEL /s /Q /F Makefile)
++if exist cmake_install.cmake (DEL /s /Q /F cmake_install.cmake)
++if exist CMakeCache.txt (DEL /s /Q /F CMakeCache.txt)
++cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../tools/cmake_toolchain_files/armgcc.cmake" -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=release  .
++mingw32-make -j 2> build_log.txt 
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_release.sh b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_release.sh
+new file mode 100755
+index 0000000..47cfb05
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/build_release.sh
+@@ -0,0 +1,7 @@
++#!/bin/sh
++if [ -d "CMakeFiles" ];then rm -rf CMakeFiles; fi
++if [ -f "Makefile" ];then rm -f Makefile; fi
++if [ -f "cmake_install.cmake" ];then rm -f cmake_install.cmake; fi
++if [ -f "CMakeCache.txt" ];then rm -f CMakeCache.txt; fi
++cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../tools/cmake_toolchain_files/armgcc.cmake" -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=release  .
++make -j 2>&1 | tee build_log.txt
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/clean.bat b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/clean.bat
+new file mode 100644
+index 0000000..f391a79
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/clean.bat
+@@ -0,0 +1,3 @@
++RD /s /Q debug release CMakeFiles
++DEL /s /Q /F Makefile cmake_install.cmake CMakeCache.txt
++pause
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/clean.sh b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/clean.sh
+new file mode 100755
+index 0000000..795ad87
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/clean.sh
+@@ -0,0 +1,3 @@
++#!/bin/sh
++rm -rf debug release CMakeFiles
++rm -rf Makefile cmake_install.cmake CMakeCache.txt
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/config.cmake b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/config.cmake
+new file mode 100755
+index 0000000..4657d1a
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/config.cmake
+@@ -0,0 +1,43 @@
++# config to select component, the format is CONFIG_USE_${component}
++# Please refer to cmake files below to get available components:
++#  ${SdkRootDirPath}/devices/MIMX9322/all_lib_device.cmake
++
++set(CONFIG_COMPILER gcc)
++set(CONFIG_TOOLCHAIN armgcc)
++set(CONFIG_USE_COMPONENT_CONFIGURATION false)
++set(CONFIG_USE_middleware_multicore_rpmsg_lite_imx93_m33_freertos true)
++set(CONFIG_USE_middleware_multicore_rpmsg_lite_freertos true)
++set(CONFIG_USE_middleware_multicore_rpmsg_lite true)
++set(CONFIG_USE_middleware_freertos-kernel_heap_4 true)
++set(CONFIG_USE_middleware_freertos-kernel_cm33_non_trustzone true)
++set(CONFIG_USE_driver_mu1 true)
++set(CONFIG_USE_driver_rgpio true)
++set(CONFIG_USE_driver_clock true)
++set(CONFIG_USE_middleware_freertos-kernel true)
++set(CONFIG_USE_driver_common true)
++set(CONFIG_USE_device_MIMX9322_CMSIS true)
++set(CONFIG_USE_utility_debug_console true)
++set(CONFIG_USE_utility_assert true)
++set(CONFIG_USE_component_lpuart_adapter true)
++set(CONFIG_USE_component_serial_manager_uart true)
++set(CONFIG_USE_component_serial_manager true)
++set(CONFIG_USE_driver_lpuart true)
++set(CONFIG_USE_component_lists true)
++set(CONFIG_USE_device_MIMX9322_startup true)
++set(CONFIG_USE_driver_iomuxc true)
++set(CONFIG_USE_driver_cache_xcache true)
++set(CONFIG_USE_driver_sentinel true)
++set(CONFIG_USE_driver_adp5585 true)
++set(CONFIG_USE_driver_pcal6524 true)
++set(CONFIG_USE_driver_srtm true)
++set(CONFIG_USE_driver_srtm_freertos true)
++set(CONFIG_USE_utilities_misc_utilities true)
++set(CONFIG_USE_middleware_freertos-kernel_template true)
++set(CONFIG_USE_CMSIS_Include_core_cm true)
++set(CONFIG_CORE cm33)
++set(CONFIG_DEVICE MIMX9322)
++set(CONFIG_BOARD mcimx93qsb)
++set(CONFIG_KIT mcimx93qsb)
++set(CONFIG_DEVICE_ID MIMX9322xxxxM)
++set(CONFIG_FPU SP_FPU)
++set(CONFIG_DSP DSP)
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/flags.cmake b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/flags.cmake
+new file mode 100755
+index 0000000..4c2f7b1
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/armgcc/flags.cmake
+@@ -0,0 +1,203 @@
++IF(NOT DEFINED FPU)  
++    SET(FPU "-mfloat-abi=hard -mfpu=fpv5-sp-d16")  
++ENDIF()  
++
++IF(NOT DEFINED SPECS)  
++    SET(SPECS "--specs=nano.specs --specs=nosys.specs")  
++ENDIF()  
++
++IF(NOT DEFINED DEBUG_CONSOLE_CONFIG)  
++    SET(DEBUG_CONSOLE_CONFIG "-DSDK_DEBUGCONSOLE=1")  
++ENDIF()  
++
++SET(CMAKE_ASM_FLAGS_DEBUG " \
++    ${CMAKE_ASM_FLAGS_DEBUG} \
++    -DDEBUG \
++    -D__STARTUP_CLEAR_BSS \
++    -D__STARTUP_INITIALIZE_NONCACHEDATA \
++    -mcpu=cortex-m33 \
++    -Wall \
++    -mthumb \
++    -fno-common \
++    -ffunction-sections \
++    -fdata-sections \
++    -ffreestanding \
++    -fno-builtin \
++    -mapcs \
++    -std=gnu99 \
++    ${FPU} \
++")
++SET(CMAKE_ASM_FLAGS_RELEASE " \
++    ${CMAKE_ASM_FLAGS_RELEASE} \
++    -DNDEBUG \
++    -D__STARTUP_CLEAR_BSS \
++    -D__STARTUP_INITIALIZE_NONCACHEDATA \
++    -mcpu=cortex-m33 \
++    -Wall \
++    -mthumb \
++    -fno-common \
++    -ffunction-sections \
++    -fdata-sections \
++    -ffreestanding \
++    -fno-builtin \
++    -mapcs \
++    -std=gnu99 \
++    ${FPU} \
++")
++SET(CMAKE_C_FLAGS_DEBUG " \
++    ${CMAKE_C_FLAGS_DEBUG} \
++    -DDEBUG_CONSOLE_TRANSFER_NON_BLOCKING \
++    -DDEBUG \
++    -DCPU_MIMX9322CVWXM_cm33 \
++    -DMCUXPRESSO_SDK \
++    -DSDK_OS_FREE_RTOS \
++    -DSERIAL_PORT_TYPE_UART=1 \
++    -g \
++    -O0 \
++    -mcpu=cortex-m33 \
++    -Wall \
++    -mthumb \
++    -MMD \
++    -MP \
++    -fno-common \
++    -ffunction-sections \
++    -fdata-sections \
++    -ffreestanding \
++    -fno-builtin \
++    -mapcs \
++    -std=gnu99 \
++    ${FPU} \
++    ${DEBUG_CONSOLE_CONFIG} \
++")
++SET(CMAKE_C_FLAGS_RELEASE " \
++    ${CMAKE_C_FLAGS_RELEASE} \
++    -DDEBUG_CONSOLE_TRANSFER_NON_BLOCKING \
++    -DNDEBUG \
++    -DCPU_MIMX9322CVWXM_cm33 \
++    -DMCUXPRESSO_SDK \
++    -DSDK_OS_FREE_RTOS \
++    -DSERIAL_PORT_TYPE_UART=1 \
++    -Os \
++    -mcpu=cortex-m33 \
++    -Wall \
++    -mthumb \
++    -MMD \
++    -MP \
++    -fno-common \
++    -ffunction-sections \
++    -fdata-sections \
++    -ffreestanding \
++    -fno-builtin \
++    -mapcs \
++    -std=gnu99 \
++    ${FPU} \
++    ${DEBUG_CONSOLE_CONFIG} \
++")
++SET(CMAKE_CXX_FLAGS_DEBUG " \
++    ${CMAKE_CXX_FLAGS_DEBUG} \
++    -DDEBUG_CONSOLE_TRANSFER_NON_BLOCKING \
++    -DDEBUG \
++    -DMCUXPRESSO_SDK \
++    -DSERIAL_PORT_TYPE_UART=1 \
++    -g \
++    -O0 \
++    -mcpu=cortex-m33 \
++    -Wall \
++    -mthumb \
++    -MMD \
++    -MP \
++    -fno-common \
++    -ffunction-sections \
++    -fdata-sections \
++    -ffreestanding \
++    -fno-builtin \
++    -mapcs \
++    -fno-rtti \
++    -fno-exceptions \
++    ${FPU} \
++    ${DEBUG_CONSOLE_CONFIG} \
++")
++SET(CMAKE_CXX_FLAGS_RELEASE " \
++    ${CMAKE_CXX_FLAGS_RELEASE} \
++    -DDEBUG_CONSOLE_TRANSFER_NON_BLOCKING \
++    -DNDEBUG \
++    -DMCUXPRESSO_SDK \
++    -DSERIAL_PORT_TYPE_UART=1 \
++    -Os \
++    -mcpu=cortex-m33 \
++    -Wall \
++    -mthumb \
++    -MMD \
++    -MP \
++    -fno-common \
++    -ffunction-sections \
++    -fdata-sections \
++    -ffreestanding \
++    -fno-builtin \
++    -mapcs \
++    -fno-rtti \
++    -fno-exceptions \
++    ${FPU} \
++    ${DEBUG_CONSOLE_CONFIG} \
++")
++SET(CMAKE_EXE_LINKER_FLAGS_DEBUG " \
++    ${CMAKE_EXE_LINKER_FLAGS_DEBUG} \
++    -g \
++    -mcpu=cortex-m33 \
++    -Wall \
++    -fno-common \
++    -ffunction-sections \
++    -fdata-sections \
++    -ffreestanding \
++    -fno-builtin \
++    -mthumb \
++    -mapcs \
++    -Xlinker \
++    --gc-sections \
++    -Xlinker \
++    -static \
++    -Xlinker \
++    -z \
++    -Xlinker \
++    muldefs \
++    -Xlinker \
++    -Map=output.map \
++    -Wl,--print-memory-usage \
++    -Xlinker \
++    --defsym=__stack_size__=0x400 \
++    -Xlinker \
++    --defsym=__heap_size__=0x400 \
++    ${FPU} \
++    ${SPECS} \
++    -T${ProjDirPath}/MIMX9322_cm33_ram.ld -static \
++")
++SET(CMAKE_EXE_LINKER_FLAGS_RELEASE " \
++    ${CMAKE_EXE_LINKER_FLAGS_RELEASE} \
++    -mcpu=cortex-m33 \
++    -Wall \
++    -fno-common \
++    -ffunction-sections \
++    -fdata-sections \
++    -ffreestanding \
++    -fno-builtin \
++    -mthumb \
++    -mapcs \
++    -Xlinker \
++    --gc-sections \
++    -Xlinker \
++    -static \
++    -Xlinker \
++    -z \
++    -Xlinker \
++    muldefs \
++    -Xlinker \
++    -Map=output.map \
++    -Wl,--print-memory-usage \
++    -Xlinker \
++    --defsym=__stack_size__=0x400 \
++    -Xlinker \
++    --defsym=__heap_size__=0x400 \
++    ${FPU} \
++    ${SPECS} \
++    -T${ProjDirPath}/MIMX9322_cm33_ram.ld -static \
++")
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/board.c b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/board.c
+new file mode 100644
+index 0000000..811819b
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/board.c
+@@ -0,0 +1,746 @@
++/*
++ * Copyright 2023 NXP
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++#include "board.h"
++#include "fsl_cache.h"
++#if defined(SDK_I2C_BASED_COMPONENT_USED) && SDK_I2C_BASED_COMPONENT_USED
++#include "fsl_lpi2c.h"
++#endif
++
++/*******************************************************************************
++ * Definitions
++ ******************************************************************************/
++struct dram_timing_info *timing_info;
++
++/*******************************************************************************
++ * Variables
++ ******************************************************************************/
++#if defined(BOARD_USE_DDR_RETENTION) && BOARD_USE_DDR_RETENTION
++static const uint16_t BOARD_DDRPHY_Addr_Remap_table[DDRPHY_NB_ADDR_REMAP] = {
++    0x000, // 0x00
++    0x001, // 0x01
++    0x002, // 0x02
++    0x003, // 0x03
++    0x004, // 0x04
++    0x005, // 0x05
++    0x006, // 0x06
++    0x007, // 0x07
++    0x008, // 0x08
++    0x009, // 0x09
++    0x00a, // 0x0a
++    0x00b, // 0x0b
++    0x100, // 0x0c
++    0x101, // 0x0d
++    0x102, // 0x0e
++    0x103, // 0x0f
++    0x104, // 0x10
++    0x105, // 0x11
++    0x106, // 0x12
++    0x107, // 0x13
++    0x108, // 0x14
++    0x109, // 0x15
++    0x10a, // 0x16
++    0x10b, // 0x17
++    0x200, // 0x18
++    0x201, // 0x19
++    0x202, // 0x1a
++    0x203, // 0x1b
++    0x204, // 0x1c
++    0x205, // 0x1d
++    0x206, // 0x1e
++    0x207, // 0x1f
++    0x208, // 0x20
++    0x209, // 0x21
++    0x20a, // 0x22
++    0x20b, // 0x23
++    0x300, // 0x24
++    0x301, // 0x25
++    0x302, // 0x26
++    0x303, // 0x27
++    0x304, // 0x28
++    0x305, // 0x29
++    0x306, // 0x2a
++    0x307, // 0x2b
++    0x308, // 0x2c
++    0x309, // 0x2d
++    0x30a, // 0x2e
++    0x30b, // 0x2f
++    0x010, // 0x30
++    0x011, // 0x31
++    0x012, // 0x32
++    0x013, // 0x33
++    0x014, // 0x34
++    0x015, // 0x35
++    0x016, // 0x36
++    0x017, // 0x37
++    0x018, // 0x38
++    0x019, // 0x39
++    0x110, // 0x3a
++    0x111, // 0x3b
++    0x112, // 0x3c
++    0x113, // 0x3d
++    0x114, // 0x3e
++    0x115, // 0x3f
++    0x116, // 0x40
++    0x117, // 0x41
++    0x118, // 0x42
++    0x119, // 0x43
++    0x210, // 0x44
++    0x211, // 0x45
++    0x212, // 0x46
++    0x213, // 0x47
++    0x214, // 0x48
++    0x215, // 0x49
++    0x216, // 0x4a
++    0x217, // 0x4b
++    0x218, // 0x4c
++    0x219, // 0x4d
++    0x310, // 0x4e
++    0x311, // 0x4f
++    0x312, // 0x50
++    0x313, // 0x51
++    0x314, // 0x52
++    0x315, // 0x53
++    0x316, // 0x54
++    0x317, // 0x55
++    0x318, // 0x56
++    0x319, // 0x57
++    0x020, // 0x58
++    0x120, // 0x59
++    0x220, // 0x5a
++    0x320, // 0x5b
++    0x040, // 0x5c
++    0x140, // 0x5d
++    0x240, // 0x5e
++    0x340, // 0x5f
++    0x050, // 0x60
++    0x051, // 0x61
++    0x052, // 0x62
++    0x053, // 0x63
++    0x054, // 0x64
++    0x055, // 0x65
++    0x056, // 0x66
++    0x057, // 0x67
++    0x070, // 0x68
++    0x090, // 0x69
++    0x190, // 0x6a
++    0x290, // 0x6b
++    0x390, // 0x6c
++    0x0c0, // 0x6d
++    0x0d0, // 0x6e
++};
++#endif
++
++/*******************************************************************************
++ * Code
++ ******************************************************************************/
++
++/* Initialize debug console. */
++void BOARD_InitDebugConsole(void)
++{
++    /* clang-format off */
++    const clock_root_config_t uartClkCfg = {
++        .clockOff = false,
++	.mux = 0, // 24MHz oscillator source
++	.div = 1
++    };
++    /* clang-format on */
++
++    CLOCK_SetRootClock(BOARD_DEBUG_UART_CLOCK_ROOT, &uartClkCfg);
++    CLOCK_EnableClock(BOARD_DEBUG_UART_CLOCK_GATE);
++    DbgConsole_Init(BOARD_DEBUG_UART_INSTANCE, BOARD_DEBUG_UART_BAUDRATE, BOARD_DEBUG_UART_TYPE,
++                    BOARD_DEBUG_UART_CLK_FREQ);
++}
++
++#if defined(SDK_I2C_BASED_COMPONENT_USED) && SDK_I2C_BASED_COMPONENT_USED
++void BOARD_LPI2C_Init(LPI2C_Type *base, uint32_t clkSrc_Hz)
++{
++    lpi2c_master_config_t lpi2cConfig = {0};
++
++    /*
++     * lpi2cConfig.debugEnable = false;
++     * lpi2cConfig.ignoreAck = false;
++     * lpi2cConfig.pinConfig = kLPI2C_2PinOpenDrain;
++     * lpi2cConfig.baudRate_Hz = 100000U;
++     * lpi2cConfig.busIdleTimeout_ns = 0;
++     * lpi2cConfig.pinLowTimeout_ns = 0;
++     * lpi2cConfig.sdaGlitchFilterWidth_ns = 0;
++     * lpi2cConfig.sclGlitchFilterWidth_ns = 0;
++     */
++    LPI2C_MasterGetDefaultConfig(&lpi2cConfig);
++    LPI2C_MasterInit(base, &lpi2cConfig, clkSrc_Hz);
++}
++
++status_t BOARD_LPI2C_Send(LPI2C_Type *base,
++                          uint8_t deviceAddress,
++                          uint32_t subAddress,
++                          uint8_t subAddressSize,
++                          uint8_t *txBuff,
++                          uint8_t txBuffSize,
++                          uint32_t flags)
++{
++    lpi2c_master_transfer_t xfer;
++
++    xfer.flags          = flags;
++    xfer.slaveAddress   = deviceAddress;
++    xfer.direction      = kLPI2C_Write;
++    xfer.subaddress     = subAddress;
++    xfer.subaddressSize = subAddressSize;
++    xfer.data           = txBuff;
++    xfer.dataSize       = txBuffSize;
++
++    return LPI2C_MasterTransferBlocking(base, &xfer);
++}
++
++status_t BOARD_LPI2C_Receive(LPI2C_Type *base,
++                             uint8_t deviceAddress,
++                             uint32_t subAddress,
++                             uint8_t subAddressSize,
++                             uint8_t *rxBuff,
++                             uint8_t rxBuffSize,
++                             uint32_t flags)
++{
++    lpi2c_master_transfer_t xfer;
++
++    xfer.flags          = flags;
++    xfer.slaveAddress   = deviceAddress;
++    xfer.direction      = kLPI2C_Read;
++    xfer.subaddress     = subAddress;
++    xfer.subaddressSize = subAddressSize;
++    xfer.data           = rxBuff;
++    xfer.dataSize       = rxBuffSize;
++
++    return LPI2C_MasterTransferBlocking(base, &xfer);
++}
++
++#if defined(BOARD_USE_PCAL6524) && BOARD_USE_PCAL6524
++void BOARD_PCAL6524_I2C_Init(void)
++{
++    BOARD_LPI2C_Init(BOARD_PCAL6524_I2C, BOARD_PCAL6524_I2C_CLOCK_FREQ);
++}
++
++status_t BOARD_PCAL6524_I2C_Send(uint8_t deviceAddress,
++                                 uint32_t subAddress,
++                                 uint8_t subAddressSize,
++                                 const uint8_t *txBuff,
++                                 uint8_t txBuffSize,
++                                 uint32_t flags)
++{
++    return BOARD_LPI2C_Send(BOARD_PCAL6524_I2C, deviceAddress, subAddress, subAddressSize, (uint8_t *)txBuff,
++                            txBuffSize, flags);
++}
++
++status_t BOARD_PCAL6524_I2C_Receive(uint8_t deviceAddress,
++                                    uint32_t subAddress,
++                                    uint8_t subAddressSize,
++                                    uint8_t *rxBuff,
++                                    uint8_t rxBuffSize,
++                                    uint32_t flags)
++{
++    return BOARD_LPI2C_Receive(BOARD_PCAL6524_I2C, deviceAddress, subAddress, subAddressSize, rxBuff, rxBuffSize,
++                               flags);
++}
++
++void BOARD_InitPCAL6524(pcal6524_handle_t *handle)
++{
++    BOARD_PCAL6524_I2C_Init();
++
++    static const pcal6524_config_t config = {
++        .i2cAddr         = BOARD_PCAL6524_I2C_ADDR,
++        .I2C_SendFunc    = BOARD_PCAL6524_I2C_Send,
++        .I2C_ReceiveFunc = BOARD_PCAL6524_I2C_Receive,
++    };
++
++    PCAL6524_Init(handle, &config);
++}
++
++#endif /* BOARD_USE_PCAL6524. */
++
++#endif
++
++void BOARD_McoreSUSPEND(void)
++{
++    uint32_t value = 0U;
++    /* Config OSCPLL LPM setting for M33 SUSPEND */
++    for (unsigned int i = OSCPLL_LPM_START; i <= OSCPLL_LPM_END; i++)
++    {
++        CCM_CTRL->OSCPLL[i].LPM0 |= CCM_OSCPLL_LPM0_LPM_SETTING_D2_MASK;
++    }
++
++    /* Config GPC_CTRL_CM33 to set Mcore as SUSPEND mode */
++    GPC_CTRL_CM33->CM_MODE_CTRL |= GPC_CPU_CTRL_CM_MODE_CTRL_CPU_MODE_TARGET_MASK;
++
++    /* Stop SysTick and enter WFI
++     * System will goes into system sleep flow
++     * The STBY LED on board will light with red color
++     */
++    /* Save old value of SYST_CSR */
++    value            = SYSTICK_CTRL_REG;
++    SYSTICK_CTRL_REG = SYSTICK_CLOSE;
++    __WFI();
++    /* Enable systick */
++    SYSTICK_CTRL_REG = value;
++}
++
++void BOARD_ConfigMPU(void)
++{
++    uint8_t attr;
++
++    /* Disable code cache(ICache) and system cache(DCache) */
++    XCACHE_DisableCache(LPCAC_PC);
++    XCACHE_DisableCache(LPCAC_PS);
++
++    /* NOTE: All TCRAM is non-cacheable regardless of MPU setting. */
++
++    /*
++     * default cache policy(default memory access behavior) after enable mpu on cortex-m33(according to RM of
++     * cortex-m33): 0x00000000-0x1FFFFFFF Normal memory, Non-shareable, Write-Through, not Write Allocate
++     * 0x20000000-0x3FFFFFFF Normal memory, Non-shareable, Write-Back, Write Allocate
++     * 0x40000000-0x5FFFFFFF Device, Shareable
++     * 0x60000000-0x7FFFFFFF Normal memory, Non-shareable, Write-Back, Write Allocate
++     * 0x80000000-0x9FFFFFFF Normal memory, Non-shareable, Write-Through, not Write Allocate
++     * 0xA0000000-0xDFFFFFFF Device, Shareable
++     * 0xE0000000-0xE003FFFF Device, Shareable
++     * 0xE0040000-0xE0043FFF Device, Shareable
++     * 0xE0044000-0xE00EFFFF Device, Shareable
++     * 0xF0000000-0xFFFFFFFF Device, Shareable
++     */
++    /* Disable MPU */
++    ARM_MPU_Disable();
++
++    /* Attr0: Device-nGnRnE */
++    ARM_MPU_SetMemAttr(0U, ARM_MPU_ATTR(ARM_MPU_ATTR_DEVICE, ARM_MPU_ATTR_DEVICE));
++
++    /* Attr1: Normal memory, Outer non-cacheable, Inner non-cacheable */
++    ARM_MPU_SetMemAttr(1U, ARM_MPU_ATTR(ARM_MPU_ATTR_NON_CACHEABLE, ARM_MPU_ATTR_NON_CACHEABLE));
++
++    /* Attr2: Normal memory, Inner write-through transient, read allocate. Inner write-through transient, read allocate
++     */
++    attr = ARM_MPU_ATTR_MEMORY_(0U, 0U, 1U, 0U);
++    ARM_MPU_SetMemAttr(2U, ARM_MPU_ATTR(attr, attr));
++
++    /* Attr3: Normal memory, Outer write-back transient, read/write allocate. Inner write-back transient, read/write
++     * allocate */
++    attr = ARM_MPU_ATTR_MEMORY_(0U, 1U, 1U, 1U);
++    ARM_MPU_SetMemAttr(3U, ARM_MPU_ATTR(attr, attr));
++
++    /*
++     * Change macro definitions as follows when choose cache policy as non-cacheable:
++     * #define DDR_NONCACHEABLE (1U)
++     * #define DDR_WRITE_THROUGH (0U)
++     * #define DDR_WRITE_BACK (0U)
++     *
++     *
++     * Change macro definitions as follows when choose cache policy as Write-Through:
++     * #define DDR_NONCACHEABLE (0U)
++     * #define DDR_WRITE_THROUGH (1U)
++     * #define DDR_WRITE_BACK (0U)
++     *
++     *
++     * Change macro definitions as follows when choose cache policy as Write-Back:
++     * #define DDR_NONCACHEABLE (0U)
++     * #define DDR_WRITE_THROUGH (0U)
++     * #define DDR_WRITE_BACK (1U)
++     */
++#define DDR_NONCACHEABLE  (1U)
++#define DDR_WRITE_THROUGH (0U)
++#define DDR_WRITE_BACK    (0U)
++#if DDR_NONCACHEABLE
++    /* NOTE: DDR is used as shared memory for A/M core communication, set it to non-cacheable. */
++    /* Region 0: [0x80000000, 0xDFFFFFFF](DRAM), outer shareable, read/write, any privileged, executable. Attr 1
++     * (non-cacheable). */
++    ARM_MPU_SetRegion(0U, ARM_MPU_RBAR(0x80000000, ARM_MPU_SH_OUTER, 0U, 1U, 0U), ARM_MPU_RLAR(0xDFFFFFFF, 1U));
++#elif DDR_WRITE_THROUGH
++    /* Region 0: [0x80000000, 0xDFFFFFFF](DRAM), outer shareable, read/write, any privileged, executable. Attr 2
++     * (Normal memory, Inner write-through transient, read allocate. Inner write-through transient, read allocate). */
++    ARM_MPU_SetRegion(0U, ARM_MPU_RBAR(0x80000000, ARM_MPU_SH_OUTER, 0U, 1U, 0U), ARM_MPU_RLAR(0xDFFFFFFF, 2U));
++#elif DDR_WRITE_BACK
++    /* Region 0: [0x80000000, 0xDFFFFFFF](DRAM), outer shareable, read/write, any privileged, executable. Attr 3
++     * (Normal memory, Outer write-back transient, read/write allocate. Inner write-back transient, read/write
++     * allocate). */
++    ARM_MPU_SetRegion(0U, ARM_MPU_RBAR(0x80000000, ARM_MPU_SH_OUTER, 0U, 1U, 0U), ARM_MPU_RLAR(0xDFFFFFFF, 3U));
++#endif
++
++    /* Enable MPU(use default memory map when access the memory within region) */
++    ARM_MPU_Enable(MPU_CTRL_PRIVDEFENA_Msk);
++
++    /* Enable ICache and DCache */
++    XCACHE_EnableCache(LPCAC_PC);
++    XCACHE_EnableCache(LPCAC_PS);
++    /* flush pipeline */
++    __DSB();
++    __ISB();
++}
++
++#if defined(BOARD_USE_DDR_RETENTION) && BOARD_USE_DDR_RETENTION
++static unsigned long BOARD_DDRPHY_Addr_Remap(uint32_t paddr_apb_from_ctlr)
++{
++    uint32_t paddr_apb_qual;
++    uint32_t paddr_apb_unqual_dec_22_13;
++    uint32_t paddr_apb_unqual_dec_19_13;
++    uint32_t paddr_apb_unqual_dec_12_1;
++    uint32_t paddr_apb_unqual;
++    uint32_t paddr_apb_phy;
++
++    paddr_apb_qual             = (paddr_apb_from_ctlr << 1);
++    paddr_apb_unqual_dec_22_13 = ((paddr_apb_qual & 0x7fe000) >> 13);
++    paddr_apb_unqual_dec_12_1  = ((paddr_apb_qual & 0x1ffe) >> 1);
++
++    /* seacrching backward, so the last tested addr (0) is also the default value in case not found */
++    paddr_apb_unqual_dec_19_13 = DDRPHY_NB_ADDR_REMAP - 1;
++    while ((paddr_apb_unqual_dec_19_13 > 0) &&
++           (BOARD_DDRPHY_Addr_Remap_table[paddr_apb_unqual_dec_19_13] != (uint16_t)paddr_apb_unqual_dec_22_13))
++    {
++        paddr_apb_unqual_dec_19_13--;
++    }
++
++    paddr_apb_unqual = ((paddr_apb_unqual_dec_19_13 << 13) | (paddr_apb_unqual_dec_12_1 << 1));
++    paddr_apb_phy    = (paddr_apb_unqual << 1);
++    return paddr_apb_phy;
++}
++
++int BOARD_Check_DDRC_Idle(int waitus, uint32_t flag)
++{
++    uint32_t ddrdsr2_val;
++    int waitforever = 0;
++    int waitedus    = 0;
++    if (waitus == 0)
++    {
++        waitforever = 1;
++    }
++
++    do
++    {
++        ddrdsr2_val = DDR_CTRL->DDRDSR_2;
++        if ((ddrdsr2_val & flag) == flag)
++        {
++            /* Memory controller is idle */
++            break;
++        }
++        SDK_DelayAtLeastUs(1, SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY);
++        waitus--;
++        waitedus++;
++    } while (waitus | waitforever);
++
++    if ((waitus == 0) & !waitforever)
++    {
++        return -1;
++    }
++    return waitedus;
++}
++
++static void BOARD_Ipg_Stop_Ack_Wait(uint32_t expect_value)
++{
++    uint32_t read_data;
++    read_data = BLK_CTRL_DDRMIX->DDRC_STOP_CTRL;
++
++    if (expect_value == 0x1)
++    {
++        while ((read_data & BIT(1)) == 0x0)
++        {
++            /* DDR Controller ipg_stop_ack is a 0 */
++            read_data = BLK_CTRL_DDRMIX->DDRC_STOP_CTRL;
++        }
++        /* DDR Controller ipg_stop_ack is a 1 */
++    }
++    else if (expect_value == 0x0)
++    {
++        while ((read_data & BIT(1)) != 0x0)
++        {
++            /* DDR Controller ipg_stop_ack is a 1 */
++            read_data = BLK_CTRL_DDRMIX->DDRC_STOP_CTRL;
++        }
++        /* DDR Controller ipg_stop_ack is a 0 */
++    }
++}
++
++/* Check whether PHY initialization is complete */
++void BOARD_Check_Dfi_Init_Complete(void)
++{
++    uint32_t ddr_phy_status = 0;
++
++    do
++    {
++        ddr_phy_status = DDR_CTRL->DDRDSR_2;
++        if (ddr_phy_status & DDRC_DDRDSR_2_PHY_INIT_CMPLT_MASK)
++        {
++            /* PHY initialization is complete */
++            break;
++        }
++    } while (1);
++
++    DDR_CTRL->DDRDSR_2 |= DDRC_DDRDSR_2_PHY_INIT_CMPLT_MASK;
++}
++
++void BOARD_DDRCEnterSelfRefresh(void)
++{
++    /* Set FRC_SR bit, put DDRC into self-refresh mode */
++    DDR_CTRL->DDR_SDRAM_CFG_2 |= DDRC_DDR_SDRAM_CFG_2_FRC_SR_MASK;
++}
++
++void BOARD_DDRPHY_ClodRest(void)
++{
++    /*
++     * dramphy_apb_n default 1 , assert -> 0, de_assert -> 1
++     * dramphy_reset_n default 0 , assert -> 0, de_assert -> 1
++     * dramphy_PwrOKIn default 0 , assert -> 1, de_assert -> 0
++     */
++    /* src_gen_dphy_apb_sw_rst_de_assert */
++    SRC_DPHY_SLICE->SLICE_SW_CTRL &= ~SRC_MIX_SLICE_SLICE_SW_CTRL_RST_CTRL_SOFT_MASK;
++    /* src_gen_dphy_sw_rst_de_assert */
++    SRC_DPHY_SLICE->SINGLE_RESET_SW_CTRL &= ~SRC_MIX_SLICE_SINGLE_RESET_SW_CTRL_RST_CTRL_SOFT_1_MASK;
++    /* src_gen_dphy_PwrOKIn_sw_rst_de_assert() */
++    SRC_DPHY_SLICE->SINGLE_RESET_SW_CTRL |= SRC_MIX_SLICE_SINGLE_RESET_SW_CTRL_RST_CTRL_SOFT_0_MASK;
++    SDK_DelayAtLeastUs(10, SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY);
++
++    /* src_gen_dphy_apb_sw_rst_assert */
++    SRC_DPHY_SLICE->SLICE_SW_CTRL |= SRC_MIX_SLICE_SLICE_SW_CTRL_RST_CTRL_SOFT_MASK;
++    /* src_gen_dphy_sw_rst_assert */
++    SRC_DPHY_SLICE->SINGLE_RESET_SW_CTRL |= SRC_MIX_SLICE_SINGLE_RESET_SW_CTRL_RST_CTRL_SOFT_1_MASK;
++    SDK_DelayAtLeastUs(10, SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY);
++
++    /* src_gen_dphy_PwrOKIn_sw_rst_assert */
++    SRC_DPHY_SLICE->SINGLE_RESET_SW_CTRL &= ~SRC_MIX_SLICE_SINGLE_RESET_SW_CTRL_RST_CTRL_SOFT_0_MASK;
++    SDK_DelayAtLeastUs(10, SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY);
++
++    /* src_gen_dphy_apb_sw_rst_de_assert */
++    SRC_DPHY_SLICE->SLICE_SW_CTRL &= ~SRC_MIX_SLICE_SLICE_SW_CTRL_RST_CTRL_SOFT_MASK;
++    /* src_gen_dphy_sw_rst_de_assert() */
++    SRC_DPHY_SLICE->SINGLE_RESET_SW_CTRL &= ~SRC_MIX_SLICE_SINGLE_RESET_SW_CTRL_RST_CTRL_SOFT_1_MASK;
++}
++
++void BOARD_DRAM_PLL_Init(void)
++{
++    /* Powerup and Enable DRAM PLL block*/
++    DRAMPLL->CTRL.SET |= PLL_CTRL_POWERUP_MASK;
++
++    /* Wait lock */
++    while (!(R32(DRAMPLL->PLL_STATUS) & PLL_PLL_STATUS_PLL_LOCK_MASK))
++    {
++        ;
++    }
++
++    /* Enable PLL output clock */
++    DRAMPLL->CTRL.SET |= PLL_CTRL_CLKMUX_EN_MASK;
++}
++
++void BOARD_DDR_Disable_Bypass(void)
++{
++    /* Set DRAM APB to 133Mhz */
++    const clock_root_config_t dramapbClkCfg = 
++	{
++		.clockOff = false,
++		.mux = 2,
++		.div = 3
++	};
++    CLOCK_SetRootClock(kCLOCK_Root_DramApb, &dramapbClkCfg);
++
++    /* wait for the new setting update done */
++    while (R32(DRAM_APB_CLK + 0x20) & BIT(28))
++    {
++        ;
++    }
++
++    /* Switch from DRAM  clock root from CCM to PLL */
++    CCM_CTRL->GPR_SHARED2.CLR |= CCM_GPR_SHARED2_DRAM_PLL_BYPASS_MASK;
++}
++
++/* Restore the dram PHY config */
++void BOARD_DRAM_PHY_Restore(struct dram_timing_info *timing)
++{
++    struct dram_cfg_param *cfg = timing->ddrphy_cfg;
++    uint32_t i;
++
++    /* Restore the PHY init config */
++    cfg = timing->ddrphy_cfg;
++    for (i = 0U; i < timing->ddrphy_cfg_num; i++)
++    {
++        dwc_ddrphy_apb_wr(cfg->reg, cfg->val);
++        cfg++;
++    }
++
++    dwc_ddrphy_apb_wr(0xd0000, 0x0);
++    dwc_ddrphy_apb_wr(0xc0080, 0x3);
++
++    /* Restore the DDR PHY CSRs */
++    cfg = timing->ddrphy_trained_csr;
++    for (i = 0U; i < timing->ddrphy_trained_csr_num; i++)
++    {
++        dwc_ddrphy_apb_wr(cfg->reg, cfg->val);
++        cfg++;
++    }
++
++    dwc_ddrphy_apb_wr(0xc0080, 0x2);
++    dwc_ddrphy_apb_wr(0xd0000, 0x1);
++
++    /* Load the PIE image */
++    cfg = timing->ddrphy_pie;
++    for (i = 0U; i < timing->ddrphy_pie_num; i++)
++    {
++        dwc_ddrphy_apb_wr(cfg->reg, cfg->val);
++        cfg++;
++    }
++}
++
++void BOARD_DDRC_Restore(struct dram_timing_info *timing)
++{
++    struct dram_cfg_param *ddrc_cfg = timing->ddrc_cfg;
++    uint32_t i;
++    uint32_t waitus = 0;
++
++    for (i = 0; i < timing->ddrc_cfg_num; i++)
++    {
++        /* skip the dram init as we resume from retention */
++        if (ddrc_cfg->reg == DDR_SDRAM_CFG_ADDR)
++        {
++            W32(ddrc_cfg->reg, ddrc_cfg->val & ~BIT(4));
++        }
++        else
++        {
++            W32(ddrc_cfg->reg, ddrc_cfg->val);
++        }
++        ddrc_cfg++;
++    }
++
++    if (timing->fsp_cfg != NULL)
++    {
++        ddrc_cfg = timing->fsp_cfg[0].ddrc_cfg;
++        while (ddrc_cfg->reg != 0)
++        {
++            W32(ddrc_cfg->reg, ddrc_cfg->val);
++            ddrc_cfg++;
++        }
++    }
++
++    /* Check whether PHY initialization is complete */
++    BOARD_Check_Dfi_Init_Complete();
++
++    /* Enable DDRC */
++    DDR_CTRL->DDR_SDRAM_CFG |= DDRC_DDR_SDRAM_CFG_MEM_EN_MASK;
++
++    /* Waiting for DDRC idel status all the times */
++    waitus = BOARD_Check_DDRC_Idle(DDRC_DDRDSR_2_Check_Idel_time, DDRC_DDRDSR_2_IDLE_MASK);
++
++    if (waitus == -1)
++    {
++        PRINTF("Check DDRC Idel status fail\r\n");
++    }
++}
++
++void BOARD_DRAMEnterRetention(void)
++{
++    uint32_t waitus = 0;
++
++    /* Waiting for DDRC idel status all the times */
++    waitus = BOARD_Check_DDRC_Idle(DDRC_DDRDSR_2_Check_Idel_time, DDRC_DDRDSR_2_IDLE_MASK);
++
++    if (waitus == -1)
++    {
++        PRINTF("Check DDRC Idel status fail\r\n");
++    }
++
++    /* Set MEM_HALT bit, halt any new transactions for DDR SDRAM */
++    DDR_CTRL->DDR_SDRAM_CFG |= DDRC_DDR_SDRAM_CFG_MEM_HALT_MASK;
++
++    /* Set DDR_SDRAM_CFG_3[SR_FAST_WK_EN], select fast wakeup method */
++    DDR_CTRL->DDR_SDRAM_CFG_3 |= DDRC_DDR_SDRAM_CFG_3_SR_FAST_WK_EN_MASK;
++
++    /*
++     * Temporarily DDR_SDRAM_CFG_4 info unavailable on 93 RM.
++     * Program DFI Frequency to max value, DDR_SDRAM_CFG_4[DFI_FREQ] to 2b'1111.
++     */
++    DDR_CTRL->DDR_SDRAM_CFG_4 |= 0x1f000;
++
++    /* Clear DDR_ZQ_CNTL register */
++    DDR_CTRL->DDR_ZQ_CNTL = 0x0;
++
++    /* Set DEBUG_26[DIS_CTRLUPD_REQ */
++    SETBIT32(DDR_CTRL_BASE + DDR_DEBUG_26, (0x1f << 12));
++
++    /* Force the DDRC to enter self-refresh */
++    BOARD_DDRCEnterSelfRefresh();
++
++    /* Set BLK_CTRL_DDRMIX AUTO_CG_CTRL[HWFFC_ACG_FORCE_B], enable ipg_stop_reg while auto cg */
++    BLK_CTRL_DDRMIX->AUTO_CG_CTRL |= DDRMIX_BLK_CTRL_AUTO_CG_CTRL_HWFFC_ACG_FORCE_B_MASK;
++    /* Set DDR_SDRAM_CFG[SREN] bit, enable DDR self-refresh function during sleep */
++    DDR_CTRL->DDR_SDRAM_CFG |= DDRC_DDR_SDRAM_CFG_SREN_MASK;
++    /* Set DDR_SDRAM_CFG_3[DRAIN_FOR_SR], drain DDRC main command for self refresh */
++    DDR_CTRL->DDR_SDRAM_CFG_3 |= DDRC_DDR_SDRAM_CFG_3_DRAIN_FOR_SR_MASK;
++
++    /* Set stop and poll stop ack */
++    BOARD_Ipg_Stop_Ack_Wait(DDRC_STOP_ACK_SET_MASK);
++    BLK_CTRL_DDRMIX->DDRC_STOP_CTRL |= DDRMIX_BLK_CTRL_DDRC_STOP_CTRL_DDRC_STOP_MASK;
++
++    BOARD_Ipg_Stop_Ack_Wait(DDRC_STOP_ACK_POLL_MASK);
++
++    /* Clear DDR_INTERVAL(this disables refreshes) */
++    DDR_CTRL->DDR_SDRAM_INTERVAL = 0x0;
++
++    /* Set DDR_SDRAM_MD_CNTL[CKE_CNTL] to 0x00100000(this forces CKE to remain low) */
++    DDR_CTRL->DDR_SDRAM_MD_CNTL = 0x00100000;
++
++    /* Remove Stop request via DDRMIX register */
++    BLK_CTRL_DDRMIX->DDRC_STOP_CTRL &= ~DDRMIX_BLK_CTRL_DDRC_STOP_CTRL_DDRC_STOP_MASK;
++
++    BOARD_Check_Dfi_Init_Complete();
++
++    /* Clear DDR_SDRAM_CFG[SREN] */
++    DDR_CTRL->DDR_SDRAM_CFG &= ~DDRC_DDR_SDRAM_CFG_SREN_MASK;
++
++    /* Clear DDR_SDRAM_CFG_3[SR_FAST_WK_EN] */
++    DDR_CTRL->DDR_SDRAM_CFG_3 &= ~DDRC_DDR_SDRAM_CFG_3_SR_FAST_WK_EN_MASK;
++
++    /* Set stop request and poll again via DDRMIX register */
++    BOARD_Ipg_Stop_Ack_Wait(DDRC_STOP_ACK_SET_MASK);
++    BLK_CTRL_DDRMIX->DDRC_STOP_CTRL |= DDRMIX_BLK_CTRL_DDRC_STOP_CTRL_DDRC_STOP_MASK;
++
++    BOARD_Ipg_Stop_Ack_Wait(DDRC_STOP_ACK_POLL_MASK);
++
++    /* Set STOP request again via DDRMIX register */
++    BLK_CTRL_DDRMIX->DDRC_STOP_CTRL &= ~DDRMIX_BLK_CTRL_DDRC_STOP_CTRL_DDRC_STOP_MASK;
++
++    /* Should check PhyInLP3 pub reg */
++    dwc_ddrphy_apb_wr(0xd0000, 0x0);
++    if (!(dwc_ddrphy_apb_rd(0x90028) & 0x1))
++    {
++        PRINTF("PhyInLP3 = 1\r\n");
++    }
++    dwc_ddrphy_apb_wr(0xd0000, 0x1);
++
++    /* Clear PwrOkIn via DDRMIX regsiter */
++    SRC_DPHY_SLICE->SINGLE_RESET_SW_CTRL |= SRC_MIX_SLICE_SINGLE_RESET_SW_CTRL_RST_CTRL_SOFT_0_MASK;
++    /* Power off the DDRMIX */
++    SDK_DelayAtLeastUs(10, SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY);
++    SRC_DDR_SLICE->SLICE_SW_CTRL |= SRC_MIX_SLICE_SLICE_SW_CTRL_PDN_SOFT_MASK;
++    SDK_DelayAtLeastUs(10, SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY);
++}
++
++void BOARD_DRAMExitRetention(void)
++{
++    /* Power up the DDRMIX */
++    SRC_DDR_SLICE->SLICE_SW_CTRL &= ~SRC_MIX_SLICE_SLICE_SW_CTRL_PDN_SOFT_MASK;
++
++    /* additional step to make sure DDR exit retenton works */
++    SRC_DDR_SLICE->SLICE_SW_CTRL |= SRC_MIX_SLICE_SLICE_SW_CTRL_RST_CTRL_SOFT_MASK;
++    SDK_DelayAtLeastUs(10, SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY);
++
++    SRC_DDR_SLICE->SLICE_SW_CTRL &= ~SRC_MIX_SLICE_SLICE_SW_CTRL_RST_CTRL_SOFT_MASK;
++    SDK_DelayAtLeastUs(10, SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY);
++
++    /* Cold reset the DDRPHY */
++    BOARD_DDRPHY_ClodRest();
++
++    /* Config the DRAM PLL to FSP0 */
++    BOARD_DRAM_PLL_Init();
++    BOARD_DDR_Disable_Bypass();
++
++    /* Reload the DDRPHY config */
++    BOARD_DRAM_PHY_Restore(timing_info);
++
++    /* Reload the ddrc config */
++    BOARD_DDRC_Restore(timing_info);
++}
++#endif
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/board.h b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/board.h
+new file mode 100644
+index 0000000..a181698
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/board.h
+@@ -0,0 +1,235 @@
++/*
++ * Copyright 2023 NXP
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++#ifndef _BOARD_H_
++#define _BOARD_H_
++
++#include "fsl_common.h"
++#include "fsl_debug_console.h"
++#include "clock_config.h"
++#if defined(BOARD_USE_PCAL6524) && BOARD_USE_PCAL6524
++#include "fsl_pcal6524.h"
++#endif
++
++/*******************************************************************************
++ * Definitions
++ ******************************************************************************/
++
++/* The UART to use for debug messages. */
++#define BOARD_DEBUG_UART_INSTANCE   2U
++#define BOARD_DEBUG_UART_BAUDRATE   115200U
++#define BOARD_DEBUG_UART_TYPE       kSerialPort_Uart
++#define BOARD_DEBUG_UART_CLOCK_ROOT kCLOCK_Root_Lpuart2
++#define BOARD_DEBUG_UART_CLOCK_GATE kCLOCK_Lpuart2
++#define BOARD_DEBUG_UART_CLK_FREQ   CLOCK_GetIpFreq(BOARD_DEBUG_UART_CLOCK_ROOT)
++
++#define VDEV0_VRING_BASE (0xA4000000U)
++#define VDEV1_VRING_BASE (0xA4010000U)
++
++#define LED_INIT()
++#define LED_TOGGLE()
++
++#define BOARD_CODEC_I2C_BASEADDR LPI2C1
++#define BOARD_CODEC_I2C_INSTANCE 1U
++
++/* PCAL6524 */
++#define BOARD_PCAL6524_I2C            LPI2C2
++#define BOARD_PCAL6524_I2C_ADDR       (0x22U)
++#define BOARD_PCAL6524_I2C_CLOCK_ROOT kCLOCK_Root_Lpi2c2
++#define BOARD_PCAL6524_I2C_CLOCK_GATE kCLOCK_Lpi2c2
++#define BOARD_PCAL6524_I2C_CLOCK_FREQ CLOCK_GetIpFreq(BOARD_PCAL6524_I2C_CLOCK_ROOT)
++
++#define BOARD_PCAL6524_EXT1_PWREN  (8U + 5U)
++#define BOARD_PCAL6524_ENET1_NRST  (8U + 7U)
++#define BOARD_PCAL6524_MIC_CAN_SEL (16U + 1U)
++#define BOARD_PCAL6524_EXP_SEL     (16U + 6U)
++#define BOARD_PCAL6524_CAN_STBY    (16U + 7U)
++
++/* SEMA42 */
++#define APP_SEMA42       SEMA42_1
++#define APP_SEMA42_GATE  (0x3U)
++#define M33_DOMAIN_ID    (0x8U)
++#define APP_CORTEX_M_DID M33_DOMAIN_ID
++
++#define BIT(n)         (1U << (n))
++#define W32(addr, val) *((volatile uint32_t *)(addr)) = (val)
++#define R32(addr)      *((volatile uint32_t *)(addr))
++
++#define SETBIT32(addr, set)           W32(addr, R32(addr) | set)
++#define CLRBIT32(addr, clear)         W32(addr, R32(addr) & ~clear)
++#define CLRSETBIT32(addr, clear, set) W32(addr, (R32(addr) & ~clear) | set)
++
++/*  SRC GPR1 as M33 active status flag, A55 will read the value before enter suspend mode */
++#define M33_ACTIVE_FLAG (SRC_GENERAL_REG_BASE + 0x54)
++#define M33_ACTIVE      (0x5555U)
++#define M33_INACTIVE    (0x0U)
++
++/*
++ * SRC GPR2 bit 0 as A55 DDR status flag, bit 1 as M33 DDR status flag.
++ * A55 will set GPR2 bit1 when it will enter suspend, and clear it before wakeup.
++ */
++#define DDR_RETENTION_BASE     (SRC_GENERAL_REG_BASE + 0x58)
++#define DDR_RETENTION_A55_FLAG BIT(0)
++#define DDR_RETENTION_M33_FLAG BIT(1)
++
++#define DRAM_APB_CLK (0x44452680U)
++
++/* DDR configure addres saved by A55 atf */
++#define SAVED_DRAM_DATA_BASE_ADDR (0x2051C000)
++
++/* DDR */
++#define DDRPHY_BASE_ADDR               (0x4E100000U)
++#define DDR_PHY_BASE                   DDRPHY_BASE_ADDR
++#define IP2APB_DDRPHY_IPS_BASE_ADDR(X) (DDR_PHY_BASE + (X * 0x2000000))
++#define DDR_DEBUG_26                   (0xF64U)
++#define DDR_SDRAM_CFG_ADDR             (0x4E300110)
++
++/* Default DDR DSR_2 Idel check time permanently */
++#define DDRC_DDRDSR_2_Check_Idel_time (0x0U)
++
++/* DDR PHY Addr remap table number */
++#define DDRPHY_NB_ADDR_REMAP (0x6FU)
++
++#define DDRC_STOP_ACK_SET_MASK  (0x0U)
++#define DDRC_STOP_ACK_POLL_MASK (0x1U)
++
++#define dwc_ddrphy_apb_wr(addr, data) W32(IP2APB_DDRPHY_IPS_BASE_ADDR(0) + BOARD_DDRPHY_Addr_Remap(addr), data)
++#define dwc_ddrphy_apb_rd(addr)       R32(IP2APB_DDRPHY_IPS_BASE_ADDR(0) + BOARD_DDRPHY_Addr_Remap(addr))
++
++struct dram_cfg_param
++{
++    uint32_t reg;
++    uint32_t val;
++};
++
++struct dram_fsp_cfg
++{
++    struct dram_cfg_param ddrc_cfg[20];
++    struct dram_cfg_param mr_cfg[10];
++    unsigned int bypass;
++};
++
++/*
++ * ATF init DDR setting and save DDR register to SAVED_DRAM_DATA_BASE_ADDR.
++ * Acore run in 64 bit system, Mcore run in 32 bit system. So, add reserved area in dram_timing_info to protect the data
++ * from being matched correctly data match.
++ */
++struct dram_timing_info
++{
++    /* umctl2 config */
++    struct dram_cfg_param *ddrc_cfg;
++    const uint32_t reserved_ddrc_cfg;
++    unsigned int ddrc_cfg_num;
++    const uint32_t reserved_ddrc_cfg_num;
++    /* fsp config */
++    struct dram_fsp_cfg *fsp_cfg;
++    const uint32_t reserved_fsp_cfg;
++    unsigned int fsp_cfg_num;
++    const uint32_t reserved_fsp_cfg_num;
++    /* ddrphy config */
++    struct dram_cfg_param *ddrphy_cfg;
++    const uint32_t reserved_ddrphy_cfg;
++    unsigned int ddrphy_cfg_num;
++    const uint32_t reserved_ddrphy_cfg_num;
++    /* ddr fsp train info */
++    struct dram_fsp_msg *fsp_msg;
++    const uint32_t reserved_fsp_msg;
++    unsigned int fsp_msg_num;
++    const uint32_t reserved_fsp_msg_num;
++    /* ddr phy trained CSR */
++    struct dram_cfg_param *ddrphy_trained_csr;
++    const uint32_t reserved_ddrphy_trained_csr;
++    unsigned int ddrphy_trained_csr_num;
++    const uint32_t reserved_ddrphy_trained_csr_num;
++    /* ddr phy PIE */
++    struct dram_cfg_param *ddrphy_pie;
++    const uint32_t reserved_ddrphy_pie;
++    unsigned int ddrphy_pie_num;
++    const uint32_t reserved_ddrphy_pie_num;
++    /* initialized fsp table */
++    unsigned int fsp_table[4];
++};
++
++#if defined(__cplusplus)
++extern "C" {
++#endif /* __cplusplus */
++
++/*******************************************************************************
++ * Prototypes
++ ******************************************************************************/
++extern struct dram_timing_info *timing_info;
++/*******************************************************************************
++ * API
++ ******************************************************************************/
++
++void BOARD_InitDebugConsole(void);
++#if defined(SDK_I2C_BASED_COMPONENT_USED) && SDK_I2C_BASED_COMPONENT_USED
++status_t BOARD_LPI2C_Send(LPI2C_Type *base,
++                          uint8_t deviceAddress,
++                          uint32_t subAddress,
++                          uint8_t subaddressSize,
++                          uint8_t *txBuff,
++                          uint8_t txBuffSize,
++                          uint32_t flags);
++status_t BOARD_LPI2C_Receive(LPI2C_Type *base,
++                             uint8_t deviceAddress,
++                             uint32_t subAddress,
++                             uint8_t subaddressSize,
++                             uint8_t *rxBuff,
++                             uint8_t rxBuffSize,
++                             uint32_t flags);
++#if defined(BOARD_USE_PCAL6524) && BOARD_USE_PCAL6524
++void BOARD_PCAL6524_I2C_Init(void);
++status_t BOARD_PCAL6524_I2C_Send(uint8_t deviceAddress,
++                                 uint32_t subAddress,
++                                 uint8_t subAddressSize,
++                                 const uint8_t *txBuff,
++                                 uint8_t txBuffSize,
++                                 uint32_t flags);
++status_t BOARD_PCAL6524_I2C_Receive(uint8_t deviceAddress,
++                                    uint32_t subAddress,
++                                    uint8_t subAddressSize,
++                                    uint8_t *rxBuff,
++                                    uint8_t rxBuffSize,
++                                    uint32_t flags);
++
++void BOARD_InitPCAL6524(pcal6524_handle_t *handle);
++#endif /* BOARD_USE_PCAL6524 */
++
++#endif
++
++/* Mcore suspend setting */
++#define OSCPLL_LPM_START 3U
++#define OSCPLL_LPM_END   12U
++/* SysTick Control and Status Register(SYST_CSR) of cortex-M33 */
++#define SYSTICK_CTRL_REG (*((volatile uint32_t *)0xe000e010))
++/*
++ * SYST_CSR[0] ENABLE(Enable counter):
++ * 0: Counter Disabled
++ * 1: Counter Enabled
++ * SYST_CSR[1] TICKINT(Enables SysTick exception request):
++ * 0: Counting down to zero does not assert the SysTick exception request.
++ * 1: Counting down to zero asserts the SysTick exception request.
++ * More info from
++ * https://developer.arm.com/documentation/100235/0004/the-cortex-m33-peripherals/system-timer--systick/systick-control-and-status-register
++ */
++#define SYSTICK_CLOSE 0U
++void BOARD_McoreSUSPEND(void);
++
++void BOARD_ConfigMPU(void);
++
++#if defined(BOARD_USE_DDR_RETENTION) && BOARD_USE_DDR_RETENTION
++/* DDR enter retention state */
++void BOARD_DRAMEnterRetention(void);
++
++/* DDR exit retention state */
++void BOARD_DRAMExitRetention(void);
++#endif
++
++#if defined(__cplusplus)
++}
++#endif /* __cplusplus */
++#endif /* _BOARD_H_ */
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/clock_config.c b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/clock_config.c
+new file mode 100644
+index 0000000..e1a5caa
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/clock_config.c
+@@ -0,0 +1,96 @@
++/*
++ * Copyright 2023 NXP
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++#include "clock_config.h"
++
++/*******************************************************************************
++ * Variables
++ ******************************************************************************/
++/* clang-format off */
++/*
++ * SYSTEM_PLL1
++ *
++ * VCO = (24MHz / rdiv) * (mfi + mfn / mfd)  = 4000MHz
++ * Output = VCO / odiv = 1000MHz
++ */
++const fracn_pll_init_t g_sysPllCfg = {
++    .rdiv = 1,
++    .mfi = 166,
++    .mfn = 2,
++    .mfd = 3,
++    .odiv = 4
++};
++
++/* SYSTEM_PLL1_PFD0 Output = VCO / (mfi + mfn / 5) = 1000MHz */
++const fracn_pll_pfd_init_t g_sysPllPfd0Cfg = {
++    .mfi = 4,
++    .mfn = 0,
++    .div2_en = true
++};
++
++/*SYSTEM_PLL1_PFD1 Output = VCO / (mfi + mfn / 5) = 800MHz */
++const fracn_pll_pfd_init_t g_sysPllPfd1Cfg = {
++    .mfi = 5,
++    .mfn = 0,
++    .div2_en = true
++};
++
++/* SYSTEM_PLL1_PFD2 Output = VCO / (mfi + mfn / 5) = 625MHz */
++const fracn_pll_pfd_init_t g_sysPllPfd2Cfg = {
++    .mfi = 6,
++    .mfn = 2,
++    .div2_en = true
++};
++
++
++/*
++ * AUDIOPLL1/AUDIOPLL1OUT
++ *
++ * VCO = (24MHz / rdiv) * (mfi + (mfn / mfd))  = 3,932,160,000 Hz
++ * Output = VCO / odiv = 393.216 MHz
++ */
++const fracn_pll_init_t g_audioPllCfg = {
++    .rdiv = 1,
++    .mfi = 163,
++    .mfn = 84,
++    .mfd = 100,
++    .odiv = 10
++};
++
++
++/* clang-format on */
++
++/*******************************************************************************
++ * Code
++ ******************************************************************************/
++
++static void BOARD_InitClock(void)
++{
++    g_clockSourceFreq[kCLOCK_Osc24M]          = 24000000U;
++    g_clockSourceFreq[kCLOCK_SysPll1]         = 4000000000U;
++    g_clockSourceFreq[kCLOCK_SysPll1Pfd0]     = 1000000000U;
++    g_clockSourceFreq[kCLOCK_SysPll1Pfd0Div2] = 500000000U;
++    g_clockSourceFreq[kCLOCK_SysPll1Pfd1]     = 800000000U;
++    g_clockSourceFreq[kCLOCK_SysPll1Pfd1Div2] = 400000000U;
++    g_clockSourceFreq[kCLOCK_SysPll1Pfd2]     = 625000000U;
++    g_clockSourceFreq[kCLOCK_SysPll1Pfd2Div2] = 312500000U;
++    g_clockSourceFreq[kCLOCK_AudioPll1Out] = 393216000U;
++    g_clockSourceFreq[kCLOCK_AudioPll1] = 393216000U;
++}
++
++void BOARD_BootClockRUN(void)
++{
++    BOARD_InitClock();
++
++    /* ROM has already initialized PLL */
++    CLOCK_PllInit(AUDIOPLL, &g_audioPllCfg);
++#if 0
++    CLOCK_PllInit(SYSPLL, &g_sysPllCfg);
++    CLOCK_PllPfdInit(SYSPLL, 0, &g_sysPllPfd0Cfg);
++    CLOCK_PllPfdInit(SYSPLL, 1, &g_sysPllPfd1Cfg);
++    CLOCK_PllPfdInit(SYSPLL, 2, &g_sysPllPfd2Cfg);
++#endif
++}
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/clock_config.h b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/clock_config.h
+new file mode 100644
+index 0000000..f7b0c07
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/clock_config.h
+@@ -0,0 +1,28 @@
++/*
++ * Copyright 2023 NXP
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++#ifndef _CLOCK_CONFIG_H_
++#define _CLOCK_CONFIG_H_
++
++#include "fsl_clock.h"
++
++/*******************************************************************************
++ * DEFINITION
++ ******************************************************************************/
++
++/*******************************************************************************
++ * API
++ ******************************************************************************/
++#if defined(__cplusplus)
++extern "C" {
++#endif /* __cplusplus*/
++
++void BOARD_BootClockRUN(void);
++
++#if defined(__cplusplus)
++}
++#endif /* __cplusplus*/
++
++#endif /* _CLOCK_CONFIG_H_ */
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/main_remote.c b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/main_remote.c
+new file mode 100644
+index 0000000..0f00da2
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/main_remote.c
+@@ -0,0 +1,96 @@
++/*
++ * Copyright 2023 NXP
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++#include "FreeRTOS.h"
++#include "task.h"
++
++#include "pin_mux.h"
++#include "board.h"
++#include "app_srtm.h"
++#include "fsl_debug_console.h"
++
++/*******************************************************************************
++ * Prototypes
++ ******************************************************************************/
++extern volatile app_srtm_state_t srtmState;
++
++/*******************************************************************************
++ * Code
++ ******************************************************************************/
++void MainTask(void *pvParameters)
++{
++    /*
++     * Wait for A core become ready
++     */
++    PRINTF("********************************\r\n");
++    PRINTF("Wait for the Linux kernel boot up to create the link between M core and A core.\r\n");
++    PRINTF("********************************\r\n");
++    while (srtmState != APP_SRTM_StateLinkedUp)
++        ;
++    PRINTF("********************************\r\n");
++    PRINTF("The rpmsg channel between M core and A core created!\r\n");
++    PRINTF("********************************\r\n");
++    PRINTF("\r\n");
++
++    while (true)
++    {
++        /* Use App task logic to replace vTaskDelay */
++        PRINTF("Task %s is running now.\r\n", (char *)pvParameters);
++        PRINTF("\r\n");
++        vTaskDelay(portMAX_DELAY);
++    }
++}
++
++/*!
++ * @brief Main function
++ */
++int main(void)
++{
++    char *taskID = "A";
++
++    const clock_root_config_t uartClkCfg = {
++        .clockOff = false,
++        .mux = 0, // 24MHz oscillator source
++        .div = 1
++    };
++
++    BOARD_InitBootPins();
++    BOARD_BootClockRUN();
++    BOARD_InitDebugConsole();
++
++    /* Setup clock for lpuart5 */
++    CLOCK_SetRootClock(kCLOCK_Root_Lpuart5, &uartClkCfg);
++    CLOCK_EnableClock(kCLOCK_Root_Lpuart5);
++
++    PRINTF("\r\n####################  RPMSG UART SHARING DEMO  ####################\r\n");
++    PRINTF("\r\n");
++    PRINTF("    Build Time: %s %s \r\n", __DATE__, __TIME__);
++    PRINTF("\r\n");
++
++    APP_SRTM_Init();
++
++    APP_SRTM_StartCommunication();
++
++    if (xTaskCreate(MainTask, "Main Task", 256U, (void *)taskID, tskIDLE_PRIORITY + 1U, NULL) != pdPASS)
++    {
++        PRINTF("Task creation failed!.\r\n");
++        while(1)
++            ;
++    }
++
++    /* Start FreeRTOS scheduler. */
++    vTaskStartScheduler();
++
++    /* Application should never reach this point. */
++    for (;;)
++    {
++    }
++}
++
++void vApplicationMallocFailedHook(void)
++{
++    PRINTF("Malloc Failed!!!\r\n");
++}
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/pin_mux.c b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/pin_mux.c
+new file mode 100644
+index 0000000..98bf2e1
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/pin_mux.c
+@@ -0,0 +1,72 @@
++/*
++ * Copyright 2023 NXP
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++/***********************************************************************************************************************
++ * This file was generated by the MCUXpresso Config Tools. Any manual edits made to this file
++ * will be overwritten if the respective MCUXpresso Config Tools is used to update this file.
++ **********************************************************************************************************************/
++
++/*
++ * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
++!!GlobalInfo
++product: Pins v13.0
++processor: MIMX9322xxxxM
++package_id: MIMX9322CVWXM
++mcu_data: ksdk2_0
++processor_version: 0.13.6
++ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
++ */
++
++#include "pin_mux.h"
++
++/* FUNCTION ************************************************************************************************************
++ *
++ * Function Name : BOARD_InitBootPins
++ * Description   : Calls initialization functions.
++ *
++ * END ****************************************************************************************************************/
++void BOARD_InitBootPins(void)
++{
++    BOARD_InitPins();
++}
++
++/*
++ * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
++BOARD_InitPins:
++- options: {callFromInitBoot: 'true', coreID: cm33}
++- pin_list:
++  - {pin_num: D14, peripheral: LPUART2, signal: lpuart_rx, pin_signal: UART2_RXD, FSEL1: SlOW_SLEW_RATE, DSE: NO_DRIVE}
++  - {pin_num: D12, peripheral: LPUART2, signal: lpuart_tx, pin_signal: UART2_TXD, PD: DISABLED, FSEL1: SlOW_SLEW_RATE}
++  - {pin_num: J20, peripheral: LPUART5, signal: lpuart_rx, pin_signal: GPIO_IO01, FSEL1: SlOW_SLEW_RATE, DSE: NO_DRIVE}
++  - {pin_num: J21, peripheral: LPUART5, signal: lpuart_tx, pin_signal: GPIO_IO00, PD: DISABLED, FSEL1: SlOW_SLEW_RATE}
++ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
++ */
++
++/* FUNCTION ************************************************************************************************************
++ *
++ * Function Name : BOARD_InitPins
++ * Description   : Configures pin routing and optionally pin electrical features.
++ *
++ * END ****************************************************************************************************************/
++void BOARD_InitPins(void) {                                /*!< Function assigned for the core: Cortex-M33[cm33] */
++    IOMUXC_SetPinMux(IOMUXC_PAD_GPIO_IO00__LPUART5_TX, 0U);
++    IOMUXC_SetPinConfig(IOMUXC_PAD_GPIO_IO00__LPUART5_TX, 
++                        IOMUXC_PAD_DSE(15U));
++    IOMUXC_SetPinMux(IOMUXC_PAD_GPIO_IO01__LPUART5_RX, 0U);
++    IOMUXC_SetPinConfig(IOMUXC_PAD_GPIO_IO01__LPUART5_RX, 
++                        IOMUXC_PAD_PD_MASK);
++
++    IOMUXC_SetPinMux(IOMUXC_PAD_UART2_RXD__LPUART2_RX, 0U);
++    IOMUXC_SetPinConfig(IOMUXC_PAD_UART2_RXD__LPUART2_RX, 
++                        IOMUXC_PAD_PD_MASK);
++    IOMUXC_SetPinMux(IOMUXC_PAD_UART2_TXD__LPUART2_TX, 0U);
++    IOMUXC_SetPinConfig(IOMUXC_PAD_UART2_TXD__LPUART2_TX, 
++                        IOMUXC_PAD_DSE(15U));
++}
++
++/***********************************************************************************************************************
++ * EOF
++ **********************************************************************************************************************/
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/pin_mux.h b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/pin_mux.h
+new file mode 100644
+index 0000000..6e11ca2
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/pin_mux.h
+@@ -0,0 +1,53 @@
++/*
++ * Copyright 2023 NXP
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++#ifndef _PIN_MUX_H_
++#define _PIN_MUX_H_
++
++#include "fsl_iomuxc.h"
++
++/***********************************************************************************************************************
++ * Definitions
++ **********************************************************************************************************************/
++
++/*!
++ * @addtogroup pin_mux
++ * @{
++ */
++
++/***********************************************************************************************************************
++ * API
++ **********************************************************************************************************************/
++
++#if defined(__cplusplus)
++extern "C" {
++#endif
++
++
++/*!
++ * @brief Calls initialization functions.
++ *
++ */
++void BOARD_InitBootPins(void);
++
++/*!
++ * @brief Configures pin routing and optionally pin electrical features.
++ *
++ */
++void BOARD_InitPins(void);                                 /*!< Function assigned for the core: Cortex-M33[cm33] */
++
++#if defined(__cplusplus)
++}
++#endif
++
++/*!
++ * @}
++ */
++#endif /* _PIN_MUX_H_ */
++
++/***********************************************************************************************************************
++ * EOF
++ **********************************************************************************************************************/
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/readme.txt b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/readme.txt
+new file mode 100644
+index 0000000..50f6bf7
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/readme.txt
+@@ -0,0 +1,78 @@
++Overview
++========
++This is a FreeRTOS example to share physical UART owned by Cortex-M Core with Cortex-A Core.
++The SRTM(Simplified Real Time Messaging) protocol is used to achieve this. LPUART5 on MCIMX93-QSB
++is used for UART sharing.
++
++Hardware requirements
++=====================
++- Type-C USB cable
++- MCIMX93-QSB board
++- J-Link Debug Probe
++- 12V~20V power supply
++- Personal Computer
++
++Board settings
++==============
++Connect LPUART5 to host PC using USB To TTL serial cable.
++
++    LPUART5 RX:  Pin 27 of J1401
++    LPUART5 TX:  Pin 28 of J1401
++    LPUART5 GND: Pin 30 of J1401
++
++Prepare the Demo
++================
++1. Connect a Type-C USB cable between the host PC and the J1708 USB port on the target board.
++   Open two serial terminals for A Core and M Core with the following settings:
++    - 115200 baud rate
++    - 8 data bits
++    - No parity
++    - One stop bit
++    - No flow control
++    (e.g. /dev/ttyUSB0~3, /dev/ttyUSB2 for A Core, /dev/ttyUSB3 for M Core)
++2. Connect 12V~20V power supply and J-Link Debug Probe to the board, switch SW301 to power on the board
++3. Boot Linux BSP to u-boot, and load M core image from SD card to run.
++   => load mmc 1:2 0x80000000 /examples/rpmsg-lite-uart-sharing-rtos/release/rpmsg_lite_uart_sharing_rtos.bin
++   => cp.b 0x80000000 0x201e0000 0x10000
++   => bootaux 0x1ffe0000 0
++4. After M core running, boot the linux kernel to create the rpmsg channel between A core and M core.
++   Make sure to use the correct DTB and append "clk_ignore_unused" in u-boot "mmcargs" env, before booting linux.
++   => setenv fdtfile imx93-9x9-qsb-rpmsg.dtb
++   => setenv jh_clk clk_ignore_unused
++   => boot
++5. Boot to linux.
++6. After login, make sure rpmsg_tty kernel module is inserted (lsmod) or insert it (modprobe rpmsg_tty).
++
++Running the demo
++================
++After the boot process succeeds, the ARM Cortex-M33 terminal (connected to LPUART2) displays the following information:
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++####################  RPMSG UART SHARING DEMO  ####################
++
++    Build Time: Oct 30 2023 11:20:34
++
++Start SRTM communication
++********************************
++Wait for the Linux kernel boot up to create the link between M core and A core.
++********************************
++Handle Peer Core Linkup
++********************************
++The rpmsg channel between M core and A core created!
++********************************
++
++Task A is running now.
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++The user can then input an arbitrary string to the virtual RPMsg tty using the following echo command on Cortex-A terminal:
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++echo test > /dev/ttyRPMSG<num>
++
++Note: <num> here is the allocated ttyRPMsg channel number. Please find out the number in the file system by "ls" command.
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++When /dev/ttyRPMSG0 to /dev/ttyRPMSG9 is used, the following output is shown on the terminal connected to LPUART5
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++$UT,test
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++When /dev/ttyRPMSG10 is used, the following output is shown on the M33 terminal (connected to LPUART2).
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++SRTM_UartService_ReceiveNotify: 452, data = test
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/remoteproc.h b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/remoteproc.h
+new file mode 100644
+index 0000000..6647760
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/remoteproc.h
+@@ -0,0 +1,372 @@
++/*
++ * Remoteproc Framework
++ *
++ * Copyright 2020, 2023 NXP.
++ * Copyright(c) 2018 Xilinx Ltd.
++ * Copyright(c) 2011 Texas Instruments, Inc.
++ * Copyright(c) 2011 Google, Inc.
++ * All rights reserved.
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++#ifndef REMOTEPROC_H
++#define REMOTEPROC_H
++
++#include <stdint.h>
++
++#if defined __cplusplus
++extern "C" {
++#endif
++
++#define RSC_NOTIFY_ID_ANY 0xFFFFFFFFUL
++
++#define RPROC_MAX_NAME_LEN 32
++
++/* IAR ARM build tools */
++#if defined(__ICCARM__)
++
++#ifndef METAL_PACKED_BEGIN
++#define METAL_PACKED_BEGIN __packed
++#endif
++
++#ifndef METAL_PACKED_END
++#define METAL_PACKED_END
++#endif
++
++/* GNUC */
++#elif defined(__GNUC__)
++
++#ifndef METAL_PACKED_BEGIN
++#define METAL_PACKED_BEGIN
++#endif
++
++#ifndef METAL_PACKED_END
++#define METAL_PACKED_END __attribute__((__packed__))
++#endif
++
++/* ARMCC */
++#elif defined(__CC_ARM) || defined(__ARMCC_VERSION)
++
++#ifndef METAL_PACKED_BEGIN
++#define METAL_PACKED_BEGIN _Pragma("pack(1U)")
++#endif
++
++#ifndef METAL_PACKED_END
++#define METAL_PACKED_END _Pragma("pack()")
++#endif
++
++#else
++/* There is no default definition here to avoid wrong structures packing in case of not supported compiler */
++#error Please implement the structure packing macros for your compiler here!
++#endif
++
++/**
++ * struct resource_table - firmware resource table header
++ * @ver: version number
++ * @num: number of resource entries
++ * @reserved: reserved (must be zero)
++ * @offset: array of offsets pointing at the various resource entries
++ *
++ * A resource table is essentially a list of system resources required
++ * by the remote remoteproc. It may also include configuration entries.
++ * If needed, the remote remoteproc firmware should contain this table
++ * as a dedicated ".resource_table" ELF section.
++ *
++ * Some resources entries are mere announcements, where the host is informed
++ * of specific remoteproc configuration. Other entries require the host to
++ * do something (e.g. allocate a system resource). Sometimes a negotiation
++ * is expected, where the firmware requests a resource, and once allocated,
++ * the host should provide back its details (e.g. address of an allocated
++ * memory region).
++ *
++ * The header of the resource table, as expressed by this structure,
++ * contains a version number (should we need to change this format in the
++ * future), the number of available resource entries, and their offsets
++ * in the table.
++ *
++ * Immediately following this header are the resource entries themselves,
++ * each of which begins with a resource entry header (as described below).
++ */
++METAL_PACKED_BEGIN
++struct resource_table
++{
++    uint32_t ver;
++    uint32_t num;
++    uint32_t reserved[2];
++    uint32_t offset[0];
++} METAL_PACKED_END;
++
++/**
++ * struct fw_rsc_hdr - firmware resource entry header
++ * @type: resource type
++ * @data: resource data
++ *
++ * Every resource entry begins with a 'struct fw_rsc_hdr' header providing
++ * its @type. The content of the entry itself will immediately follow
++ * this header, and it should be parsed according to the resource type.
++ */
++METAL_PACKED_BEGIN
++struct fw_rsc_hdr
++{
++    uint32_t type;
++    uint8_t data[0];
++} METAL_PACKED_END;
++
++/**
++ * enum fw_resource_type - types of resource entries
++ *
++ * @RSC_CARVEOUT:   request for allocation of a physically contiguous
++ *          memory region.
++ * @RSC_DEVMEM:     request to iommu_map a memory-based peripheral.
++ * @RSC_TRACE:      announces the availability of a trace buffer into which
++ *          the remote remoteproc will be writing logs.
++ * @RSC_VDEV:       declare support for a virtio device, and serve as its
++ *          virtio header.
++ * @RSC_VENDOR_START: start of the vendor specific resource types range
++ * @RSC_VENDOR_END  : end of the vendor specific resource types range
++ * @RSC_LAST:       just keep this one at the end
++ *
++ * For more details regarding a specific resource type, please see its
++ * dedicated structure below.
++ *
++ * Please note that these values are used as indices to the rproc_handle_rsc
++ * lookup table, so please keep them sane. Moreover, @RSC_LAST is used to
++ * check the validity of an index before the lookup table is accessed, so
++ * please update it as needed.
++ */
++enum fw_resource_type
++{
++    RSC_CARVEOUT     = 0,
++    RSC_DEVMEM       = 1,
++    RSC_TRACE        = 2,
++    RSC_VDEV         = 3,
++    RSC_LAST         = 4,
++    RSC_VENDOR_START = 128,
++    RSC_VENDOR_END   = 512,
++};
++
++#define FW_RSC_U64_ADDR_ANY 0xFFFFFFFFFFFFFFFFUL
++#define FW_RSC_U32_ADDR_ANY 0xFFFFFFFFUL
++
++/**
++ * struct fw_rsc_carveout - physically contiguous memory request
++ * @da: device address
++ * @pa: physical address
++ * @len: length (in bytes)
++ * @flags: iommu protection flags
++ * @reserved: reserved (must be zero)
++ * @name: human-readable name of the requested memory region
++ *
++ * This resource entry requests the host to allocate a physically contiguous
++ * memory region.
++ *
++ * These request entries should precede other firmware resource entries,
++ * as other entries might request placing other data objects inside
++ * these memory regions (e.g. data/code segments, trace resource entries, ...).
++ *
++ * Allocating memory this way helps utilizing the reserved physical memory
++ * (e.g. CMA) more efficiently, and also minimizes the number of TLB entries
++ * needed to map it (in case @rproc is using an IOMMU). Reducing the TLB
++ * pressure is important; it may have a substantial impact on performance.
++ *
++ * If the firmware is compiled with static addresses, then @da should specify
++ * the expected device address of this memory region. If @da is set to
++ * FW_RSC_ADDR_ANY, then the host will dynamically allocate it, and then
++ * overwrite @da with the dynamically allocated address.
++ *
++ * We will always use @da to negotiate the device addresses, even if it
++ * isn't using an iommu. In that case, though, it will obviously contain
++ * physical addresses.
++ *
++ * Some remote remoteprocs needs to know the allocated physical address
++ * even if they do use an iommu. This is needed, e.g., if they control
++ * hardware accelerators which access the physical memory directly (this
++ * is the case with OMAP4 for instance). In that case, the host will
++ * overwrite @pa with the dynamically allocated physical address.
++ * Generally we don't want to expose physical addresses if we don't have to
++ * (remote remoteprocs are generally _not_ trusted), so we might want to
++ * change this to happen _only_ when explicitly required by the hardware.
++ *
++ * @flags is used to provide IOMMU protection flags, and @name should
++ * (optionally) contain a human readable name of this carveout region
++ * (mainly for debugging purposes).
++ */
++METAL_PACKED_BEGIN
++struct fw_rsc_carveout
++{
++    uint32_t type;
++    uint32_t da;
++    uint32_t pa;
++    uint32_t len;
++    uint32_t flags;
++    uint32_t reserved;
++    uint8_t name[RPROC_MAX_NAME_LEN];
++} METAL_PACKED_END;
++
++/**
++ * struct fw_rsc_devmem - iommu mapping request
++ * @da: device address
++ * @pa: physical address
++ * @len: length (in bytes)
++ * @flags: iommu protection flags
++ * @reserved: reserved (must be zero)
++ * @name: human-readable name of the requested region to be mapped
++ *
++ * This resource entry requests the host to iommu map a physically contiguous
++ * memory region. This is needed in case the remote remoteproc requires
++ * access to certain memory-based peripherals; _never_ use it to access
++ * regular memory.
++ *
++ * This is obviously only needed if the remote remoteproc is accessing memory
++ * via an iommu.
++ *
++ * @da should specify the required device address, @pa should specify
++ * the physical address we want to map, @len should specify the size of
++ * the mapping and @flags is the IOMMU protection flags. As always, @name may
++ * (optionally) contain a human readable name of this mapping (mainly for
++ * debugging purposes).
++ *
++ * Note: at this point we just "trust" those devmem entries to contain valid
++ * physical addresses, but this isn't safe and will be changed: eventually we
++ * want remoteproc implementations to provide us ranges of physical addresses
++ * the firmware is allowed to request, and not allow firmwares to request
++ * access to physical addresses that are outside those ranges.
++ */
++METAL_PACKED_BEGIN
++struct fw_rsc_devmem
++{
++    uint32_t type;
++    uint32_t da;
++    uint32_t pa;
++    uint32_t len;
++    uint32_t flags;
++    uint32_t reserved;
++    uint8_t name[RPROC_MAX_NAME_LEN];
++} METAL_PACKED_END;
++
++/**
++ * struct fw_rsc_trace - trace buffer declaration
++ * @da: device address
++ * @len: length (in bytes)
++ * @reserved: reserved (must be zero)
++ * @name: human-readable name of the trace buffer
++ *
++ * This resource entry provides the host information about a trace buffer
++ * into which the remote remoteproc will write log messages.
++ *
++ * @da specifies the device address of the buffer, @len specifies
++ * its size, and @name may contain a human readable name of the trace buffer.
++ *
++ * After booting the remote remoteproc, the trace buffers are exposed to the
++ * user via debugfs entries (called trace0, trace1, etc..).
++ */
++METAL_PACKED_BEGIN
++struct fw_rsc_trace
++{
++    uint32_t type;
++    uint32_t da;
++    uint32_t len;
++    uint32_t reserved;
++    uint8_t name[RPROC_MAX_NAME_LEN];
++} METAL_PACKED_END;
++
++/**
++ * struct fw_rsc_vdev_vring - vring descriptor entry
++ * @da: device address
++ * @align: the alignment between the consumer and producer parts of the vring
++ * @num: num of buffers supported by this vring (must be power of two)
++ * @notifyid is a unique rproc-wide notify index for this vring. This notify
++ * index is used when kicking a remote remoteproc, to let it know that this
++ * vring is triggered.
++ * @reserved: reserved (must be zero)
++ *
++ * This descriptor is not a resource entry by itself; it is part of the
++ * vdev resource type (see below).
++ *
++ * Note that @da should either contain the device address where
++ * the remote remoteproc is expecting the vring, or indicate that
++ * dynamically allocation of the vring's device address is supported.
++ */
++METAL_PACKED_BEGIN
++struct fw_rsc_vdev_vring
++{
++    uint32_t da;
++    uint32_t align;
++    uint32_t num;
++    uint32_t notifyid;
++    uint32_t reserved;
++} METAL_PACKED_END;
++
++/**
++ * struct fw_rsc_vdev - virtio device header
++ * @id: virtio device id (as in virtio_ids.h)
++ * @notifyid is a unique rproc-wide notify index for this vdev. This notify
++ * index is used when kicking a remote remoteproc, to let it know that the
++ * status/features of this vdev have changes.
++ * @dfeatures specifies the virtio device features supported by the firmware
++ * @gfeatures is a place holder used by the host to write back the
++ * negotiated features that are supported by both sides.
++ * @config_len is the size of the virtio config space of this vdev. The config
++ * space lies in the resource table immediate after this vdev header.
++ * @status is a place holder where the host will indicate its virtio progress.
++ * @num_of_vrings indicates how many vrings are described in this vdev header
++ * @reserved: reserved (must be zero)
++ * @vring is an array of @num_of_vrings entries of 'struct fw_rsc_vdev_vring'.
++ *
++ * This resource is a virtio device header: it provides information about
++ * the vdev, and is then used by the host and its peer remote remoteprocs
++ * to negotiate and share certain virtio properties.
++ *
++ * By providing this resource entry, the firmware essentially asks remoteproc
++ * to statically allocate a vdev upon registration of the rproc (dynamic vdev
++ * allocation is not yet supported).
++ *
++ * Note: unlike virtualization systems, the term 'host' here means
++ * the Linux side which is running remoteproc to control the remote
++ * remoteprocs. We use the name 'gfeatures' to comply with virtio's terms,
++ * though there isn't really any virtualized guest OS here: it's the host
++ * which is responsible for negotiating the final features.
++ * Yeah, it's a bit confusing.
++ *
++ * Note: immediately following this structure is the virtio config space for
++ * this vdev (which is specific to the vdev; for more info, read the virtio
++ * spec). the size of the config space is specified by @config_len.
++ */
++METAL_PACKED_BEGIN
++struct fw_rsc_vdev
++{
++    uint32_t type;
++    uint32_t id;
++    uint32_t notifyid;
++    uint32_t dfeatures;
++    uint32_t gfeatures;
++    uint32_t config_len;
++    uint8_t status;
++    uint8_t num_of_vrings;
++    uint8_t reserved[2];
++    struct fw_rsc_vdev_vring vring[0];
++} METAL_PACKED_END;
++
++/**
++ * struct fw_rsc_vendor - remote processor vendor specific resource
++ * @len: length of the resource
++ *
++ * This resource entry tells the host the vendor specific resource
++ * required by the remote.
++ *
++ * These request entries should precede other shared resource entries
++ * such as vdevs, vrings.
++ */
++METAL_PACKED_BEGIN
++struct fw_rsc_vendor
++{
++    uint32_t type;
++    uint32_t len;
++} METAL_PACKED_END;
++
++#if defined __cplusplus
++}
++#endif
++
++#endif /* REMOTEPROC_H_ */
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/rpmsg_config.h b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/rpmsg_config.h
+new file mode 100644
+index 0000000..dce3efe
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/rpmsg_config.h
+@@ -0,0 +1,78 @@
++/*
++ * Copyright 2023 NXP
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++#ifndef _RPMSG_CONFIG_H
++#define _RPMSG_CONFIG_H
++
++/*!
++ * @addtogroup config
++ * @{
++ * @file
++ */
++
++//! @name Configuration options
++//@{
++
++//! @def RL_MS_PER_INTERVAL
++//!
++//! Delay in milliseconds used in non-blocking API functions for polling.
++//! The default value is 1.
++#define RL_MS_PER_INTERVAL (1)
++
++//! @def RL_BUFFER_PAYLOAD_SIZE
++//!
++//! Size of the buffer payload, it must be equal to (240, 496, 1008, ...)
++//! [2^n - 16].
++//! The default value is 496U.
++#define RL_BUFFER_PAYLOAD_SIZE (496U)
++
++//! @def RL_BUFFER_COUNT
++//!
++//! Number of the buffers, it must be power of two (2, 4, ...).
++//! The default value is 2U.
++#define RL_BUFFER_COUNT (256U)
++
++//! @def RL_API_HAS_ZEROCOPY
++//!
++//! Zero-copy API functions enabled/disabled.
++//! The default value is 1 (enabled).
++#define RL_API_HAS_ZEROCOPY (1)
++
++//! @def RL_USE_STATIC_API
++//!
++//! Static API functions (no dynamic allocation) enabled/disabled.
++//! The default value is 0 (static API disabled).
++#define RL_USE_STATIC_API (0)
++
++//! @def RL_CLEAR_USED_BUFFERS
++//!
++//! Clearing used buffers before returning back to the pool of free buffers
++//! enabled/disabled.
++//! The default value is 0 (disabled).
++#define RL_CLEAR_USED_BUFFERS (0)
++
++//! @def RL_USE_MCMGR_IPC_ISR_HANDLER
++//!
++//! When enabled IPC interrupts are managed by the Multicore Manager (IPC
++//! interrupts router), when disabled RPMsg-Lite manages IPC interrupts
++//! by itself.
++//! The default value is 0 (no MCMGR IPC ISR handler used).
++#define RL_USE_MCMGR_IPC_ISR_HANDLER (0)
++
++//! @def RL_USE_ENVIRONMENT_CONTEXT
++//!
++//! When enabled the environment layer uses its own context.
++//! Added for QNX port mainly, but can be used if required.
++//! The default value is 0 (no context, saves some RAM).
++#define RL_USE_ENVIRONMENT_CONTEXT (0)
++
++//! @def RL_DEBUG_CHECK_BUFFERS
++//!
++//! Do not use in RPMsg-Lite to Linux configuration
++#define RL_DEBUG_CHECK_BUFFERS (0)
++//@}
++//
++#endif /* _RPMSG_CONFIG_H */
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/rsc_table.c b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/rsc_table.c
+new file mode 100644
+index 0000000..c61f302
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/rsc_table.c
+@@ -0,0 +1,84 @@
++/*
++ * Copyright 2023 NXP
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++/* This file populates resource table for BM remote
++ * for use by the Linux Master */
++
++#include <string.h>
++#include "board.h"
++#include "rsc_table.h"
++#include "rpmsg_lite.h"
++
++#define NUM_VRINGS 0x02
++
++/* Place resource table in special ELF section */
++#if defined(__ARMCC_VERSION) || defined(__GNUC__)
++__attribute__((section(".resource_table")))
++#elif defined(__ICCARM__)
++#pragma location = ".resource_table"
++#else
++#error Compiler not supported!
++#endif
++const struct remote_resource_table resources = {
++    /* Version */
++    1,
++
++    /* NUmber of table entries */
++    NO_RESOURCE_ENTRIES,
++
++    /* reserved fields */
++    {
++        0,
++        0,
++    },
++
++    /* Offsets of rsc entries */
++    {
++        offsetof(struct remote_resource_table, srtm_vdev),
++        offsetof(struct remote_resource_table, user_vdev),
++    },
++
++    /* SRTM virtio device entry */
++    {
++        RSC_VDEV,
++        7,
++        0,
++        RSC_VDEV_FEATURE_NS,
++        0,
++        0,
++        0,
++        NUM_VRINGS,
++        {0, 0},
++    },
++
++    /* Vring rsc entry - part of vdev rsc entry */
++    {VDEV0_VRING_BASE, VRING_ALIGN, RL_BUFFER_COUNT, 0, 0},
++    {VDEV0_VRING_BASE + VRING_SIZE, VRING_ALIGN, RL_BUFFER_COUNT, 1, 0},
++
++    /* SRTM virtio device entry */
++    {
++        RSC_VDEV,
++        7,
++        1,
++        RSC_VDEV_FEATURE_NS,
++        0,
++        0,
++        0,
++        NUM_VRINGS,
++        {0, 0},
++    },
++
++    /* Vring rsc entry - part of vdev rsc entry */
++    {VDEV1_VRING_BASE, VRING_ALIGN, RL_BUFFER_COUNT, 2, 0},
++    {VDEV1_VRING_BASE + VRING_SIZE, VRING_ALIGN, RL_BUFFER_COUNT, 3, 0},
++};
++
++void copyResourceTable(void)
++{
++    /* TCM ECC is enabled in default. Must initialize to use. */
++    memset((void *)RESOURCE_TABLE_START, 0, RESOURCE_TABLE_SIZE);
++    memcpy((void *)RESOURCE_TABLE_START, &resources, sizeof(resources));
++}
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/rsc_table.h b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/rsc_table.h
+new file mode 100644
+index 0000000..e0b909a
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/rsc_table.h
+@@ -0,0 +1,55 @@
++/*
++ * Copyright 2023 NXP
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++/* This file populates resource table for BM remote
++ * for use by the Linux Master */
++
++#ifndef RSC_TABLE_H_
++#define RSC_TABLE_H_
++
++#include <stddef.h>
++#include <remoteproc.h>
++
++#if defined __cplusplus
++extern "C" {
++#endif
++
++#define NO_RESOURCE_ENTRIES (2)
++#define RSC_VDEV_FEATURE_NS (1) /* Support name service announcement */
++
++#define RESOURCE_TABLE_START 0x2001E000U
++#define RESOURCE_TABLE_SIZE  0x1000U
++
++/* Resource table for the given remote */
++METAL_PACKED_BEGIN
++struct remote_resource_table
++{
++    uint32_t version;
++    uint32_t num;
++    uint32_t reserved[2];
++    uint32_t offset[NO_RESOURCE_ENTRIES];
++
++    /* rpmsg vdev entry for srtm communication */
++    struct fw_rsc_vdev srtm_vdev;
++    struct fw_rsc_vdev_vring srtm_vring0;
++    struct fw_rsc_vdev_vring srtm_vring1;
++    /* rpmsg vdev entry for user app communication */
++    struct fw_rsc_vdev user_vdev;
++    struct fw_rsc_vdev_vring user_vring0;
++    struct fw_rsc_vdev_vring user_vring1;
++} METAL_PACKED_END;
++
++/*
++ * Copy resource table to shared memory base for early M Core boot case.
++ * In M Core early boot case, Linux kernel need to get resource table before file system gets loaded.
++ */
++void copyResourceTable(void);
++
++#if defined __cplusplus
++}
++#endif
++
++#endif /* RSC_TABLE_H_ */
+diff --git a/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/srtm_config.h b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/srtm_config.h
+new file mode 100644
+index 0000000..4bc8c49
+--- /dev/null
++++ b/boards/mcimx93qsb/multicore_examples/rpmsg_lite_uart_sharing_rtos/srtm_config.h
+@@ -0,0 +1,28 @@
++/*
++ * Copyright 2023 NXP
++ *
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++#ifndef _SRTM_CONFIG_H
++#define _SRTM_CONFIG_H
++
++#ifdef SDK_OS_FREE_RTOS
++#include "FreeRTOS.h"
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++#if configSUPPORT_STATIC_ALLOCATION
++#define SRTM_STATIC_API 1
++typedef StaticSemaphore_t srtm_sem_buf_t;
++typedef StaticSemaphore_t srtm_mutex_buf_t;
++#endif
++
++#endif /* SDK_OS_FREE_RTOS */
++
++#ifdef __cplusplus
++}
++#endif
++#endif /* _SRTM_CONFIG_H */
+-- 
+2.25.1
+
