@@ -14,9 +14,9 @@ SRC_URI = " \
     ${MCUX_SDK_SRC};destsuffix=git/mcux-sdk;name=mcux-sdk \
     ${CMSIS_SRC};destsuffix=git/mcux-sdk/CMSIS;name=CMSIS \
     ${FREERTOS_KERNEL_SRC};destsuffix=git/FreeRTOS-Kernel;name=FreeRTOS-Kernel \
-    ${RPMSG_LITE_SRC};destsuffix=git/middleware/multicore/rpmsg_lite;name=rpmsg-lite \
     ${LWIP_SRC};destsuffix=git/middleware/lwip;name=lwip \
     ${MCUX_SDK_MIDDLEWARE_MULTICORE_SRC};destsuffix=git/middleware/multicore;name=mcux-sdk-middleware-multicore \
+    ${RPMSG_LITE_SRC};destsuffix=git/middleware/multicore/rpmsg_lite;name=rpmsg-lite \
 "
 
 SRCREV_mcux-sdk = "${AUTOREV}"
