@@ -3,15 +3,15 @@
 require mcux-sdk-common.inc
 
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://LA_OPT_NXP_Software_License.txt;md5=b592a5e3fd12f6337531d6aec2d7db8d"
+LIC_FILES_CHKSUM = "file://LA_OPT_NXP_Software_License.txt;md5=99c3c4327c01ce19cda75b537a1fb1af"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI = " \
-    file://SDK_2_13_1_MCIMX93-EVK.tar.gz \
-    file://0001-REL_2.13.1_IMX93_PRC2_RC3_0-add-srtm-uart-service.patch \
-    file://0002-REL_2.13.1_IMX93_PRC2_RC3_0-move-structure-to-header.patch \
-    file://0003-REL_2.13.1_IMX93_PRC2_RC3_0-add-rpmsg_lite_uart_shar.patch \
+    file://SDK_2_14_1_MCIMX93-EVK.tar.gz \
+    file://0001-REL_2.14.1_IMX93_PRC2_RC2_1-srtm-move-srtm-endpoint-.patch \
+    file://0002-REL_2.14.1_IMX93_PRC2_RC2_1-add-srtm-uart-service.patch \
+    file://0003-REL_2.14.1_IMX93_PRC2_RC2_1-add-rpmsg_lite_uart_shar.patch \
 "
 
 MCUX_EXAMPLE_DIR = "boards/${RTOS-INDUSTRIAL-BOARD}/multicore_examples/rpmsg_lite_uart_sharing_rtos"
