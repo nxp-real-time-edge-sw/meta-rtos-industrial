@@ -19,12 +19,12 @@ SRC_URI = " \
     ${RPMSG_LITE_SRC};destsuffix=git/middleware/multicore/rpmsg_lite;name=rpmsg-lite \
 "
 
-SRCREV_mcux-sdk = "${AUTOREV}"
-SRCREV_CMSIS = "${AUTOREV}"
-SRCREV_FreeRTOS-Kernel = "${AUTOREV}"
-SRCREV_rpmsg-lite = "${AUTOREV}"
-SRCREV_lwip = "${AUTOREV}"
-SRCREV_mcux-sdk-middleware-multicore = "${AUTOREV}"
+SRCREV_mcux-sdk = "${MCUX_SDK_SRCREV}"
+SRCREV_CMSIS = "${CMSIS_SRCREV}"
+SRCREV_FreeRTOS-Kernel = "${FREERTOS_KERNEL_SRCREV}"
+SRCREV_rpmsg-lite = "${RPMSG_LITE_SRCREV}"
+SRCREV_lwip = "${LWIP_SRCREV}"
+SRCREV_mcux-sdk-middleware-multicore = "${MCUX_SDK_MIDDLEWARE_MULTICORE_SRCREV}"
 
 S = "${WORKDIR}/git"
 
