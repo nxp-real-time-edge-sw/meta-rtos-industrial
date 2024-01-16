@@ -1,0 +1,240 @@
+Release Name: Yocto layer NXP RTOS Industrial
+Release Version: 2.8
+Package License: LICENSE.txt - Additional Distribution License granted, license in Section 2.3 applies
+
+SDK_Examples               Name: SDK examples
+                           Version: NA
+                           Outgoing License: BSD-3-Clause
+                           License File: COPYING-BSD-3
+                           Format: source code, binary, project files, linker
+                           files
+                           Description: SDK out of box examples to show how
+                           to use peripheral drivers and integrate
+                           middleware.
+                           Location: boards/<board>/
+                           Origin: NXP (BSD-3-Clause)
+
+segger_sysview             Name: Segger SystemView Demo
+                           Version: 3.30
+                           Outgoing License: BSD-1-Clause
+                           License File:
+                           boards/<board>/freertos_examples/visualization/fre
+                           ertos_segger_sysview/LICENSE
+                           Format: source code
+                           Description: Segger SystemView demo
+                           Location:
+                           boards/<board>/freertos_examples/visualization/fre
+                           ertos_segger_sysview
+                           Origin: Segger (BSD-1-Clause)
+                           Url:
+                           https://www.segger.com/products/development-tools/
+                           systemview/
+
+SDK_Peripheral_Driver      Name: SDK Peripheral Driver
+                           Version: 2.x.x
+                           Outgoing License: BSD-3-Clause
+                           License File: COPYING-BSD-3
+                           Format: source code
+                           Description: Peripheral drivers are designed for
+                           the most common use cases identified for the
+                           underlying hardware block.
+                           Location: devices/<device>/drivers
+                           Origin: NXP (BSD-3-Clause)
+
+SDK_Device                 Name: SDK SoC files
+                           Version: NA
+                           Outgoing License: BSD-3-Clause
+                           License File: COPYING-BSD-3
+                           Format: source code, linker files
+                           Description: Device system files, template files,
+                           IDE related startup and linker files.
+                           Location: devices/<device>/
+                           Origin: NXP (BSD-3-Clause)
+
+SDK_Components             Name: SDK components and board peripheral drivers
+                           Version: NA
+                           Outgoing License: BSD-3-Clause
+                           License File: COPYING-BSD-3
+                           Format: source code
+                           Description: SDK components and board peripheral
+                           drivers, for example, flash and codec drivers.
+                           Location: components/
+                           Origin: NXP (BSD-3-Clause), ITE (BSD-3-Clause)
+
+cmsis_drivers              Name: SDK CMSIS Peripheral Drivers
+                           Version: 2.x.x
+                           Outgoing License: Apache License 2.0
+                           License File: CMSIS/LICENSE.txt
+                           Format: source code
+                           Description: CMSIS Peripheral drivers are designed
+                           to provide hardware independent APIs which make
+                           application reusable across a wide range of
+                           supported microcontroller devices.
+                           Location: devices/<device>/cmsis_drivers
+                           Origin: NXP (Apache License 2.0)
+
+CMSIS                      Name: CMSIS
+                           Version: 5.8.0
+                           Outgoing License: Apache License 2.0
+                           License File: CMSIS/LICENSE.txt
+                           Format: source code
+                           Description: Vendor-independent hardware
+                           abstraction layer for microcontrollers that are
+                           based on Arm Cortex processors, distributed by
+                           ARM. cores
+                           Location: CMSIS/
+                           Origin: NXP (Apache License 2.0)
+
+freertos-kernel            Name: FreeRTOS kernel
+                           Version: 10.5.1
+                           Outgoing License: MIT
+                           License File:
+                           rtos/freertos/freertos-kernel/LICENSE.md
+                           Format: source code
+                           Description: Open source RTOS kernel for small
+                           devices
+                           Location: rtos/freertos/freertos-kernel
+                           Origin: Amazon (MIT)
+                           Url: https://github.com/FreeRTOS/FreeRTOS-Kernel
+
+mbedtls                    Name: Mbed TLS
+                           Version: 2.28.3
+                           Outgoing License: Apache-2.0
+                           License File: middleware/mbedtls/LICENSE
+                           Format: source code
+                           Description: Cryptographic and SSL/TLS Library
+                           Location: middleware/mbedtls
+                           Origin: ARM(Apache-2.0) -
+                           https://github.com/Mbed-TLS/mbedtls/releases/tag/v
+                           2.28.3
+
+mmcau                      Name: mmCAU S/W Library
+                           Version: 2.0.4
+                           Outgoing License: BSD-3-Clause
+                           License File: middleware/mmcau/LICENSE
+                           Format: source code
+                           Description: S/W library that works with the
+                           memory-mapped cryptographic acceleration unit
+                           present on some MCUXpresso SoCs
+                           Location: middleware/mmcau
+                           Origin: NXP (BSD-3-Clause)
+
+multicore                  Name: Multicore SDK
+                           Version: 2.14.0
+                           Outgoing License: BSD-3-Clause
+                           License File: COPYING-BSD-3
+                           Format: source code
+                           Description: NXP Multicore Software Development
+                           Kit.
+                           Location: middleware/multicore
+                           Origin: NXP (BSD-3-Clause)
+
+multicore_rpmsg_lite       Name: RPMsg-Lite
+                           Version: 5.1.0
+                           Outgoing License: BSD-3-Clause
+                           License File: COPYING-BSD-3
+                           Format: source code
+                           Description: Open Asymmetric Multi Processing
+                           (OpenAMP) framework project
+                           Location: middleware/multicore/rpmsg_lite
+                           Origin: Mentor Graphics Corporation & community
+                           contributors
+                           Url: https://github.com/NXPmicro/rpmsg-lite
+
+multicore_erpc             Name: eRPC
+                           Version: 1.11.0
+                           Outgoing License: BSD-3-Clause
+                           License File: middleware/multicore/erpc/LICENSE
+                           Format: source code
+                           Description: Embedded Remote Procedure Call
+                           Location: middleware/multicore/erpc
+                           Origin: NXP & community contributors
+                           Url: https://github.com/EmbeddedRPC/erpc
+
+usb                        Name: USB
+                           Version: 2.9.0
+                           Outgoing License: BSD-3-Clause
+                           License File: COPYING-BSD-3
+                           Format: source code
+                           Description: NXP USB stack. This is a version of
+                           the USB stack that has been integrated with the
+                           MCUXpresso SDK.
+                           Location: middleware/usb
+                           Origin: NXP (BSD-3-Clause)
+
+osa                        Name: OSA
+                           Version: 1.0.0
+                           Outgoing License: BSD-3-Clause
+                           License File: COPYING-BSD-3
+                           Format: source code
+                           Description: NXP USB stack. This is a version of
+                           the USB stack that has been integrated with the
+                           MCUXpresso SDK.
+                           Origin: NXP (BSD-3-Clause)
+                           Location: components/osa
+
+issdk                      Name: ISSDK
+                           Version: 1.7
+                           Outgoing License: BSD-3-Clause
+                           License File: COPYING-BSD-3
+                           Format: source code
+                           Description: NXP IoT Sensing SDK. It combines a
+                           set of robust Sensor Drivers and algorithms along
+                           with example applications.
+                           Location: middleware/issdk
+                           Origin: NXP (BSD-3-Clause)
+
+Pedometer_Library          Name: Pedometer Library
+                           Version: 1.0.0
+                           Outgoing License: LA_OPT_NXP_Software_License.txt
+                           v45 May 2023- Additional Distribution License
+                           granted, license in Section 2.3 applies
+                           License File: LA_OPT_NXP_Software_License.txt
+                           Format: binary library
+                           Description: NXP issdk pedometer algorithm library
+                           for Arm Cortex M0+ and M4 processors
+                           Location:
+                           middleware/issdk/algorithms/pedometer/lib
+                           Origin: KEYnetik, Inc
+
+fatfs                      Name: FatFs
+                           Version: 0.14b
+                           Outgoing License: FatFs License
+                           Approved open source license: Yes
+                           License File: middleware/fatfs/LICENSE.txt
+                           Format: source code
+                           Description: Generic FAT file system for small
+                           embedded devices.
+                           Location: middleware/fatfs
+                           Origin: Electronic Lives Mfg. by ChaN of Ageo
+                           city, Japan (FatFs License)
+                           Url: http://elm-chan.org/fsw/ff/00index_e.html
+
+sdmmc                      Name: SD MMC SDIO Card middleware
+                           Version: 2.2.7
+                           Outgoing License: BSD-3-Clause
+                           License File: COPYING-BSD-3
+                           Format: source code
+                           Description: A software component support SD card,
+                           eMMC card, SDIO card.
+                           Location: middleware/sdmmc
+                           Origin: NXP (BSD-3-Clause)
+
+sdmmc_sdspi                Name: SD Card middleware
+                           Version: 2.1.4
+                           Outgoing License: BSD-3-Clause
+                           License File: COPYING-BSD-3
+                           Format: source code
+                           Description: A software component support access
+                           SD card through spi.
+                           Location: middleware/sdmmc/sdspi
+                           Origin: NXP (BSD-3-Clause)
+
+soem                       Name: soem
+                           Version: 1.4.0
+                           Outgoing License: GPL-2.0
+                           License File: gpl-2.0.txt
+                           Format: source
+                           Description: Simple Open EtherCAT Master Library
+                           Location: https://github.com/nxp-real-time-edge-sw/soem.git
+                           Origin: OpenEtherCATsociety (GPL-2.0) - https://github.com/OpenEtherCATsociety/SOEM
