@@ -1,4 +1,4 @@
-# Copyright 2022-2023 NXP
+# Copyright 2022-2024 NXP
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
@@ -17,6 +17,8 @@ SRC_URI = " \
     ${LWIP_SRC};destsuffix=git/middleware/lwip;name=lwip \
     ${MCUX_SDK_MIDDLEWARE_MULTICORE_SRC};destsuffix=git/middleware/multicore;name=mcux-sdk-middleware-multicore \
     ${RPMSG_LITE_SRC};destsuffix=git/middleware/multicore/rpmsg_lite;name=rpmsg-lite \
+    ${ZEPHYR_SRC};destsuffix=git/zephyr;name=zephyr \
+    ${HAL_NXP_SRC};destsuffix=git/modules/hal/nxp;name=hal-nxp \
 "
 
 SRCREV_mcux-sdk = "${MCUX_SDK_SRCREV}"
@@ -25,6 +27,8 @@ SRCREV_FreeRTOS-Kernel = "${FREERTOS_KERNEL_SRCREV}"
 SRCREV_rpmsg-lite = "${RPMSG_LITE_SRCREV}"
 SRCREV_lwip = "${LWIP_SRCREV}"
 SRCREV_mcux-sdk-middleware-multicore = "${MCUX_SDK_MIDDLEWARE_MULTICORE_SRCREV}"
+SRCREV_zephyr = "${ZEPHYR_SRCREV}"
+SRCREV_hal-nxp = "${HAL_NXP_SRCREV}"
 
 S = "${WORKDIR}/git"
 
