@@ -1,4 +1,4 @@
-# Copyright 2023 NXP
+# Copyright 2023-2024 NXP
 
 require mcux-sdk-src.inc
 require hmc.inc
@@ -18,6 +18,7 @@ do_install:append () {
     install -d ${D}${bindir}
     install -p ${S}/heterogeneous-multicore/tools/ram_console/ram_console_dump ${D}${bindir}
     install -p ${S}/heterogeneous-multicore/tools/rpmsg_perf/rpmsg_perf ${D}${bindir}
+    install -p ${S}/heterogeneous-multicore/tools/virtio_perf/vt_test.sh ${D}${bindir}
 }
 
 FILES:${PN} += "${bindir}"
