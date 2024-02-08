@@ -5,6 +5,7 @@ require mcux-sdk-src.inc
 require hmc.inc
 
 inherit deploy
+inherit python3native
 
 do_configure[noexec] = "1"
 # do_rootfs[noexec] = "1"
@@ -59,3 +60,8 @@ do_deploy () {
 }
 
 addtask deploy after do_compile
+
+DEPENDS += "python3-packaging-native"
+DEPENDS += "python3-pyelftools-native"
+DEPENDS += "python3-pykwalify-native"
+DEPENDS += "python3-pyyaml-native"
