@@ -10,4 +10,4 @@ python () {
 
 # IMAGE_NO_MANIFEST = "1"
 
-IMAGE_FSTYPES = "elf bin"
+EXAMPLE_TYPES = "elf bin"

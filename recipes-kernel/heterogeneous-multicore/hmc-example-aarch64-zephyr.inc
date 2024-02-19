@@ -46,7 +46,7 @@ FILES:${PN} += "/examples/*"
 do_install () {
     install -d ${D}/${EXAMPLE_INSTALL_DIR}/${PN}
 
-    for type in ${IMAGE_FSTYPES}; do
+    for type in ${EXAMPLE_TYPES}; do
         cp ${EXAMPLE_ARMGCC_DIR}/${BUILD_DIR}/${BIN_NAME}.${type}  ${D}/${EXAMPLE_INSTALL_DIR}/${PN}
     done
 }
@@ -54,7 +54,7 @@ do_install () {
 do_deploy () {
     install -d ${DEPLOYDIR}/${EXAMPLE_INSTALL_DIR}/${PN}
 
-    for type in ${IMAGE_FSTYPES}; do
+    for type in ${EXAMPLE_TYPES}; do
         cp ${EXAMPLE_ARMGCC_DIR}/${BUILD_DIR}/${BIN_NAME}.${type}  ${DEPLOYDIR}/${EXAMPLE_INSTALL_DIR}/${PN}
     done
 }
