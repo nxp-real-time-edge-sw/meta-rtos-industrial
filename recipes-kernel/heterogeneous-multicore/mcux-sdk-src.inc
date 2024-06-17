@@ -15,6 +15,7 @@ SRC_URI = " \
     ${CMSIS_SRC};destsuffix=git/mcux-sdk/CMSIS;name=CMSIS \
     ${FREERTOS_KERNEL_SRC};destsuffix=git/FreeRTOS-Kernel;name=FreeRTOS-Kernel \
     ${LWIP_SRC};destsuffix=git/middleware/lwip;name=lwip \
+    ${SOEM_SRC};destsuffix=git/middleware/soem;name=soem \
     ${MCUX_SDK_MIDDLEWARE_MULTICORE_SRC};destsuffix=git/middleware/multicore;name=mcux-sdk-middleware-multicore \
     ${RPMSG_LITE_SRC};destsuffix=git/middleware/multicore/rpmsg_lite;name=rpmsg-lite \
     ${ZEPHYR_SRC};destsuffix=git/zephyr;name=zephyr \
@@ -26,6 +27,7 @@ SRCREV_CMSIS = "${CMSIS_SRCREV}"
 SRCREV_FreeRTOS-Kernel = "${FREERTOS_KERNEL_SRCREV}"
 SRCREV_rpmsg-lite = "${RPMSG_LITE_SRCREV}"
 SRCREV_lwip = "${LWIP_SRCREV}"
+SRCREV_soem = "${SOEM_SRCREV}"
 SRCREV_mcux-sdk-middleware-multicore = "${MCUX_SDK_MIDDLEWARE_MULTICORE_SRCREV}"
 SRCREV_zephyr = "${ZEPHYR_SRCREV}"
 SRCREV_hal-nxp = "${HAL_NXP_SRCREV}"
