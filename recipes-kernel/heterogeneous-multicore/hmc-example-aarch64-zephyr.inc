@@ -38,7 +38,7 @@ do_compile() {
     ./clean.sh
 
     # build
-    ./build.sh
+    ./build_release.sh
 }
 
 FILES:${PN} += "/examples/*"
