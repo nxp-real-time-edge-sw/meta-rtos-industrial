@@ -16,7 +16,8 @@ SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu/${PV}/binrel/ar
 SRC_URI[gcc-aarch64.sha256sum] = "f3871c0d91a7375834eb43eb758f4df6d8dadf20ad9deca2eb569d5599d98e89"
 SRC_URI[gcc-x86_64.sha256sum] = "7fe7b8548258f079d6ce9be9144d2a10bd2bf93b551dafbf20fe7f2e44e014b8"
 
-S = "${WORKDIR}/arm-gnu-toolchain-${PV}-${HOST_ARCH}-${BINNAME}"
+# The decompressed toolchain version string is changed to capitalized "Rel1"
+S = "${WORKDIR}/arm-gnu-toolchain-13.2.Rel1-${HOST_ARCH}-${BINNAME}"
 
 UPSTREAM_CHECK_URI = "https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-a/downloads"
 UPSTREAM_CHECK_REGEX = "gcc-arm-(?P<pver>.+)-${HOST_ARCH}-${BINNAME}\.tar\.\w+"
