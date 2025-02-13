@@ -19,6 +19,7 @@ do_install:append () {
     install -p ${S}/heterogeneous-multicore/tools/ram_console/ram_console_dump ${D}${bindir}
     install -p ${S}/heterogeneous-multicore/tools/rpmsg_perf/rpmsg_perf ${D}${bindir}
     install -p ${S}/heterogeneous-multicore/tools/virtio_perf/vt_test.sh ${D}${bindir}
+    install -p ${S}/heterogeneous-multicore/tools/rt_setup/real_time_setup.sh ${D}${bindir}
 }
 
 FILES:${PN} += "${bindir}"
