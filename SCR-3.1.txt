@@ -224,9 +224,9 @@ eiq_tensorflow_lite        Name: TensorFlow Lite for Microcontrollers
 
 soem                       Name: soem
                            Version: 1.4.0
-                           Outgoing License: GPL-2.0
-                           License File: gpl-2.0.txt
+                           Outgoing License: GPL-2.0-with-exception
+                           License File: LICENSE
                            Format: source
                            Description: Simple Open EtherCAT Master Library
                            Location: https://github.com/nxp-real-time-edge-sw/soem.git
-                           Origin: OpenEtherCATsociety (GPL-2.0) - https://github.com/OpenEtherCATsociety/SOEM
+                           Origin: SOEM (GPL-2.0-with-exception) - https://github.com/OpenEtherCATsociety/SOEM
