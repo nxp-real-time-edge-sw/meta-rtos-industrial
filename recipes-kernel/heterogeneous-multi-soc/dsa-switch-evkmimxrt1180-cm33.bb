@@ -7,7 +7,8 @@ SRC_URI = "file://COPYING-BSD-3 \
            file://release \
            file://ram_release"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/src"
+UNPACKDIR = "${S}"
 
 inherit deploy
 
@@ -18,15 +19,15 @@ do_package_qa[noexec] = "1"
 do_install() {
     install -d ${D}/${EXAMPLE_INSTALL_DIR}/${PN}/release
     install -d ${D}/${EXAMPLE_INSTALL_DIR}/${PN}/ram_release
-    install -Dm 0755 ${WORKDIR}/release/* ${D}/${EXAMPLE_INSTALL_DIR}/${PN}/release
-    install -Dm 0755 ${WORKDIR}/ram_release/* ${D}/${EXAMPLE_INSTALL_DIR}/${PN}/ram_release
+    install -Dm 0755 ${UNPACKDIR}/release/* ${D}/${EXAMPLE_INSTALL_DIR}/${PN}/release
+    install -Dm 0755 ${UNPACKDIR}/ram_release/* ${D}/${EXAMPLE_INSTALL_DIR}/${PN}/ram_release
 }
 
 do_deploy () {
     install -d ${DEPLOYDIR}/${EXAMPLE_INSTALL_DIR}/${PN}/release
     install -d ${DEPLOYDIR}/${EXAMPLE_INSTALL_DIR}/${PN}/ram_release
-    install -Dm 0755 ${WORKDIR}/release/* ${DEPLOYDIR}/${EXAMPLE_INSTALL_DIR}/${PN}/release
-    install -Dm 0755 ${WORKDIR}/ram_release/* ${DEPLOYDIR}/${EXAMPLE_INSTALL_DIR}/${PN}/ram_release
+    install -Dm 0755 ${UNPACKDIR}/release/* ${DEPLOYDIR}/${EXAMPLE_INSTALL_DIR}/${PN}/release
+    install -Dm 0755 ${UNPACKDIR}/ram_release/* ${DEPLOYDIR}/${EXAMPLE_INSTALL_DIR}/${PN}/ram_release
 }
 
 FILES:${PN} += "/examples/heterogeneous-multi-soc/dsa-switch-evkmimxrt1180-cm33/*"
