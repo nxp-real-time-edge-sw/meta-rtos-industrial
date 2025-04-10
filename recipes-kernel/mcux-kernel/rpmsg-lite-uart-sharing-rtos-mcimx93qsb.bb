@@ -16,7 +16,7 @@ SRC_URI = " \
 
 MCUX_EXAMPLE_DIR = "boards/${RTOS-INDUSTRIAL-BOARD}/multicore_examples/rpmsg_lite_uart_sharing_rtos"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/src"
 
 inherit deploy
 
