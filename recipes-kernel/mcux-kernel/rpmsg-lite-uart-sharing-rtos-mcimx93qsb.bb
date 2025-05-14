@@ -1,4 +1,4 @@
-# Copyright 2023 NXP
+# Copyright 2023, 2025 NXP
 
 require mcux-sdk-common.inc
 
@@ -34,8 +34,8 @@ INHIBIT_DEFAULT_DEPS = "1"
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
-DEPENDS = "gcc-arm-none-eabi-native"
-ARMGCC_DIR ?= "${WORKDIR}/recipe-sysroot-native${libexecdir}/gcc-arm-none-eabi"
+DEPENDS = "rtos-gcc-arm-none-eabi-native"
+ARMGCC_DIR ?= "${WORKDIR}/recipe-sysroot-native${libexecdir}/rtos-gcc-arm-none-eabi"
 
 EXAMPLE_ARMGCC_DIR = "${S}/${MCUX_EXAMPLE_DIR}/armgcc"
 

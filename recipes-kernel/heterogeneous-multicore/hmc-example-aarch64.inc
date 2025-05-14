@@ -1,4 +1,4 @@
-# Copyright 2022-2023 NXP
+# Copyright 2022-2023, 2025 NXP
 
 require hmc-common.inc
 require mcux-sdk-src.inc
@@ -20,8 +20,8 @@ INHIBIT_DEFAULT_DEPS = "1"
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
-DEPENDS = "gcc-aarch64-none-elf-native"
-ARMGCC_DIR ?= "${WORKDIR}/recipe-sysroot-native${libexecdir}/gcc-aarch64-none-elf"
+DEPENDS = "rtos-gcc-aarch64-none-elf-native"
+ARMGCC_DIR ?= "${WORKDIR}/recipe-sysroot-native${libexecdir}/rtos-gcc-aarch64-none-elf"
 
 EXAMPLE_ARMGCC_DIR = "${S}/${HMC_EXAMPLE_DIR}/armgcc_aarch64"
 

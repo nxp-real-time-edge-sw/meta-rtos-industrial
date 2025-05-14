@@ -1,10 +1,10 @@
-# Copyright 2022-2024 NXP
+# Copyright 2022-2025 NXP
 
 INHIBIT_DEFAULT_DEPS = "1"
 
 FILES:${PN} = "${libexecdir} ${bindir}"
 
-BINNAME = "${@d.getVar("BPN").strip("gcc-")}"
+BINNAME = "${@d.getVar("BPN").strip("rtos-gcc-")}"
 
 do_install() {
     install -d ${D}${bindir} ${D}${libexecdir}/${BPN}/

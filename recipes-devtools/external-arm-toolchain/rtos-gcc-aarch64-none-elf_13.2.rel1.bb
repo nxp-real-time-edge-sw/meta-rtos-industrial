@@ -1,4 +1,4 @@
-# Copyright 2024 NXP
+# Copyright 2024-2025 NXP
 
 require arm-binary-toolchain.inc
 
@@ -10,7 +10,7 @@ LICENSE = "GPL-3.0-with-GCC-exception & GPL-3.0-only"
 LIC_FILES_CHKSUM:aarch64 = "file://share/doc/gcc/Copying.html;md5=402090210d41f07263e91f760d0d1ea3"
 LIC_FILES_CHKSUM:x86-64 = "file://share/doc/gcc/Copying.html;md5=2a62a4d37ddad55da732679acd9edf03"
 
-PROVIDES = "virtual/aarch64-none-elf-gcc"
+PROVIDES = "rtos-gcc-aarch64-none-elf"
 
 SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu/${PV}/binrel/arm-gnu-toolchain-${PV}-${HOST_ARCH}-${BINNAME}.tar.xz;name=gcc-${HOST_ARCH}"
 SRC_URI[gcc-aarch64.sha256sum] = "f3871c0d91a7375834eb43eb758f4df6d8dadf20ad9deca2eb569d5599d98e89"
