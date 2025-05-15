@@ -4,6 +4,7 @@ Date: Tue, 14 Mar 2023 13:23:20 +0800
 Subject: [PATCH 3/3] REL_2.14.1_IMX93_PRC2_RC2_1: add
  rpmsg_lite_uart_sharing_rtos demo
 
+Upstream-Status: Inappropriate [configuration specific]
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 ---
  .../FreeRTOSConfig.h                          | 183 +++++

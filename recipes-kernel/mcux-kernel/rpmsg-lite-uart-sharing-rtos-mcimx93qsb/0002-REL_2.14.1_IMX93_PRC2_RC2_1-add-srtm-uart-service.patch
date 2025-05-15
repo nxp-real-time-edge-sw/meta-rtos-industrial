@@ -3,6 +3,7 @@ From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Date: Tue, 14 Mar 2023 13:10:36 +0800
 Subject: [PATCH 2/3] REL_2.14.1_IMX93_PRC2_RC2_1: add srtm uart service
 
+Upstream-Status: Inappropriate [configuration specific]
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 ---
  components/srtm/services/srtm_uart_adapter.c | 179 ++++++
