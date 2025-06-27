@@ -1,5 +1,5 @@
 Release Name: Yocto layer NXP RTOS Industrial
-Release Version: 3.0
+Release Version: 3.2
 Package License: LICENSE.txt - Additional Distribution License granted, license in Section 2.3 applies
 
 SDK_Examples               Name: SDK examples
