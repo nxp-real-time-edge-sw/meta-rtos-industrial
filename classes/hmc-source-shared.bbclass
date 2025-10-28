@@ -12,6 +12,11 @@ S = "${HMS_SOURCE_DIR}"
 do_fetch[noexec] = "1"
 do_unpack[noexec] = "1"
 
+# Critical: Ensure all tasks that need source wait for hmc-source
+do_populate_lic[depends] += "hmc-source:do_unpack"
+do_configure[depends] += "hmc-source:do_configure"
+do_compile[depends] += "hmc-source:do_configure"
+
 # Verify source is ready before configure
 do_configure[prefuncs] += "hmc_verify_source"
 

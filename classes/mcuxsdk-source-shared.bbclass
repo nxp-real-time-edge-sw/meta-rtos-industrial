@@ -12,6 +12,11 @@ S = "${MCUXSDK_SOURCE_DIR}"
 do_fetch[noexec] = "1"
 do_unpack[noexec] = "1"
 
+# Critical: Ensure all tasks that need source wait for mcusdk-source
+do_populate_lic[depends] += "mcuxsdk-source:do_unpack"
+do_configure[depends] += "mcuxsdk-source:do_configure"
+do_compile[depends] += "mcuxsdk-source:do_configure"
+
 # Verify source is ready before configure
 do_configure[prefuncs] += "mcuxsdk_verify_source"
 
