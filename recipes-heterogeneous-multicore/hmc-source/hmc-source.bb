@@ -30,20 +30,21 @@ EOF
     # Update manifest-rev to track latest commits
     bbnote "Updating manifest-rev references"
 
-    if [ -d "${S}/mcuxsdk/mcuxsdk-manifests" ]; then
-        cd ${S}/mcuxsdk/mcuxsdk-manifests
-        git update-ref refs/heads/manifest-rev origin/feature/heterogeneous_multicore
-    fi
-
-    if [ -d "${S}/zsdk/zephyr" ]; then
-        cd ${S}/zsdk/zephyr
-        git update-ref refs/heads/manifest-rev origin/main
-    fi
-
-    if [ -d "${S}/zsdk/zsdk" ]; then
-        cd ${S}/zsdk/zsdk
-        git update-ref refs/heads/manifest-rev origin/main
-    fi
+    for repo in \
+        "${S}/mcuxsdk/mcuxsdk-manifests" \
+        "${S}/zsdk/zephyr" \
+        "${S}/zsdk/zsdk" ; do
+        if [ -d "${repo}" ]; then
+            # get current commit and update manifest-rev to point to it
+            sha=$(git -C "${repo}" rev-parse --verify HEAD)
+            if [ -n "${sha}" ]; then
+                git -C "${repo}" update-ref refs/heads/manifest-rev "${sha}"
+                bbnote "Set ${repo} refs/heads/manifest-rev -> ${sha}"
+            else
+                bbwarn "Could not determine HEAD for ${repo}"
+            fi
+        fi
+    done
 
     # Create marker file to indicate source is ready
     touch ${S}/.hmc-source-ready
