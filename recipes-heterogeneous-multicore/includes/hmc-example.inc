@@ -37,6 +37,7 @@ DEPENDS += " \
     west-native \
     python3-jsonschema-native \
     python3-pyelftools-native \
+    python3-pykwalify-native \
     python3-pyyaml-native \
     dtc-native \
     ninja-native \
