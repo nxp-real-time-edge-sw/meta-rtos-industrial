@@ -17,6 +17,12 @@ SRC_URI += " \
     file://0001-MCUX-83513-driver-iuart-Add-9-bit-mode-support.patch;patchdir=${S}/mcuxsdk \
 "
 
+# mcuxsdk-examples patch
+SRC_URI += " \
+    file://0001-Add-9bit-polling-example.patch;patchdir=${S}/mcuxsdk/examples \
+    file://0002-Add-9bit-interrupt-transfer-example.patch;patchdir=${S}/mcuxsdk/examples \
+"
+
 do_configure() {
     if [ ! -d "${S}/.west" ]; then
         bbnote "Creating .west directory and config"
