@@ -21,6 +21,10 @@ SRC_URI += " \
 SRC_URI += " \
     file://0001-Add-9bit-polling-example.patch;patchdir=${S}/mcuxsdk/examples \
     file://0002-Add-9bit-interrupt-transfer-example.patch;patchdir=${S}/mcuxsdk/examples \
+    file://0003-Add-master-and-slave-time-synchronization.patch;patchdir=${S}/mcuxsdk/examples \
+    file://0004-Fix-compile-warning.patch;patchdir=${S}/mcuxsdk/examples \
+    file://0005-soem-plit-hardware-and-main-function.patch;patchdir=${S}/mcuxsdk/examples \
+    file://0006-add-imx8mm-imx8mp-and-imx93-support.patch;patchdir=${S}/mcuxsdk/examples \
 "
 
 do_configure() {

@@ -1,0 +1,608 @@
+From dff1d11506cfefc1a46e1979d84c6a471f91e7f7 Mon Sep 17 00:00:00 2001
+From: jony zhang <jony.zhang@nxp.com>
+Date: Wed, 10 Sep 2025 14:27:17 +0800
+Subject: [PATCH 4/6] Fix compile warning
+
+Signed-off-by: jony zhang <jony.zhang@nxp.com>
+Upstream-Status: Pending
+---
+ .../soem_examples/soem_gpio_pulse/bm/prj.conf  |  1 -
+ .../soem_gpio_pulse/freertos/prj.conf          |  1 -
+ .../soem_examples/soem_gpio_pulse/bm/prj.conf  |  1 -
+ .../soem_gpio_pulse/freertos/prj.conf          |  1 -
+ .../soem_gpio_pulse/bm/cm7/prj.conf            |  1 -
+ .../soem_gpio_pulse/freertos/cm7/prj.conf      |  1 -
+ .../soem_examples/soem_gpio_pulse/bm/prj.conf  |  1 -
+ .../soem_gpio_pulse/freertos/prj.conf          |  1 -
+ .../soem_examples/soem_gpio_pulse/bm/prj.conf  |  1 -
+ .../soem_gpio_pulse/freertos/prj.conf          |  1 -
+ .../soem_examples/soem_gpio_pulse/prj.conf     |  1 -
+ .../soem_examples/soem_gpio_pulse/bm/prj.conf  |  1 -
+ .../soem_gpio_pulse/freertos/prj.conf          |  1 -
+ .../soem_examples/soem_gpio_pulse/prj.conf     |  1 -
+ .../soem_examples/soem_gpio_pulse/bm/prj.conf  |  1 -
+ .../soem_gpio_pulse/freertos/prj.conf          |  1 -
+ .../soem_examples/soem_gpio_pulse/bm/prj.conf  |  1 -
+ .../soem_gpio_pulse/freertos/prj.conf          |  1 -
+ .../soem_gpio_pulse/bm/cm7/prj.conf            |  1 -
+ .../soem_gpio_pulse/freertos/cm7/prj.conf      |  1 -
+ .../soem_gpio_pulse/bm/cm33/prj.conf           |  2 --
+ .../soem_gpio_pulse/bm/cm7/prj.conf            |  2 --
+ .../soem_gpio_pulse/freertos/cm33/prj.conf     |  1 -
+ .../soem_gpio_pulse/freertos/cm7/prj.conf      |  1 -
+ .../soem_servo_motor/bm/cm33/prj.conf          |  2 --
+ .../soem_servo_motor/bm/cm7/prj.conf           |  2 --
+ .../soem_servo_motor_rt1180/bm/cm33/prj.conf   |  2 --
+ .../soem_servo_motor_rt1180/bm/cm7/prj.conf    |  2 --
+ .../soem_gpio_pulse/freertos/soem_gpio_pulse.c |  2 --
+ .../soem_gpio_pulse_netc/bm/soem_gpio_pulse.c  | 10 ----------
+ .../soem_gpio_pulse_netc/freertos/prj.conf     |  3 +--
+ .../freertos/soem_gpio_pulse.c                 | 12 ------------
+ .../soem_servo_motor/bm/soem_servo_motor.c     | 11 +----------
+ .../bm/soem_servo_motor.c                      | 18 +-----------------
+ 34 files changed, 3 insertions(+), 87 deletions(-)
+
+diff --git a/_boards/evkbimxrt1050/soem_examples/soem_gpio_pulse/bm/prj.conf b/_boards/evkbimxrt1050/soem_examples/soem_gpio_pulse/bm/prj.conf
+index c92bab6ac..9daa3ec12 100644
+--- a/_boards/evkbimxrt1050/soem_examples/soem_gpio_pulse/bm/prj.conf
++++ b/_boards/evkbimxrt1050/soem_examples/soem_gpio_pulse/bm/prj.conf
+@@ -3,6 +3,5 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.bm=y
+diff --git a/_boards/evkbimxrt1050/soem_examples/soem_gpio_pulse/freertos/prj.conf b/_boards/evkbimxrt1050/soem_examples/soem_gpio_pulse/freertos/prj.conf
+index 1bdfdf70b..0b0562dbb 100644
+--- a/_boards/evkbimxrt1050/soem_examples/soem_gpio_pulse/freertos/prj.conf
++++ b/_boards/evkbimxrt1050/soem_examples/soem_gpio_pulse/freertos/prj.conf
+@@ -3,7 +3,6 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ # freertos-kernel config
+ CONFIG_MCUX_COMPONENT_middleware.freertos-kernel=y
+diff --git a/_boards/evkbmimxrt1060/soem_examples/soem_gpio_pulse/bm/prj.conf b/_boards/evkbmimxrt1060/soem_examples/soem_gpio_pulse/bm/prj.conf
+index c92bab6ac..9daa3ec12 100644
+--- a/_boards/evkbmimxrt1060/soem_examples/soem_gpio_pulse/bm/prj.conf
++++ b/_boards/evkbmimxrt1060/soem_examples/soem_gpio_pulse/bm/prj.conf
+@@ -3,6 +3,5 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.bm=y
+diff --git a/_boards/evkbmimxrt1060/soem_examples/soem_gpio_pulse/freertos/prj.conf b/_boards/evkbmimxrt1060/soem_examples/soem_gpio_pulse/freertos/prj.conf
+index 1bdfdf70b..0b0562dbb 100644
+--- a/_boards/evkbmimxrt1060/soem_examples/soem_gpio_pulse/freertos/prj.conf
++++ b/_boards/evkbmimxrt1060/soem_examples/soem_gpio_pulse/freertos/prj.conf
+@@ -3,7 +3,6 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ # freertos-kernel config
+ CONFIG_MCUX_COMPONENT_middleware.freertos-kernel=y
+diff --git a/_boards/evkbmimxrt1170/soem_examples/soem_gpio_pulse/bm/cm7/prj.conf b/_boards/evkbmimxrt1170/soem_examples/soem_gpio_pulse/bm/cm7/prj.conf
+index 9187b3f3b..ee213988d 100644
+--- a/_boards/evkbmimxrt1170/soem_examples/soem_gpio_pulse/bm/cm7/prj.conf
++++ b/_boards/evkbmimxrt1170/soem_examples/soem_gpio_pulse/bm/cm7/prj.conf
+@@ -3,7 +3,6 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.bm=y
+ CONFIG_MCUX_PRJSEG_module.board.pinmux_project_core_folder=y
+diff --git a/_boards/evkbmimxrt1170/soem_examples/soem_gpio_pulse/freertos/cm7/prj.conf b/_boards/evkbmimxrt1170/soem_examples/soem_gpio_pulse/freertos/cm7/prj.conf
+index d622de748..a95633a0a 100644
+--- a/_boards/evkbmimxrt1170/soem_examples/soem_gpio_pulse/freertos/cm7/prj.conf
++++ b/_boards/evkbmimxrt1170/soem_examples/soem_gpio_pulse/freertos/cm7/prj.conf
+@@ -3,7 +3,6 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ # freertos-kernel config
+ CONFIG_MCUX_COMPONENT_middleware.freertos-kernel=y
+diff --git a/_boards/evkcmimxrt1060/soem_examples/soem_gpio_pulse/bm/prj.conf b/_boards/evkcmimxrt1060/soem_examples/soem_gpio_pulse/bm/prj.conf
+index c92bab6ac..9daa3ec12 100644
+--- a/_boards/evkcmimxrt1060/soem_examples/soem_gpio_pulse/bm/prj.conf
++++ b/_boards/evkcmimxrt1060/soem_examples/soem_gpio_pulse/bm/prj.conf
+@@ -3,6 +3,5 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.bm=y
+diff --git a/_boards/evkcmimxrt1060/soem_examples/soem_gpio_pulse/freertos/prj.conf b/_boards/evkcmimxrt1060/soem_examples/soem_gpio_pulse/freertos/prj.conf
+index 1bdfdf70b..0b0562dbb 100644
+--- a/_boards/evkcmimxrt1060/soem_examples/soem_gpio_pulse/freertos/prj.conf
++++ b/_boards/evkcmimxrt1060/soem_examples/soem_gpio_pulse/freertos/prj.conf
+@@ -3,7 +3,6 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ # freertos-kernel config
+ CONFIG_MCUX_COMPONENT_middleware.freertos-kernel=y
+diff --git a/_boards/evkmimxrt1020/soem_examples/soem_gpio_pulse/bm/prj.conf b/_boards/evkmimxrt1020/soem_examples/soem_gpio_pulse/bm/prj.conf
+index c92bab6ac..9daa3ec12 100644
+--- a/_boards/evkmimxrt1020/soem_examples/soem_gpio_pulse/bm/prj.conf
++++ b/_boards/evkmimxrt1020/soem_examples/soem_gpio_pulse/bm/prj.conf
+@@ -3,6 +3,5 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.bm=y
+diff --git a/_boards/evkmimxrt1020/soem_examples/soem_gpio_pulse/freertos/prj.conf b/_boards/evkmimxrt1020/soem_examples/soem_gpio_pulse/freertos/prj.conf
+index 1bdfdf70b..0b0562dbb 100644
+--- a/_boards/evkmimxrt1020/soem_examples/soem_gpio_pulse/freertos/prj.conf
++++ b/_boards/evkmimxrt1020/soem_examples/soem_gpio_pulse/freertos/prj.conf
+@@ -3,7 +3,6 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ # freertos-kernel config
+ CONFIG_MCUX_COMPONENT_middleware.freertos-kernel=y
+diff --git a/_boards/evkmimxrt1020/soem_examples/soem_gpio_pulse/prj.conf b/_boards/evkmimxrt1020/soem_examples/soem_gpio_pulse/prj.conf
+index 23b6857cb..e69de29bb 100644
+--- a/_boards/evkmimxrt1020/soem_examples/soem_gpio_pulse/prj.conf
++++ b/_boards/evkmimxrt1020/soem_examples/soem_gpio_pulse/prj.conf
+@@ -1 +0,0 @@
+-CONFIG_MCUX_PRJSEG_target.flexspi_nor_sdram=y
+\ No newline at end of file
+diff --git a/_boards/evkmimxrt1024/soem_examples/soem_gpio_pulse/bm/prj.conf b/_boards/evkmimxrt1024/soem_examples/soem_gpio_pulse/bm/prj.conf
+index c92bab6ac..9daa3ec12 100644
+--- a/_boards/evkmimxrt1024/soem_examples/soem_gpio_pulse/bm/prj.conf
++++ b/_boards/evkmimxrt1024/soem_examples/soem_gpio_pulse/bm/prj.conf
+@@ -3,6 +3,5 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.bm=y
+diff --git a/_boards/evkmimxrt1024/soem_examples/soem_gpio_pulse/freertos/prj.conf b/_boards/evkmimxrt1024/soem_examples/soem_gpio_pulse/freertos/prj.conf
+index 1bdfdf70b..0b0562dbb 100644
+--- a/_boards/evkmimxrt1024/soem_examples/soem_gpio_pulse/freertos/prj.conf
++++ b/_boards/evkmimxrt1024/soem_examples/soem_gpio_pulse/freertos/prj.conf
+@@ -3,7 +3,6 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ # freertos-kernel config
+ CONFIG_MCUX_COMPONENT_middleware.freertos-kernel=y
+diff --git a/_boards/evkmimxrt1024/soem_examples/soem_gpio_pulse/prj.conf b/_boards/evkmimxrt1024/soem_examples/soem_gpio_pulse/prj.conf
+index 23b6857cb..e69de29bb 100644
+--- a/_boards/evkmimxrt1024/soem_examples/soem_gpio_pulse/prj.conf
++++ b/_boards/evkmimxrt1024/soem_examples/soem_gpio_pulse/prj.conf
+@@ -1 +0,0 @@
+-CONFIG_MCUX_PRJSEG_target.flexspi_nor_sdram=y
+\ No newline at end of file
+diff --git a/_boards/evkmimxrt1040/soem_examples/soem_gpio_pulse/bm/prj.conf b/_boards/evkmimxrt1040/soem_examples/soem_gpio_pulse/bm/prj.conf
+index c92bab6ac..9daa3ec12 100644
+--- a/_boards/evkmimxrt1040/soem_examples/soem_gpio_pulse/bm/prj.conf
++++ b/_boards/evkmimxrt1040/soem_examples/soem_gpio_pulse/bm/prj.conf
+@@ -3,6 +3,5 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.bm=y
+diff --git a/_boards/evkmimxrt1040/soem_examples/soem_gpio_pulse/freertos/prj.conf b/_boards/evkmimxrt1040/soem_examples/soem_gpio_pulse/freertos/prj.conf
+index 1bdfdf70b..0b0562dbb 100644
+--- a/_boards/evkmimxrt1040/soem_examples/soem_gpio_pulse/freertos/prj.conf
++++ b/_boards/evkmimxrt1040/soem_examples/soem_gpio_pulse/freertos/prj.conf
+@@ -3,7 +3,6 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ # freertos-kernel config
+ CONFIG_MCUX_COMPONENT_middleware.freertos-kernel=y
+diff --git a/_boards/evkmimxrt1064/soem_examples/soem_gpio_pulse/bm/prj.conf b/_boards/evkmimxrt1064/soem_examples/soem_gpio_pulse/bm/prj.conf
+index c92bab6ac..9daa3ec12 100644
+--- a/_boards/evkmimxrt1064/soem_examples/soem_gpio_pulse/bm/prj.conf
++++ b/_boards/evkmimxrt1064/soem_examples/soem_gpio_pulse/bm/prj.conf
+@@ -3,6 +3,5 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.bm=y
+diff --git a/_boards/evkmimxrt1064/soem_examples/soem_gpio_pulse/freertos/prj.conf b/_boards/evkmimxrt1064/soem_examples/soem_gpio_pulse/freertos/prj.conf
+index 1bdfdf70b..0b0562dbb 100644
+--- a/_boards/evkmimxrt1064/soem_examples/soem_gpio_pulse/freertos/prj.conf
++++ b/_boards/evkmimxrt1064/soem_examples/soem_gpio_pulse/freertos/prj.conf
+@@ -3,7 +3,6 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ # freertos-kernel config
+ CONFIG_MCUX_COMPONENT_middleware.freertos-kernel=y
+diff --git a/_boards/evkmimxrt1160/soem_examples/soem_gpio_pulse/bm/cm7/prj.conf b/_boards/evkmimxrt1160/soem_examples/soem_gpio_pulse/bm/cm7/prj.conf
+index 9187b3f3b..ee213988d 100644
+--- a/_boards/evkmimxrt1160/soem_examples/soem_gpio_pulse/bm/cm7/prj.conf
++++ b/_boards/evkmimxrt1160/soem_examples/soem_gpio_pulse/bm/cm7/prj.conf
+@@ -3,7 +3,6 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.bm=y
+ CONFIG_MCUX_PRJSEG_module.board.pinmux_project_core_folder=y
+diff --git a/_boards/evkmimxrt1160/soem_examples/soem_gpio_pulse/freertos/cm7/prj.conf b/_boards/evkmimxrt1160/soem_examples/soem_gpio_pulse/freertos/cm7/prj.conf
+index d622de748..a95633a0a 100644
+--- a/_boards/evkmimxrt1160/soem_examples/soem_gpio_pulse/freertos/cm7/prj.conf
++++ b/_boards/evkmimxrt1160/soem_examples/soem_gpio_pulse/freertos/cm7/prj.conf
+@@ -3,7 +3,6 @@ CONFIG_MCUX_COMPONENT_component.phyksz8081=y
+ CONFIG_MCUX_COMPONENT_component.silicon_id=y
+ CONFIG_MCUX_COMPONENT_driver.enet=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.enet=y
+ # freertos-kernel config
+ CONFIG_MCUX_COMPONENT_middleware.freertos-kernel=y
+diff --git a/_boards/evkmimxrt1180/soem_examples/soem_gpio_pulse/bm/cm33/prj.conf b/_boards/evkmimxrt1180/soem_examples/soem_gpio_pulse/bm/cm33/prj.conf
+index b0519fe92..e00314adb 100644
+--- a/_boards/evkmimxrt1180/soem_examples/soem_gpio_pulse/bm/cm33/prj.conf
++++ b/_boards/evkmimxrt1180/soem_examples/soem_gpio_pulse/bm/cm33/prj.conf
+@@ -4,8 +4,6 @@ CONFIG_MCUX_COMPONENT_component.phyrtl8211f=y
+ CONFIG_MCUX_COMPONENT_driver.msgintr=y
+ CONFIG_MCUX_COMPONENT_driver.netc=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.baremetal=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.netc=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.bm=y
+ CONFIG_MCUX_PRJSEG_module.board.pinmux_project_core_folder=y
+diff --git a/_boards/evkmimxrt1180/soem_examples/soem_gpio_pulse/bm/cm7/prj.conf b/_boards/evkmimxrt1180/soem_examples/soem_gpio_pulse/bm/cm7/prj.conf
+index b0519fe92..e00314adb 100644
+--- a/_boards/evkmimxrt1180/soem_examples/soem_gpio_pulse/bm/cm7/prj.conf
++++ b/_boards/evkmimxrt1180/soem_examples/soem_gpio_pulse/bm/cm7/prj.conf
+@@ -4,8 +4,6 @@ CONFIG_MCUX_COMPONENT_component.phyrtl8211f=y
+ CONFIG_MCUX_COMPONENT_driver.msgintr=y
+ CONFIG_MCUX_COMPONENT_driver.netc=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.baremetal=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.netc=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.bm=y
+ CONFIG_MCUX_PRJSEG_module.board.pinmux_project_core_folder=y
+diff --git a/_boards/evkmimxrt1180/soem_examples/soem_gpio_pulse/freertos/cm33/prj.conf b/_boards/evkmimxrt1180/soem_examples/soem_gpio_pulse/freertos/cm33/prj.conf
+index 17ae8cd44..2e2eefbac 100644
+--- a/_boards/evkmimxrt1180/soem_examples/soem_gpio_pulse/freertos/cm33/prj.conf
++++ b/_boards/evkmimxrt1180/soem_examples/soem_gpio_pulse/freertos/cm33/prj.conf
+@@ -4,7 +4,6 @@ CONFIG_MCUX_COMPONENT_component.phyrtl8211f=y
+ CONFIG_MCUX_COMPONENT_driver.msgintr=y
+ CONFIG_MCUX_COMPONENT_driver.netc=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.netc=y
+ # freertos-kernel config
+ CONFIG_MCUX_COMPONENT_middleware.freertos-kernel=y
+diff --git a/_boards/evkmimxrt1180/soem_examples/soem_gpio_pulse/freertos/cm7/prj.conf b/_boards/evkmimxrt1180/soem_examples/soem_gpio_pulse/freertos/cm7/prj.conf
+index 4d0c861d0..fcb99db40 100644
+--- a/_boards/evkmimxrt1180/soem_examples/soem_gpio_pulse/freertos/cm7/prj.conf
++++ b/_boards/evkmimxrt1180/soem_examples/soem_gpio_pulse/freertos/cm7/prj.conf
+@@ -4,7 +4,6 @@ CONFIG_MCUX_COMPONENT_component.phyrtl8211f=y
+ CONFIG_MCUX_COMPONENT_driver.msgintr=y
+ CONFIG_MCUX_COMPONENT_driver.netc=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.netc=y
+ # freertos-kernel config
+ CONFIG_MCUX_COMPONENT_middleware.freertos-kernel=y
+diff --git a/_boards/evkmimxrt1180/soem_examples/soem_servo_motor/bm/cm33/prj.conf b/_boards/evkmimxrt1180/soem_examples/soem_servo_motor/bm/cm33/prj.conf
+index b0519fe92..e00314adb 100644
+--- a/_boards/evkmimxrt1180/soem_examples/soem_servo_motor/bm/cm33/prj.conf
++++ b/_boards/evkmimxrt1180/soem_examples/soem_servo_motor/bm/cm33/prj.conf
+@@ -4,8 +4,6 @@ CONFIG_MCUX_COMPONENT_component.phyrtl8211f=y
+ CONFIG_MCUX_COMPONENT_driver.msgintr=y
+ CONFIG_MCUX_COMPONENT_driver.netc=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.baremetal=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.netc=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.bm=y
+ CONFIG_MCUX_PRJSEG_module.board.pinmux_project_core_folder=y
+diff --git a/_boards/evkmimxrt1180/soem_examples/soem_servo_motor/bm/cm7/prj.conf b/_boards/evkmimxrt1180/soem_examples/soem_servo_motor/bm/cm7/prj.conf
+index b0519fe92..e00314adb 100644
+--- a/_boards/evkmimxrt1180/soem_examples/soem_servo_motor/bm/cm7/prj.conf
++++ b/_boards/evkmimxrt1180/soem_examples/soem_servo_motor/bm/cm7/prj.conf
+@@ -4,8 +4,6 @@ CONFIG_MCUX_COMPONENT_component.phyrtl8211f=y
+ CONFIG_MCUX_COMPONENT_driver.msgintr=y
+ CONFIG_MCUX_COMPONENT_driver.netc=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.baremetal=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.netc=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.bm=y
+ CONFIG_MCUX_PRJSEG_module.board.pinmux_project_core_folder=y
+diff --git a/_boards/evkmimxrt1180/soem_examples/soem_servo_motor_rt1180/bm/cm33/prj.conf b/_boards/evkmimxrt1180/soem_examples/soem_servo_motor_rt1180/bm/cm33/prj.conf
+index b0519fe92..e00314adb 100644
+--- a/_boards/evkmimxrt1180/soem_examples/soem_servo_motor_rt1180/bm/cm33/prj.conf
++++ b/_boards/evkmimxrt1180/soem_examples/soem_servo_motor_rt1180/bm/cm33/prj.conf
+@@ -4,8 +4,6 @@ CONFIG_MCUX_COMPONENT_component.phyrtl8211f=y
+ CONFIG_MCUX_COMPONENT_driver.msgintr=y
+ CONFIG_MCUX_COMPONENT_driver.netc=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.baremetal=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.netc=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.bm=y
+ CONFIG_MCUX_PRJSEG_module.board.pinmux_project_core_folder=y
+diff --git a/_boards/evkmimxrt1180/soem_examples/soem_servo_motor_rt1180/bm/cm7/prj.conf b/_boards/evkmimxrt1180/soem_examples/soem_servo_motor_rt1180/bm/cm7/prj.conf
+index b0519fe92..e00314adb 100644
+--- a/_boards/evkmimxrt1180/soem_examples/soem_servo_motor_rt1180/bm/cm7/prj.conf
++++ b/_boards/evkmimxrt1180/soem_examples/soem_servo_motor_rt1180/bm/cm7/prj.conf
+@@ -4,8 +4,6 @@ CONFIG_MCUX_COMPONENT_component.phyrtl8211f=y
+ CONFIG_MCUX_COMPONENT_driver.msgintr=y
+ CONFIG_MCUX_COMPONENT_driver.netc=y
+ CONFIG_MCUX_COMPONENT_driver.gpt=y
+-CONFIG_MCUX_COMPONENT_middleware.baremetal=y
+-CONFIG_MCUX_COMPONENT_middleware.soem=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.netc=y
+ CONFIG_MCUX_COMPONENT_middleware.soem.bm=y
+ CONFIG_MCUX_PRJSEG_module.board.pinmux_project_core_folder=y
+diff --git a/soem_examples/soem_gpio_pulse/freertos/soem_gpio_pulse.c b/soem_examples/soem_gpio_pulse/freertos/soem_gpio_pulse.c
+index 0f2483cff..61138b0fb 100644
+--- a/soem_examples/soem_gpio_pulse/freertos/soem_gpio_pulse.c
++++ b/soem_examples/soem_gpio_pulse/freertos/soem_gpio_pulse.c
+@@ -342,7 +342,5 @@ int main(void)
+                                 rt_task_stack, &xTaskBuffer);
+ 
+     vTaskStartScheduler();
+-    for (;;)
+-        ;
+     return 0;
+ }
+diff --git a/soem_examples/soem_gpio_pulse_netc/bm/soem_gpio_pulse.c b/soem_examples/soem_gpio_pulse_netc/bm/soem_gpio_pulse.c
+index 14b161058..b0d773255 100644
+--- a/soem_examples/soem_gpio_pulse_netc/bm/soem_gpio_pulse.c
++++ b/soem_examples/soem_gpio_pulse_netc/bm/soem_gpio_pulse.c
+@@ -92,11 +92,9 @@ AT_NONCACHEABLE_SECTION_ALIGN(static uint8_t g_txFrame[EP_TXBUFF_SIZE], EP_BUFF_
+ AT_NONCACHEABLE_SECTION_ALIGN(static netc_tx_bd_t g_mgmtTxBuffDescrip[EP_TXBD_NUM], EP_BD_ALIGN);
+ AT_NONCACHEABLE_SECTION_ALIGN(static netc_cmd_bd_t g_cmdBuffDescrip[EP_TXBD_NUM], EP_BD_ALIGN);
+ #endif
+-AT_NONCACHEABLE_SECTION(static uint8_t g_rxFrame[EP_RXBUFF_SIZE_ALIGN]);
+ static uint64_t rxBuffAddrArray[EP_RING_NUM][EP_RXBD_NUM];
+ #if !(defined(EXAMPLE_NETC_HAS_NO_SWITCH) && EXAMPLE_NETC_HAS_NO_SWITCH)
+ static netc_tx_frame_info_t g_mgmtTxDirty[EP_TXBD_NUM];
+-static netc_tx_frame_info_t mgmtTxFrameInfo;
+ #endif
+ #if defined(EXAMPLE_EP_NUM) && EXAMPLE_EP_NUM
+ AT_NONCACHEABLE_SECTION_ALIGN(static netc_tx_bd_t g_txBuffDescrip[EP_RING_NUM][EP_TXBD_NUM],
+@@ -185,16 +183,9 @@ void msgintrCallback(MSGINTR_Type *base, uint8_t channel, uint32_t pendingIntr)
+     }
+ }
+ 
+-//static status_t ReclaimCallback(ep_handle_t *handle, uint8_t ring, netc_tx_frame_info_t *frameInfo, void *userData)
+-//{
+-//    txFrameInfo = *frameInfo;
+-//    return kStatus_Success;
+-//}
+-
+ #if !(defined(EXAMPLE_NETC_HAS_NO_SWITCH) && EXAMPLE_NETC_HAS_NO_SWITCH)
+ static status_t APP_SwtReclaimCallback(swt_handle_t *handle, netc_tx_frame_info_t *frameInfo, void *userData)
+ {
+-    mgmtTxFrameInfo = *frameInfo;
+     return kStatus_Success;
+ }
+ #endif
+@@ -353,7 +344,6 @@ static int if_port_init(void)
+ static int if_port_swt_init(void)
+ {
+ 	struct soem_if_port soem_port;
+-    status_t result                  = kStatus_Success;
+     bdrConfig.rxBdrConfig = &rxBdrConfig;
+ 	bdrConfig.txBdrConfig = &txBdrConfig;
+     uint32_t msgAddr;
+diff --git a/soem_examples/soem_gpio_pulse_netc/freertos/prj.conf b/soem_examples/soem_gpio_pulse_netc/freertos/prj.conf
+index 19b963a46..f89b1c2f0 100644
+--- a/soem_examples/soem_gpio_pulse_netc/freertos/prj.conf
++++ b/soem_examples/soem_gpio_pulse_netc/freertos/prj.conf
+@@ -1,2 +1 @@
+-CONFIG_configSUPPORT_STATIC_ALLOCATION=y
+-CONFIG_MCUX_MISC_middleware.freertos_generate_config=n
+\ No newline at end of file
++CONFIG_configSUPPORT_STATIC_ALLOCATION=y
+\ No newline at end of file
+diff --git a/soem_examples/soem_gpio_pulse_netc/freertos/soem_gpio_pulse.c b/soem_examples/soem_gpio_pulse_netc/freertos/soem_gpio_pulse.c
+index 5eb6e8073..af752c04a 100644
+--- a/soem_examples/soem_gpio_pulse_netc/freertos/soem_gpio_pulse.c
++++ b/soem_examples/soem_gpio_pulse_netc/freertos/soem_gpio_pulse.c
+@@ -101,11 +101,9 @@ AT_NONCACHEABLE_SECTION_ALIGN(static uint8_t g_txFrame[EP_TXBUFF_SIZE], EP_BUFF_
+ AT_NONCACHEABLE_SECTION_ALIGN(static netc_tx_bd_t g_mgmtTxBuffDescrip[EP_TXBD_NUM], EP_BD_ALIGN);
+ AT_NONCACHEABLE_SECTION_ALIGN(static netc_cmd_bd_t g_cmdBuffDescrip[EP_TXBD_NUM], EP_BD_ALIGN);
+ #endif
+-AT_NONCACHEABLE_SECTION(static uint8_t g_rxFrame[EP_RXBUFF_SIZE_ALIGN]);
+ static uint64_t rxBuffAddrArray[EP_RING_NUM][EP_RXBD_NUM];
+ #if !(defined(EXAMPLE_NETC_HAS_NO_SWITCH) && EXAMPLE_NETC_HAS_NO_SWITCH)
+ static netc_tx_frame_info_t g_mgmtTxDirty[EP_TXBD_NUM];
+-static netc_tx_frame_info_t mgmtTxFrameInfo;
+ #endif
+ #if defined(EXAMPLE_EP_NUM) && EXAMPLE_EP_NUM
+ AT_NONCACHEABLE_SECTION_ALIGN(static netc_tx_bd_t g_txBuffDescrip[EP_RING_NUM][EP_TXBD_NUM],
+@@ -219,16 +217,9 @@ void msgintrCallback(MSGINTR_Type *base, uint8_t channel, uint32_t pendingIntr)
+     }
+ }
+ 
+-//static status_t ReclaimCallback(ep_handle_t *handle, uint8_t ring, netc_tx_frame_info_t *frameInfo, void *userData)
+-//{
+-//    txFrameInfo = *frameInfo;
+-//    return kStatus_Success;
+-//}
+-
+ #if !(defined(EXAMPLE_NETC_HAS_NO_SWITCH) && EXAMPLE_NETC_HAS_NO_SWITCH)
+ static status_t APP_SwtReclaimCallback(swt_handle_t *handle, netc_tx_frame_info_t *frameInfo, void *userData)
+ {
+-    mgmtTxFrameInfo = *frameInfo;
+     return kStatus_Success;
+ }
+ #endif
+@@ -386,7 +377,6 @@ static int if_port_init(void)
+ static int if_port_swt_init(void)
+ {
+ 	struct soem_if_port soem_port;
+-    status_t result                  = kStatus_Success;
+     bdrConfig.rxBdrConfig = &rxBdrConfig;
+ 	bdrConfig.txBdrConfig = &txBdrConfig;
+     uint32_t msgAddr;
+@@ -618,7 +608,5 @@ int main(void)
+                                 rt_task_stack, &xTaskBuffer);
+ 
+     vTaskStartScheduler();
+-    for (;;)
+-        ;
+     return 0;
+ }
+diff --git a/soem_examples/soem_servo_motor/bm/soem_servo_motor.c b/soem_examples/soem_servo_motor/bm/soem_servo_motor.c
+index 0a94f6021..85254d35a 100644
+--- a/soem_examples/soem_servo_motor/bm/soem_servo_motor.c
++++ b/soem_examples/soem_servo_motor/bm/soem_servo_motor.c
+@@ -103,11 +103,9 @@ AT_NONCACHEABLE_SECTION_ALIGN(static uint8_t g_txFrame[EP_TXBUFF_SIZE], EP_BUFF_
+ AT_NONCACHEABLE_SECTION_ALIGN(static netc_tx_bd_t g_mgmtTxBuffDescrip[EP_TXBD_NUM], EP_BD_ALIGN);
+ AT_NONCACHEABLE_SECTION_ALIGN(static netc_cmd_bd_t g_cmdBuffDescrip[EP_TXBD_NUM], EP_BD_ALIGN);
+ #endif
+-AT_NONCACHEABLE_SECTION(static uint8_t g_rxFrame[EP_RXBUFF_SIZE_ALIGN]);
+ static uint64_t rxBuffAddrArray[EP_RING_NUM][EP_RXBD_NUM];
+ #if !(defined(EXAMPLE_NETC_HAS_NO_SWITCH) && EXAMPLE_NETC_HAS_NO_SWITCH)
+ static netc_tx_frame_info_t g_mgmtTxDirty[EP_TXBD_NUM];
+-static netc_tx_frame_info_t mgmtTxFrameInfo;
+ #endif
+ #if defined(EXAMPLE_EP_NUM) && EXAMPLE_EP_NUM
+ AT_NONCACHEABLE_SECTION_ALIGN(static netc_tx_bd_t g_txBuffDescrip[EP_RING_NUM][EP_TXBD_NUM],
+@@ -355,16 +353,10 @@ void msgintrCallback(MSGINTR_Type *base, uint8_t channel, uint32_t pendingIntr)
+ #if !(defined(EXAMPLE_NETC_HAS_NO_SWITCH) && EXAMPLE_NETC_HAS_NO_SWITCH)
+ static status_t APP_SwtReclaimCallback(swt_handle_t *handle, netc_tx_frame_info_t *frameInfo, void *userData)
+ {
+-    mgmtTxFrameInfo = *frameInfo;
+     return kStatus_Success;
+ }
+ #endif
+ 
+-static status_t ReclaimCallback(ep_handle_t *handle, uint8_t ring, netc_tx_frame_info_t *frameInfo, void *userData)
+-{
+-    return kStatus_Success;
+-}
+-
+ static uint64_t gettime()
+ {
+ 	uint64_t nsec_base;
+@@ -496,7 +488,7 @@ static int if_port_init(void)
+     ep_config.si                    = KNETC_EP_CONFIG_SI;
+     ep_config.siConfig.txRingUse    = 1;
+     ep_config.siConfig.rxRingUse    = 1;
+-    ep_config.reclaimCallback       = ReclaimCallback;
++    //ep_config.reclaimCallback       = ReclaimCallback;
+     ep_config.msixEntry             = &msixEntry[0];
+     ep_config.entryNum              = 2;
+     ep_config.port.ethMac.miiMode   = KNETC_HW_MII_MODE;
+@@ -533,7 +525,6 @@ static int if_port_init(void)
+ static int if_port_swt_init(void)
+ {
+ 	struct soem_if_port soem_port;
+-    status_t result                  = kStatus_Success;
+     bdrConfig.rxBdrConfig = &rxBdrConfig;
+ 	bdrConfig.txBdrConfig = &txBdrConfig;
+     uint32_t msgAddr;
+diff --git a/soem_examples/soem_servo_motor_rt1180/bm/soem_servo_motor.c b/soem_examples/soem_servo_motor_rt1180/bm/soem_servo_motor.c
+index 41bfaa78b..c5a4632cc 100644
+--- a/soem_examples/soem_servo_motor_rt1180/bm/soem_servo_motor.c
++++ b/soem_examples/soem_servo_motor_rt1180/bm/soem_servo_motor.c
+@@ -75,13 +75,9 @@ typedef uint8_t rx_buffer_t[EP_RXBUFF_SIZE_ALIGN];
+ 
+ /* dc sync time */
+ static uint64_t dc_start_time_ns = 0LL;
+-static uint64_t dc_time_ns = 0;
+ static uint8_t  dc_started = 0;
+ static int32_t  dc_diff_ns = 0;
+ static int32_t  prev_dc_diff_ns = 0;
+-static int64_t  dc_diff_total_ns = 0LL;
+-static int64_t  dc_delta_total_ns = 0LL;
+-static int      dc_filter_idx = 0;
+ static int64_t  dc_adjust_ns;
+ static int64_t  system_time_offset = 0LL;
+ 
+@@ -114,11 +110,9 @@ AT_NONCACHEABLE_SECTION_ALIGN(static uint8_t g_txFrame[EP_TXBUFF_SIZE], EP_BUFF_
+ AT_NONCACHEABLE_SECTION_ALIGN(static netc_tx_bd_t g_mgmtTxBuffDescrip[EP_TXBD_NUM], EP_BD_ALIGN);
+ AT_NONCACHEABLE_SECTION_ALIGN(static netc_cmd_bd_t g_cmdBuffDescrip[EP_TXBD_NUM], EP_BD_ALIGN);
+ #endif
+-AT_NONCACHEABLE_SECTION(static uint8_t g_rxFrame[EP_RXBUFF_SIZE_ALIGN]);
+ static uint64_t rxBuffAddrArray[EP_RING_NUM][EP_RXBD_NUM];
+ #if !(defined(EXAMPLE_NETC_HAS_NO_SWITCH) && EXAMPLE_NETC_HAS_NO_SWITCH)
+ static netc_tx_frame_info_t g_mgmtTxDirty[EP_TXBD_NUM];
+-static netc_tx_frame_info_t mgmtTxFrameInfo;
+ #endif
+ #if defined(EXAMPLE_EP_NUM) && EXAMPLE_EP_NUM
+ AT_NONCACHEABLE_SECTION_ALIGN(static netc_tx_bd_t g_txBuffDescrip[EP_RING_NUM][EP_TXBD_NUM],
+@@ -313,16 +307,10 @@ void msgintrCallback(MSGINTR_Type *base, uint8_t channel, uint32_t pendingIntr)
+ #if !(defined(EXAMPLE_NETC_HAS_NO_SWITCH) && EXAMPLE_NETC_HAS_NO_SWITCH)
+ static status_t APP_SwtReclaimCallback(swt_handle_t *handle, netc_tx_frame_info_t *frameInfo, void *userData)
+ {
+-    mgmtTxFrameInfo = *frameInfo;
+     return kStatus_Success;
+ }
+ #endif
+ 
+-static status_t ReclaimCallback(ep_handle_t *handle, uint8_t ring, netc_tx_frame_info_t *frameInfo, void *userData)
+-{
+-    return kStatus_Success;
+-}
+-
+ uint64_t system_time64_ns()
+ {
+ 	uint64_t nsec_base;
+@@ -454,7 +442,7 @@ static int if_port_init(void)
+     ep_config.si                    = KNETC_EP_CONFIG_SI;
+     ep_config.siConfig.txRingUse    = 1;
+     ep_config.siConfig.rxRingUse    = 1;
+-    ep_config.reclaimCallback       = ReclaimCallback;
++    //ep_config.reclaimCallback       = ReclaimCallback;
+     ep_config.msixEntry             = &msixEntry[0];
+     ep_config.entryNum              = 2;
+     ep_config.port.ethMac.miiMode   = KNETC_HW_MII_MODE;
+@@ -491,7 +479,6 @@ static int if_port_init(void)
+ static int if_port_swt_init(void)
+ {
+ 	struct soem_if_port soem_port;
+-    status_t result                  = kStatus_Success;
+     bdrConfig.rxBdrConfig = &rxBdrConfig;
+ 	bdrConfig.txBdrConfig = &txBdrConfig;
+     uint32_t msgAddr;
+@@ -759,9 +746,6 @@ void control_task(char *ifname)
+ 				ec_statecheck(1, EC_STATE_OPERATIONAL, 50000);
+ 			} while (chk-- && (ec_slave[0].state != EC_STATE_OPERATIONAL));
+ 
+-			int64_t last_dc_start_time_ns = 0, last_dc = 0;
+-			int64_t diff_sys = 0, diff_dc = 0;
+-			int l = 0;
+ 			if (ec_slave[0].state != EC_STATE_OPERATIONAL) {
+ 				PRINTF("Not all slaves reached operational state.\r\n");
+ 			} else {
+-- 
+2.43.0
+
