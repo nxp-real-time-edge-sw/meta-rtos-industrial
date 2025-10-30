@@ -1,0 +1,551 @@
+From 11623bb23981df710d53c149a54b2dc391623bdf Mon Sep 17 00:00:00 2001
+From: jony zhang <jony.zhang@nxp.com>
+Date: Thu, 23 Oct 2025 16:48:59 +0800
+Subject: [PATCH 1/6] Add 9bit polling example
+
+Signed-off-by: Wenbin Song <wenbin.song@nxp.com>
+Signed-off-by: jony zhang <jony.zhang@nxp.com>
+Upstream-Status: Pending
+---
+ .../driver_examples/uart/9bit_polling/app.h   |  29 ++++
+ .../uart/9bit_polling/example_board_readme.md |  45 ++++++
+ .../uart/9bit_polling/hardware_init.c         |  29 ++++
+ .../uart/9bit_polling/pin_mux.c               |  83 +++++++++++
+ .../uart/9bit_polling/pin_mux.h               |  54 +++++++
+ .../uart/9bit_polling/prj.conf                |   2 +
+ .../uart/9bit_polling/reconfig.cmake          |   6 +
+ .../iuart/9bit_polling/CMakeLists.txt         |  21 +++
+ .../iuart/9bit_polling/example.yml            |  17 +++
+ driver_examples/iuart/9bit_polling/prj.conf   |   2 +
+ driver_examples/iuart/9bit_polling/readme.md  |  10 ++
+ .../iuart/9bit_polling/uart_9bit_polling.c    | 139 ++++++++++++++++++
+ 12 files changed, 437 insertions(+)
+ create mode 100644 _boards/evkmimx8mm/driver_examples/uart/9bit_polling/app.h
+ create mode 100644 _boards/evkmimx8mm/driver_examples/uart/9bit_polling/example_board_readme.md
+ create mode 100644 _boards/evkmimx8mm/driver_examples/uart/9bit_polling/hardware_init.c
+ create mode 100644 _boards/evkmimx8mm/driver_examples/uart/9bit_polling/pin_mux.c
+ create mode 100644 _boards/evkmimx8mm/driver_examples/uart/9bit_polling/pin_mux.h
+ create mode 100644 _boards/evkmimx8mm/driver_examples/uart/9bit_polling/prj.conf
+ create mode 100644 _boards/evkmimx8mm/driver_examples/uart/9bit_polling/reconfig.cmake
+ create mode 100644 driver_examples/iuart/9bit_polling/CMakeLists.txt
+ create mode 100644 driver_examples/iuart/9bit_polling/example.yml
+ create mode 100644 driver_examples/iuart/9bit_polling/prj.conf
+ create mode 100644 driver_examples/iuart/9bit_polling/readme.md
+ create mode 100644 driver_examples/iuart/9bit_polling/uart_9bit_polling.c
+
+diff --git a/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/app.h b/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/app.h
+new file mode 100644
+index 000000000..de3729d34
+--- /dev/null
++++ b/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/app.h
+@@ -0,0 +1,29 @@
++/*
++ * Copyright 2022-2025 NXP
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++ 
++#ifndef _APP_H_
++#define _APP_H_
++
++/*******************************************************************************
++ * Definitions
++ ******************************************************************************/
++/*${macro:start}*/
++#define DEMO_UART          UART3
++#define DEMO_UART_CLK_FREQ                                                                  \
++    CLOCK_GetPllFreq(kCLOCK_SystemPll1Ctrl) / (CLOCK_GetRootPreDivider(kCLOCK_RootUart3)) / \
++        (CLOCK_GetRootPostDivider(kCLOCK_RootUart3)) / 10
++#define EXAMPLE_ADDRESS 0xFEU
++#define TRANSFER_SIZE   8U
++/*${macro:end}*/
++
++/*******************************************************************************
++ * Prototypes
++ ******************************************************************************/
++/*${prototype:start}*/
++void BOARD_InitHardware(void);
++/*${prototype:end}*/
++
++#endif /* _APP_H_ */
+diff --git a/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/example_board_readme.md b/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/example_board_readme.md
+new file mode 100644
+index 000000000..336c338b5
+--- /dev/null
++++ b/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/example_board_readme.md
+@@ -0,0 +1,45 @@
++Hardware requirements
++=====================
++- Micro USB cable
++- MIMX8MM6-EVK  board
++- J-Link Debug Probe
++- 12V power supply
++- Personal Computer
++
++Board settings
++============
++No special settings are required.
++
++
++
++Prepare the Demo
++===============
++1.  Connect 12V power supply and J-Link Debug Probe to the board, switch SW101 to power on the board
++2.  Connect a USB cable between the host PC and the J901 USB port on the target board.
++3.  Open a serial terminal with the following settings:
++    - 115200 baud rate
++    - 8 data bits
++    - No parity
++    - One stop bit
++    - No flow control
++4.  Download the program to the target board.
++5.  Launch the debugger in your IDE to begin running the demo.
++
++
++Running the demo
++===============
++In order to test this feature by using a single i.MX 8M Mini LPDDR4 EVK board, use external loopback of
++UART3 for testing. Please connect PIN8 (UART3_TXD) and PIN10 (UART3_RXD) by using a flying wire.
++
++When the demo runs successfully, the log would be seen on the debug terminal like:
++
++  UART will send first piece of data out without addressing itself:
++    0x10  0x11  0x12  0x13  0x14  0x15  0x16  0x17
++
++  UART will send second piece of data out with addressing itself:
++    Address: 0xfe : 0x80 0x81 0x82 0x83 0x84 0x85 0x86 0x87
++
++  UART received data:
++  Address: 0xfe : 0x80 0x81 0x82 0x83 0x84 0x85 0x86 0x87
++
++  All data matches!
+diff --git a/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/hardware_init.c b/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/hardware_init.c
+new file mode 100644
+index 000000000..261de7fe7
+--- /dev/null
++++ b/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/hardware_init.c
+@@ -0,0 +1,29 @@
++/*
++ * Copyright 2022-2025 NXP
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++ 
++/*${header:start}*/
++#include "pin_mux.h"
++#include "clock_config.h"
++#include "board.h"
++/*${header:end}*/
++
++/*${function:start}*/
++void BOARD_InitHardware(void)
++{
++    /* Board specific RDC settings */
++    BOARD_RdcInit();
++
++    /* Set UART3 source to SysPLL1 Div10 80MHZ */
++    CLOCK_SetRootMux(kCLOCK_RootUart3, kCLOCK_UartRootmuxSysPll1Div10);
++    /* Set root clock to 80MHZ/ 1= 80MHZ */
++    CLOCK_SetRootDivider(kCLOCK_RootUart3, 1U, 1U);
++
++    BOARD_InitBootPins();
++    BOARD_BootClockRUN();
++    BOARD_InitDebugConsole();
++    BOARD_InitMemory();
++}
++/*${function:end}*/
+diff --git a/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/pin_mux.c b/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/pin_mux.c
+new file mode 100644
+index 000000000..fcd17776f
+--- /dev/null
++++ b/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/pin_mux.c
+@@ -0,0 +1,83 @@
++/*
++ * Copyright 2022-2025 NXP
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++
++/***********************************************************************************************************************
++ * This file was generated by the MCUXpresso Config Tools. Any manual edits made to this file
++ * will be overwritten if the respective MCUXpresso Config Tools is used to update this file.
++ **********************************************************************************************************************/
++
++/*
++ * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
++!!GlobalInfo
++product: Pins v9.0
++processor: MIMX8MM6xxxLZ
++package_id: MIMX8MM6DVTLZ
++mcu_data: ksdk2_0
++processor_version: 9.0.0
++
++ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
++ */
++
++#include "fsl_common.h"
++#include "fsl_iomuxc.h"
++#include "pin_mux.h"
++
++/* FUNCTION ************************************************************************************************************
++ *
++ * Function Name : BOARD_InitBootPins
++ * Description   : Calls initialization functions.
++ *
++ * END ****************************************************************************************************************/
++void BOARD_InitBootPins(void)
++{
++    BOARD_InitPins();
++}
++
++/*
++ * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
++BOARD_InitPins:
++- options: {callFromInitBoot: 'true', prefix: BOARD_, coreID: cm4}
++- pin_list:
++  - {pin_num: F19, peripheral: UART4, signal: uart_rx, pin_signal: UART4_RXD, PE: Disabled, PUE: Disabled, DSE: X6_0}
++  - {pin_num: F18, peripheral: UART4, signal: uart_tx, pin_signal: UART4_TXD, PE: Disabled, PUE: Disabled, DSE: X6_0}
++ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
++ */
++
++/* FUNCTION ************************************************************************************************************
++ *
++ * Function Name : BOARD_InitPins
++ * Description   : Configures pin routing and optionally pin electrical features.
++ *
++ * END ****************************************************************************************************************/
++void BOARD_InitPins(void) {                                /*!< Function assigned for the core: Cortex-M4[m4] */
++    IOMUXC_SetPinMux(IOMUXC_UART4_RXD_UART4_RX, 0U);
++    IOMUXC_SetPinConfig(IOMUXC_UART4_RXD_UART4_RX,
++                        IOMUXC_SW_PAD_CTL_PAD_DSE(6U) |
++                        IOMUXC_SW_PAD_CTL_PAD_FSEL(2U));
++    IOMUXC_SetPinMux(IOMUXC_UART4_TXD_UART4_TX, 0U);
++    IOMUXC_SetPinConfig(IOMUXC_UART4_TXD_UART4_TX,
++                        IOMUXC_SW_PAD_CTL_PAD_DSE(6U) |
++                        IOMUXC_SW_PAD_CTL_PAD_FSEL(2U));
++
++
++    IOMUXC_SetPinMux(IOMUXC_ECSPI1_MOSI_UART3_TX, 0U);
++    IOMUXC_SetPinConfig(IOMUXC_ECSPI1_MOSI_UART3_TX,
++                        IOMUXC_SW_PAD_CTL_PAD_DSE(6U) |
++                        IOMUXC_SW_PAD_CTL_PAD_FSEL(2U) |
++                        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
++                        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
++    IOMUXC_SetPinMux(IOMUXC_ECSPI1_SCLK_UART3_RX, 0U);
++    IOMUXC_SetPinConfig(IOMUXC_ECSPI1_SCLK_UART3_RX,
++                        IOMUXC_SW_PAD_CTL_PAD_DSE(6U) |
++                        IOMUXC_SW_PAD_CTL_PAD_FSEL(2U) |
++                        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
++                        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
++}
++
++/***********************************************************************************************************************
++ * EOF
++ **********************************************************************************************************************/
+\ No newline at end of file
+diff --git a/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/pin_mux.h b/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/pin_mux.h
+new file mode 100644
+index 000000000..5a7e2c209
+--- /dev/null
++++ b/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/pin_mux.h
+@@ -0,0 +1,54 @@
++/*
++ * Copyright 2022-2025 NXP
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++
++#ifndef _PIN_MUX_H_
++#define _PIN_MUX_H_
++
++#include "board.h"
++
++/***********************************************************************************************************************
++ * Definitions
++ **********************************************************************************************************************/
++
++/*!
++ * @addtogroup pin_mux
++ * @{
++ */
++
++/***********************************************************************************************************************
++ * API
++ **********************************************************************************************************************/
++
++#if defined(__cplusplus)
++extern "C" {
++#endif
++
++
++/*!
++ * @brief Calls initialization functions.
++ *
++ */
++void BOARD_InitBootPins(void);
++
++/*!
++ * @brief Configures pin routing and optionally pin electrical features.
++ *
++ */
++void BOARD_InitPins(void);                                 /*!< Function assigned for the core: Cortex-M4[m4] */
++
++#if defined(__cplusplus)
++}
++#endif
++
++/*!
++ * @}
++ */
++#endif /* _PIN_MUX_H_ */
++
++/***********************************************************************************************************************
++ * EOF
++ **********************************************************************************************************************/
+diff --git a/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/prj.conf b/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/prj.conf
+new file mode 100644
+index 000000000..07f3133aa
+--- /dev/null
++++ b/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/prj.conf
+@@ -0,0 +1,2 @@
++
++CONFIG_MCUX_COMPONENT_driver.rdc=y
+\ No newline at end of file
+diff --git a/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/reconfig.cmake b/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/reconfig.cmake
+new file mode 100644
+index 000000000..827b36cb6
+--- /dev/null
++++ b/_boards/evkmimx8mm/driver_examples/uart/9bit_polling/reconfig.cmake
+@@ -0,0 +1,6 @@
++
++mcux_add_source(
++    BASE_PATH ${SdkRootDirPath}
++    SOURCES middleware/multicore/remoteproc/empty_rsc_table.c
++)
++include(${SdkRootDirPath}/examples/_boards/${board}/project_common.cmake OPTIONAL)
+diff --git a/driver_examples/iuart/9bit_polling/CMakeLists.txt b/driver_examples/iuart/9bit_polling/CMakeLists.txt
+new file mode 100644
+index 000000000..9d92bf0d3
+--- /dev/null
++++ b/driver_examples/iuart/9bit_polling/CMakeLists.txt
+@@ -0,0 +1,21 @@
++cmake_minimum_required(VERSION 3.22.0)
++
++include(${SdkRootDirPath}/cmake/extension/mcux.cmake)
++
++project(iuart_9bit_polling LANGUAGES C CXX ASM PROJECT_BOARD_PORT_PATH ${board_root}/${board}/driver_examples/uart/9bit_polling)
++
++include(${SdkRootDirPath}/CMakeLists.txt)
++mcux_add_source(
++    BASE_PATH ${SdkRootDirPath}
++    SOURCES examples/driver_examples/iuart/9bit_polling/uart_9bit_polling.c
++)
++
++mcux_add_include(
++    BASE_PATH ${SdkRootDirPath}
++    INCLUDES ${board_root}/${board}/driver_examples/uart/9bit_polling
++             ${board_root}/${board}/driver_examples/uart/9bit_polling/${core_id}
++)
++
++include(${SdkRootDirPath}/${board_root}/${board}/driver_examples/uart/9bit_polling/reconfig.cmake OPTIONAL)
++
++mcux_convert_binary(BINARY ${APPLICATION_BINARY_DIR}/${MCUX_SDK_PROJECT_NAME}.bin)
+\ No newline at end of file
+diff --git a/driver_examples/iuart/9bit_polling/example.yml b/driver_examples/iuart/9bit_polling/example.yml
+new file mode 100644
+index 000000000..a04fca232
+--- /dev/null
++++ b/driver_examples/iuart/9bit_polling/example.yml
+@@ -0,0 +1,17 @@
++# yaml-language-server: $schema=../../../../../scripts/data_schema/example_description_schema.json
++iuart_9bit_polling:
++  section-type: application
++  contents:
++    meta_path: examples/driver_examples/iuart/9bit_polling
++    project-root-path: boards/${board}/driver_examples/uart/9bit_polling/${multicore_foldername}
++    document:
++      name: iuart_9bit_polling${core_id_suffix_name}
++      category: driver_examples/uart
++      brief: The uart_9bit_polling example shows how to use uart driver in 9bit_polling way:In
++        this example, one uart instance connect to PC through uart, the board will send back 
++        all characters that PC send to the board.
++      example_readme:
++      - examples/driver_examples/iuart/9bit_polling/readme.md
++      - ${board_root}/${board}/driver_examples/uart/9bit_polling/example_board_readme.md
++      - ${board_root}/${board}/examples_shared_readme.md
++  boards:
+diff --git a/driver_examples/iuart/9bit_polling/prj.conf b/driver_examples/iuart/9bit_polling/prj.conf
+new file mode 100644
+index 000000000..61024c2f9
+--- /dev/null
++++ b/driver_examples/iuart/9bit_polling/prj.conf
+@@ -0,0 +1,2 @@
++
++CONFIG_MCUX_COMPONENT_driver.iuart=y
+\ No newline at end of file
+diff --git a/driver_examples/iuart/9bit_polling/readme.md b/driver_examples/iuart/9bit_polling/readme.md
+new file mode 100644
+index 000000000..73fc31241
+--- /dev/null
++++ b/driver_examples/iuart/9bit_polling/readme.md
+@@ -0,0 +1,10 @@
++# iuart_polling
++
++## Overview
++The 9bit_polling example shows how to use uart driver in 9bit polling way:
++
++In this example, one uart instance connect to PC through uart, the board will send back all characters that PC
++send to the board.
++
++## Supported Boards
++- [EVK-MIMX8MM](../../../_boards/evkmimx8mm/driver_examples/uart/9bit_polling/example_board_readme.md)
+diff --git a/driver_examples/iuart/9bit_polling/uart_9bit_polling.c b/driver_examples/iuart/9bit_polling/uart_9bit_polling.c
+new file mode 100644
+index 000000000..fad690c20
+--- /dev/null
++++ b/driver_examples/iuart/9bit_polling/uart_9bit_polling.c
+@@ -0,0 +1,139 @@
++/*
++ * Copyright 2022-2025 NXP
++ *
++ * SPDX-License-Identifier: BSD-3-Clause
++ */
++
++#include "app.h"
++#include "board.h"
++#include "fsl_debug_console.h"
++#include "fsl_uart.h"
++
++/*******************************************************************************
++ * Definitions
++ ******************************************************************************/
++
++/*******************************************************************************
++ * Prototypes
++ ******************************************************************************/
++
++/*******************************************************************************
++ * Variables
++ ******************************************************************************/
++uint8_t g_txBuffer0[TRANSFER_SIZE] = {0};
++uint8_t g_txBuffer1[TRANSFER_SIZE] = {0};
++uint8_t g_rxBuffer[TRANSFER_SIZE + 1U] = {0};
++
++/*******************************************************************************
++ * Code
++ ******************************************************************************/
++/*!
++ * @brief Main function
++ */
++int main(void)
++{
++    status_t status;
++    uart_config_t config;
++    uint32_t i;
++
++    BOARD_InitHardware();
++
++    /*
++     * config.baudRate_Bps = 115200U;
++     * config.parityMode = kUART_ParityDisabled;
++     * config.dataBitsCount = kUART_EightDataBits;
++     * config.stopBitCount = kUART_OneStopBit;
++     * config.txFifoWatermark = 0;
++     * config.rxFifoWatermark = 1;
++     * config.enableTx = false;
++     * config.enableRx = false;
++     */
++    UART_GetDefaultConfig(&config);
++    config.baudRate_Bps    = BOARD_DEBUG_UART_BAUDRATE;
++    config.txFifoWatermark = 2;
++    config.rxFifoWatermark = 8;
++    config.enableTx        = true;
++    config.enableRx        = true;
++
++    status = UART_Init(DEMO_UART, &config, DEMO_UART_CLK_FREQ);
++    if (kStatus_Success != status)
++    {
++        return kStatus_Fail;
++    }
++
++    /* Configure RS485 slave address. */
++    UART_SetMatchAddress(DEMO_UART, EXAMPLE_ADDRESS);
++    /* Select Automatic Address Detect mode. */
++    UART_SetRS485AddressDetectMode(DEMO_UART, RS485_ADDRESS_DETECT_MODE_AUTOMATIC);
++    /* Enable RS-485 Slave Address Detected Interrupt. */
++    UART_SetRS485AddressDetectInterrput(DEMO_UART, true);
++    /* Set up transfer data */
++    UART_Enable9bitRS485Mode(DEMO_UART, true);
++
++    for (i = 0U; i < TRANSFER_SIZE; i++)
++    {
++        g_txBuffer0[i] = 0x10 + i;
++    }
++
++    for (i = 0U; i < TRANSFER_SIZE; i++)
++    {
++        g_txBuffer1[i] = 0x80 + i;
++    }
++
++    for (i = 0U; i < TRANSFER_SIZE + 1U; i++)
++    {
++        g_rxBuffer[i] = 0;
++    }
++
++    /* First send TRANSFER_SIZE byte of data without addressing itself first, these data should be discarded. */
++    PRINTF("  UART will send first piece of data out without addressing itself:\n\r");
++    PRINTF("    ");
++    for (i = 0U; i < TRANSFER_SIZE; i++)
++    {
++        PRINTF("0x%2x  ", g_txBuffer0[i]);
++    }
++    PRINTF("\r\n\r\n");
++    UART_WriteBlocking(DEMO_UART, g_txBuffer0, TRANSFER_SIZE);
++
++    /* Second send TRANSFER_SIZE byte of data with addressing itself first, these data should be received. */
++    PRINTF("  UART will send second piece of data out with addressing itself:\n\r");
++
++    PRINTF("    Address: 0x%2x : ", EXAMPLE_ADDRESS);
++
++    for (i = 0; i < TRANSFER_SIZE; i++)
++    {
++        PRINTF("0x%2x ", g_txBuffer1[i]);
++    }
++    PRINTF("\r\n\r\n");
++    UART_Send9bitRS485Address(DEMO_UART, EXAMPLE_ADDRESS);
++    UART_WriteBlocking(DEMO_UART, g_txBuffer1, TRANSFER_SIZE);
++
++    bool success = true;
++    UART_ReadBlocking(DEMO_UART, g_rxBuffer, TRANSFER_SIZE + 1);
++    PRINTF("  UART received data:\n\r");
++    PRINTF("  Address: 0x%2x : ", g_rxBuffer[0]);
++    for (i = 0; i < TRANSFER_SIZE; i++)
++    {
++        PRINTF("0x%2x ", g_rxBuffer[i + 1U]);
++    }
++    PRINTF("\r\n\r\n");
++
++    /* Check if the data is right. */
++    for (i = 0; i < TRANSFER_SIZE; i++)
++    {
++        if (g_rxBuffer[i + 1U] != g_txBuffer1[i])
++        {
++            success = false;
++            PRINTF("  Received data does not match!\n\r");
++            break;
++        }
++    }
++    if (success)
++    {
++        PRINTF("  All data matches!\n\r");
++    }
++
++    while (1)
++    {
++    }
++}
+-- 
+2.43.0
+

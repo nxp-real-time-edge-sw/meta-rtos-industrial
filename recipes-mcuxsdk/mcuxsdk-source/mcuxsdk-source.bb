@@ -12,6 +12,11 @@ S = "${WORKDIR}/git"
 # Don't generate packages
 inherit nopackages
 
+# mcuxsdk-core patch
+SRC_URI += " \
+    file://0001-MCUX-83513-driver-iuart-Add-9-bit-mode-support.patch;patchdir=${S}/mcuxsdk \
+"
+
 do_configure() {
     if [ ! -d "${S}/.west" ]; then
         bbnote "Creating .west directory and config"
