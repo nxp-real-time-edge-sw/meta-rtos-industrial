@@ -23,6 +23,7 @@ HMC_RTOS_TYPE ?= "freertos zephyr"
 RTOS_ACORE_TYPE ?= ""
 RTOS_MCORE_TYPE ?= ""
 HMC_RTOS_CORE_TYPE ?= "${RTOS_ACORE_TYPE} ${RTOS_MCORE_TYPE}"
+HMC_RTOS_CORE_NUM ?= "${@len(d.getVar('HMC_RTOS_CORE_TYPE').split())}"
 
 HMC_EXAMPLE_TARGET_TYPE ?= "release ddr_release"
 
@@ -72,7 +73,11 @@ get_build_dir() {
         return 1
     fi
 
-    echo "${HMC_EXAMPLE_DIR}/${rtos}/boards/${RTOS_INDUSTRIAL_BOARD}/${core}/${toolchain}"
+    if [ "${HMC_RTOS_CORE_NUM}" = "1" ]; then
+        echo "${HMC_EXAMPLE_DIR}/${rtos}/boards/${RTOS_INDUSTRIAL_BOARD}/${toolchain}"
+    else
+        echo "${HMC_EXAMPLE_DIR}/${rtos}/boards/${RTOS_INDUSTRIAL_BOARD}/${core}/${toolchain}"
+    fi
 }
 
 compile_generic() {
@@ -198,6 +203,12 @@ do_install() {
                 for file in $(find . \( -name "${HMC_EXAMPLE_NAME}_*.elf" -o -name "${HMC_EXAMPLE_NAME}_*.bin" \)); do
                     install -m 0644 "$file" ${D}/${HMC_EXAMPLE_INSTALL_DIR}/${PN}-${rtos}/
                 done
+
+                if [ "${HMC_RTOS_CORE_NUM}" = "1" ]; then
+                    for file in $(find . \( -name "${HMC_EXAMPLE_NAME}*.elf" -o -name "${HMC_EXAMPLE_NAME}*.bin" \)); do
+                        install -m 0644 "$file" ${D}/${HMC_EXAMPLE_INSTALL_DIR}/${PN}-${rtos}/
+                    done
+                fi
             fi
         done
     done
@@ -217,6 +228,12 @@ do_deploy() {
                 for file in $(find . \( -name "${HMC_EXAMPLE_NAME}_*.elf" -o -name "${HMC_EXAMPLE_NAME}_*.bin" \)); do
                     install -m 0644 "$file" ${DEPLOYDIR}/${HMC_EXAMPLE_INSTALL_DIR}/${PN}-${rtos}/
                 done
+
+                if [ "${HMC_RTOS_CORE_NUM}" = "1" ]; then
+                    for file in $(find . \( -name "${HMC_EXAMPLE_NAME}*.elf" -o -name "${HMC_EXAMPLE_NAME}*.bin" \)); do
+                        install -m 0644 "$file" ${DEPLOYDIR}/${HMC_EXAMPLE_INSTALL_DIR}/${PN}-${rtos}/
+                    done
+                fi
             fi
         done
     done
