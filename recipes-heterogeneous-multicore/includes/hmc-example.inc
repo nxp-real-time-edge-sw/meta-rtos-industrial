@@ -5,7 +5,7 @@ SUMMARY = "HMS Application"
 require recipes-heterogeneous-multicore/includes/hmc-version.inc
 
 inherit hmc-source-shared
-inherit deploy
+inherit west deploy
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -35,14 +35,6 @@ HMC_EXAMPLE_INSTALL_DIR ?= "examples/heterogeneous-multicore"
 DEPENDS += " \
     ${HMC_ARMGCC}-native \
     ${HMC_ARMGCC_AARCH64}-native \
-    west-native \
-    python3-jsonschema-native \
-    python3-pyelftools-native \
-    python3-pykwalify-native \
-    python3-pyyaml-native \
-    dtc-native \
-    ninja-native \
-    cmake-native \
 "
 
 python () {

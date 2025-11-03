@@ -5,7 +5,7 @@ SUMMARY = "MCUX SDK Application"
 include recipes-mcuxsdk/includes/mcuxsdk-version.inc
 
 inherit mcuxsdk-source-shared
-inherit deploy
+inherit west deploy
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -33,9 +33,6 @@ MCUXSDK_TOOLCHAIN ?="armgcc"
 
 DEPENDS:append = " \
     ${MCUXSDK_ARMGCC}-native \
-    west-native \
-    ninja-native \
-    cmake-native \
 "
 
 python () {
