@@ -24,6 +24,7 @@ RTOS_ACORE_TYPE:mx93-nxp-bsp = "ca55"
 RTOS_ACORE_TYPE:mx95-nxp-bsp = "ca55"
 
 RTOS_MCORE_TYPE ?= ""
+RTOS_MCORE_TYPE:mx8mm-nxp-bsp = "cm4"
 RTOS_MCORE_TYPE:mx8mn-nxp-bsp = "cm7"
 RTOS_MCORE_TYPE:mx8mp-nxp-bsp = "cm7"
 RTOS_MCORE_TYPE:mx93-nxp-bsp = "cm33"
