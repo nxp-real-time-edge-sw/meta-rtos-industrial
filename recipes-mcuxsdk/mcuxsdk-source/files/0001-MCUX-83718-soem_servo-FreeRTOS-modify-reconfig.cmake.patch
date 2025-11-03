@@ -1,0 +1,69 @@
+From 909c4ad048bac34dc169925072ff7ee50fc36d43 Mon Sep 17 00:00:00 2001
+From: jony zhang <jony.zhang@nxp.com>
+Date: Mon, 3 Nov 2025 15:32:30 +0800
+Subject: [PATCH] [MCUX-83718][soem_servo][FreeRTOS] modify reconfig.cmake path
+
+Signed-off-by: jony zhang <jony.zhang@nxp.com>
+Upstream-Status: Pending
+---
+ soem_examples/soem_servo_motor/bm/CMakeLists.txt              | 1 +
+ soem_examples/soem_servo_motor/freertos/CMakeLists.txt        | 1 +
+ soem_examples/soem_servo_motor_rt1180/bm/CMakeLists.txt       | 1 +
+ soem_examples/soem_servo_motor_rt1180/freertos/CMakeLists.txt | 1 +
+ 4 files changed, 4 insertions(+)
+
+diff --git a/soem_examples/soem_servo_motor/bm/CMakeLists.txt b/soem_examples/soem_servo_motor/bm/CMakeLists.txt
+index 1831237ffa..f9016981c3 100644
+--- a/soem_examples/soem_servo_motor/bm/CMakeLists.txt
++++ b/soem_examples/soem_servo_motor/bm/CMakeLists.txt
+@@ -22,6 +22,7 @@ mcux_add_include(
+     INCLUDES examples/soem_examples/soem_servo_motor/bm
+ )
+ 
++include(${SdkRootDirPath}/${board_root}/${board}/soem_examples/soem_servo_motor/bm/reconfig.cmake OPTIONAL)
+ include(${SdkRootDirPath}/${board_root}/${board}/soem_examples/soem_servo_motor/bm/${core_id}/reconfig.cmake OPTIONAL)
+ 
+ mcux_convert_binary(BINARY ${APPLICATION_BINARY_DIR}/${MCUX_SDK_PROJECT_NAME}.bin)
+\ No newline at end of file
+diff --git a/soem_examples/soem_servo_motor/freertos/CMakeLists.txt b/soem_examples/soem_servo_motor/freertos/CMakeLists.txt
+index 1f3f699429..ad13ee376a 100644
+--- a/soem_examples/soem_servo_motor/freertos/CMakeLists.txt
++++ b/soem_examples/soem_servo_motor/freertos/CMakeLists.txt
+@@ -22,6 +22,7 @@ mcux_add_include(
+     INCLUDES examples/soem_examples/soem_servo_motor/freertos
+ )
+ 
++include(${SdkRootDirPath}/${board_root}/${board}/soem_examples/soem_servo_motor/freertos/reconfig.cmake OPTIONAL)
+ include(${SdkRootDirPath}/${board_root}/${board}/soem_examples/soem_servo_motor/freertos/${core_id}/reconfig.cmake OPTIONAL)
+ 
+ mcux_convert_binary(BINARY ${APPLICATION_BINARY_DIR}/${MCUX_SDK_PROJECT_NAME}.bin)
+\ No newline at end of file
+diff --git a/soem_examples/soem_servo_motor_rt1180/bm/CMakeLists.txt b/soem_examples/soem_servo_motor_rt1180/bm/CMakeLists.txt
+index 78a9988fd2..48efb3e1f6 100644
+--- a/soem_examples/soem_servo_motor_rt1180/bm/CMakeLists.txt
++++ b/soem_examples/soem_servo_motor_rt1180/bm/CMakeLists.txt
+@@ -22,6 +22,7 @@ mcux_add_include(
+     INCLUDES examples/soem_examples/soem_servo_motor_rt1180/bm
+ )
+ 
++include(${SdkRootDirPath}/${board_root}/${board}/soem_examples/soem_servo_motor_rt1180/bm/reconfig.cmake OPTIONAL)
+ include(${SdkRootDirPath}/${board_root}/${board}/soem_examples/soem_servo_motor_rt1180/bm/${core_id}/reconfig.cmake OPTIONAL)
+ 
+ mcux_convert_binary(BINARY ${APPLICATION_BINARY_DIR}/${MCUX_SDK_PROJECT_NAME}.bin)
+\ No newline at end of file
+diff --git a/soem_examples/soem_servo_motor_rt1180/freertos/CMakeLists.txt b/soem_examples/soem_servo_motor_rt1180/freertos/CMakeLists.txt
+index b341e54438..7e3032169a 100644
+--- a/soem_examples/soem_servo_motor_rt1180/freertos/CMakeLists.txt
++++ b/soem_examples/soem_servo_motor_rt1180/freertos/CMakeLists.txt
+@@ -22,6 +22,7 @@ mcux_add_include(
+     INCLUDES examples/soem_examples/soem_servo_motor_rt1180/freertos
+ )
+ 
++include(${SdkRootDirPath}/${board_root}/${board}/soem_examples/soem_servo_motor_rt1180/freertos/reconfig.cmake OPTIONAL)
+ include(${SdkRootDirPath}/${board_root}/${board}/soem_examples/soem_servo_motor_rt1180/freertos/${core_id}/reconfig.cmake OPTIONAL)
+ 
+ mcux_convert_binary(BINARY ${APPLICATION_BINARY_DIR}/${MCUX_SDK_PROJECT_NAME}.bin)
+\ No newline at end of file
+-- 
+2.42.0.windows.2
+
