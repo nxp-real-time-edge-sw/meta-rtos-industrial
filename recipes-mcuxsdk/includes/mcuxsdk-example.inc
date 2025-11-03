@@ -2,7 +2,7 @@
 
 SUMMARY = "MCUX SDK Application"
 
-include recipes-mcuxsdk/includes/mcuxsdk-version.inc
+require recipes-mcuxsdk/includes/mcuxsdk-version.inc
 
 inherit mcuxsdk-source-shared
 inherit west deploy
