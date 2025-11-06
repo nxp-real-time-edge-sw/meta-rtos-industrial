@@ -37,6 +37,9 @@ DEPENDS += " \
     ${HMC_ARMGCC_AARCH64}-native \
 "
 
+# i.MX93 14x14 LPDDR4X EVK shares HMC examples with standard i.MX93 EVK
+RTOS_INDUSTRIAL_BOARD:imx93-14x14-lpddr4x-evk = "mcimx93evk"
+
 python () {
     d.delVar('CFLAGS')
     d.delVar('CXXFLAGS')
