@@ -40,6 +40,9 @@ DEPENDS += " \
 # i.MX93 14x14 LPDDR4X EVK shares HMC examples with standard i.MX93 EVK
 RTOS_INDUSTRIAL_BOARD:imx93-14x14-lpddr4x-evk = "mcimx93evk"
 
+# i.MX95 15x15 LPDDR4X EVK to share HMC firmware with i.MX95 19x19 LPDDR5 EVK (imx95lpd5evk19)
+RTOS_INDUSTRIAL_BOARD:imx95-15x15-lpddr4x-evk = "imx95lpd5evk19"
+
 python () {
     d.delVar('CFLAGS')
     d.delVar('CXXFLAGS')
