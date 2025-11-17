@@ -3,3 +3,5 @@
 require recipes-heterogeneous-multicore/includes/hmc-example.inc
 
 HMC_EXAMPLE_NAME = "soem_servo_rt1180"
+
+RTOS_INDUSTRIAL_BOARD:imx95-15x15-lpddr4x-evk = "imx95lp4xevk15"
