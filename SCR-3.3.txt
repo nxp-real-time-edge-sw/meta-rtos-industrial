@@ -1,0 +1,109 @@
+Release Name: Yocto layer NXP RTOS Industrial
+Release Version: 3.3
+Package License: LICENSE.txt - Additional Distribution License granted, license in Section 2.3 applies
+
+Package: Heterogeneous_Multicore
+Version: 3.3
+Outgoing License: BSD-3-Clause
+License Files: LICENSE.txt
+Type of Content: source code, project files, linker files, binary library.
+Description and comments: Library and applications to support inter-core communication and resource sharing between heterogeneous multicore.
+                          For source code of binary library, please contact with NXP support team.
+Release Location: https://github.com/nxp-real-time-edge-sw/heterogeneous-multicore
+                  branch: main (tag: Real-Time-Edge-v3.3-202512)
+Origin: NXP (BSD-3-Clause)
+
+Package: Zephyr
+Version: 4.3.0
+Outgoing License: Apache-2.0
+License File: zephyr/LICENSE
+Type of Content: source code
+Description and comments: Open source scalable real-time operating system
+Release Location: https://github.com/nxp-zephyr/zephyr.git
+                  branch: feature/heterogeneous_multicore (tag: Real-Time-Edge-v3.3-202512)
+Origin: https://github.com/zephyrproject-rtos/zephyr.git
+
+Package: mcuxsdk-core
+Version: v25.09.00
+Outgoing License: BSD-3-Clause
+License File: COPYING-BSD-3
+Type of content: source code, header file, script
+Description and comments: MCUXpresso SDK core drivers, build scripts and cmake, kconfig build files.
+Release Location: https://github.com/nxp-mcuxpresso/mcuxsdk-core
+Origin:
+      NXP (BSD-3-Clause)
+      Zephyr (Apache 2.0) - https://github.com/zephyrproject-rtos/zephyr
+      Kconfiglib - Ulf Magnusson (ISC) - https://github.com/ulfalizer/Kconfiglib
+
+Package: mcuxsdk-examples
+Version: v25.09.00
+Outgoing License: BSD-3-Clause
+License File: LICENSE
+Type of Content: source code, binary, project files, linker files
+Description and comments: SDK out of box examples to show how to use peripheral drivers and integrate middleware.
+Release Location: https://github.com/nxp-mcuxpresso/mcuxsdk-examples
+Origin:
+      NXP (BSD-3-Clause)
+      FreeRTOS - Amazon (MIT) - https://github.com/FreeRTOS
+      cJSON - Dave Gamble and cJSON contributors (MIT) - https://github.com/DaveGamble/cJSON
+      base64 - Jouni Malinen (BSD) - https://web.mit.edu/freebsd/head/contrib/wpa/src/utils/base64.c
+      picohttpparser - Kazuho Oku, Tokuhiro Matsuno, Daisuke Murase, Shigeo Mitsunari (MIT) - https://github.com/h2o/picohttpparser
+      ML-KWS-for-MCU - ARM (Apache-2.0) - https://github.com/ARM-software/ML-KWS-for-MCU
+      Tensorflow - Google (Apache-2.0) - https://github.com/tensorflow/tensorflow
+      CMSIS-DSP - ARM (Apache-2.0) - https://github.com/ARM-software/CMSIS-DSP
+      Amazon FreeRTOS - Amazon (MIT) - https://github.com/aws/amazon-freertos
+      FreeRTOS Kernel - Amazon (MIT) - https://github.com/FreeRTOS/FreeRTOS-Kernel
+      PSA Certified API Specifications - ARM (Apache-2.0) - https://github.com/ARM-software/psa-api
+      iot-reference-nxp-rt1060- Amazon (MIT) - https://github.com/FreeRTOS/iot-reference-nxp-rt1060
+      lwIP TCP/IP Stack- Swedish Institute of Computer Science and community(BSD) - http://savannah.nongnu.org/projects/lwip
+      RangeHTTPServer - danvk (Apache-2.0) - https://github.com/danvk/RangeHTTPServer
+      segger_sysview - Segger(BSD-1-Clause) - https://www.segger.com/products/development-tools/systemview/
+      FatFS - Elm Chan (FatFs License) - http://elm-chan.org/fsw/ff/
+      Zephyr (Apache-2.0) - https://github.com/zephyrproject-rtos/zephyr
+      wslay - Tatsuhiro Tsujikawa (MIT) - https://github.com/tatsuhiro-t/wslay
+      jsmn - zserge (MIT) - https://github.com/zserge/jsmn
+      littlefs - ARM (BSD-3-Clause) - https://github.com/littlefs-project/littlefs/tree/master
+      mbedtls (Apache-2.0) - https://github.com/Mbed-TLS/mbedtls/tree/mbedtls-3.6.0
+      The Independent JPEG Group's software (IJG) - http://www.ijg.org/files/jpegsr9b.zip
+      lvgl (MIT) - https://github.com/lvgl/lvgl
+
+Package: mcux-component
+Version: 1.0.0
+Outgoing License: LA_OPT_Online_Code_Hosting
+License File: LICENSE
+Type of content: source code, header files
+Description and comments:
+      SDK components and board peripheral drivers, for example, flash and codec drivers.
+      CMSIS Peripheral drivers are designed to provide hardware independent APIs which make application reusable across a wide range of supported microcontroller devices.
+      Simple Unit Testing for C.
+      Host driver middleware and API's for connecting to MW320 Wi-Fi co-processor with on-board TCP/IP stack.
+      SEGGER Real Timer Transfer.
+      Wi-Fi module Tx power limits.
+      CRC32 code written by Gary S. Brown.
+      gcov_support code written by Erich Styger
+      AWS IoT.
+      MemFault integration.
+Release Location: https://github.com/nxp-mcuxpresso/mcux-component
+Origin:
+      NXP (proprietary)
+      NXP (BSD-3-Clause)
+      ITE (BSD-3-Clause)
+      cmsis_drivers - ARM (Apache-2.0) - https://github.com/ARM-software/CMSIS_6/tree/v6.1.0
+      unity - ThrowTheSwitch.org (MIT) - https://github.com/ThrowTheSwitch/Unity
+      rtt - SEGGER Microcontroller (single-clause) - https://github.com/SEGGERMicro/RTT
+      wifi_bt_module - Murata Manufacturing Co., Ltd. (BSD-3-Clause) - https://github.com/murata-wireless/nxp-freertos-calibration
+      CRC32-GS - Gary S. Brown (BSD-3-Clause)
+      mcuoneclipse - Erich Styger (BSD-2-Clause) - https://github.com/ErichStyger/mcuoneclipse/tree/SourceForgeRelease_29-12-2022
+      FreeRTOSConfig - Amazon (MIT) - https://github.com/FreeRTOS/FreeRTOS-Kernel
+      aws_iot - Amazon (MIT) - https://github.com/FreeRTOS/iot-reference-nxp-rt1060
+      MemFault - Memfault, Inc (Apache-2.0) - https://github.com/memfault/memfault-firmware-sdk
+      coremark - EEMBC (Apache-2.0) - https://github.com/eembc/coremark
+
+Package: soem
+Version: 1.2.0
+Outgoing License: GPL-2.0-with-exception
+License File: LICENSE
+Type of Content: source code
+Description and comments: Simple Open EtherCAT Master Library
+Release Location: https://github.com/nxp-real-time-edge-sw/soem.git
+Origin: SOEM (GPL-2.0-with-exception) - https://github.com/OpenEtherCATsociety/SOEM
