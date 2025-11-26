@@ -7,4 +7,4 @@ LIC_FILES_CHKSUM = " \
     file://mcuxsdk/mcuxsdk/LA_OPT_NXP_Software_License.txt;md5=577c3672e53c1a68e0ffd266224e6d20 \
 "
 
-PV ?= "3.3"
+PV = "3.3"
