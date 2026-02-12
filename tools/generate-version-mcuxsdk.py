@@ -121,10 +121,10 @@ lines.append("")
 
 # SRC_URI
 lines.append('SRC_URI = "\\')
-lines.append('    ${SRC_URI_MCUXSDK};branch=${MCUXSDK_BRANCH};name=mcuxsdk;destsuffix=git/manifests \\')
+lines.append('    ${SRC_URI_MCUXSDK};branch=${MCUXSDK_BRANCH};name=mcuxsdk;destsuffix=manifests \\')
 for project in projects:
     var_name = bitbake_var(project.name)
-    lines.append(f'    ${{SRC_URI_MCUXSDK_{var_name}_WITH_BRANCH}};name=mcuxsdk-{project.name};destsuffix=git/{project.path} \\')
+    lines.append(f'    ${{SRC_URI_MCUXSDK_{var_name}_WITH_BRANCH}};name=mcuxsdk-{project.name};destsuffix={project.path} \\')
 lines.append('"')
 lines.append("")
 

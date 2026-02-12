@@ -7,8 +7,7 @@ SRC_URI = "file://COPYING-BSD-3 \
            file://release \
            file://ram_release"
 
-S = "${WORKDIR}/src"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 inherit deploy
 

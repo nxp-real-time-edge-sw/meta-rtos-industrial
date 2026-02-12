@@ -5,7 +5,7 @@
 DEPENDS:append = " mcuxsdk-source"
 
 # Set source directory to shared location
-MCUXSDK_SOURCE_DIR ?= "${TMPDIR}/work-shared/mcuxsdk/git"
+MCUXSDK_SOURCE_DIR ?= "${TMPDIR}/work-shared/mcuxsdk/sources"
 S = "${MCUXSDK_SOURCE_DIR}"
 
 # Skip fetch and unpack as source is provided by mcuxsdk-source

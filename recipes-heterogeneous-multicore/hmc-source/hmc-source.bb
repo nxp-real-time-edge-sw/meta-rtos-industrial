@@ -7,7 +7,8 @@ require hmc-source.inc
 
 # Use work-shared directory
 WORKDIR = "${TMPDIR}/work-shared/hmc-source"
-S = "${WORKDIR}/git"
+
+S = "${UNPACKDIR}"
 
 # Don't generate packages
 inherit nopackages

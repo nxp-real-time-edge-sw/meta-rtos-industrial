@@ -7,7 +7,8 @@ require mcuxsdk-source.inc
 
 # Use work-shared directory
 WORKDIR = "${TMPDIR}/work-shared/mcuxsdk"
-S = "${WORKDIR}/git"
+
+S = "${UNPACKDIR}"
 
 # Don't generate packages
 inherit nopackages

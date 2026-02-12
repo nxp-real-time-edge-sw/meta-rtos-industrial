@@ -5,7 +5,7 @@
 DEPENDS:append = " hmc-source"
 
 # Set source directory to shared location
-HMS_SOURCE_DIR ?= "${TMPDIR}/work-shared/hmc-source/git"
+HMS_SOURCE_DIR ?= "${TMPDIR}/work-shared/hmc-source/sources"
 S = "${HMS_SOURCE_DIR}"
 
 # Skip fetch and unpack as source is provided by hmc-source

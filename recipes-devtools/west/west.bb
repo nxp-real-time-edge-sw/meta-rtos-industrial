@@ -13,8 +13,6 @@ SRCREV = "f0e657721f2e215470274d6f8c0464fa73fc9caf"
 
 PROVIDES = "virtual/west"
 
-S = "${WORKDIR}/git"
-
 inherit python_setuptools_build_meta  python3native
 
 DEPENDS += "\
