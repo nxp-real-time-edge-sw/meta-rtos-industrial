@@ -1,9 +1,9 @@
 Release Name: Yocto layer NXP RTOS Industrial
-Release Version: 3.3
+Release Version: 3.4
 Package License: LICENSE.txt - Additional Distribution License granted, license in Section 2.3 applies
 
 Package: Heterogeneous_Multicore
-Version: 3.3
+Version: 3.4
 Outgoing License: BSD-3-Clause
 License Files: LICENSE.txt
 Type of Content: source code, project files, linker files, binary library.
