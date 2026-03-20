@@ -2,7 +2,7 @@
 
 SRCREV_FORMAT = "hmc"
 
-SRCREV_hmc ?= "c33ba19599e9219d1ee4a84dd278a11f0e51add1"
+SRCREV_hmc ?= "d81d5c7029623dda8b05220766962ac1a308e07d"
 SRCREV_core ?= "054a131cb31b19d9dd11ab5a153d28c9a8810022"
 SRCREV_mcuxsdk-manifests ?= "664eba64531a0115122747ce615b92c2798352a8"
 SRCREV_MCUX_CMSIS ?= "19a9390ee4acdb36407639d56d6eea392719a993"
@@ -140,4 +140,4 @@ ${S}/zsdk/zephyr\;\
 "
 
 HMC_BRANCH ?= "main"
-PV = "3.3"
+PV = "3.4"
