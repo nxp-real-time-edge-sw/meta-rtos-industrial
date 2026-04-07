@@ -169,8 +169,8 @@ do_clean() {
     done
 
     # Clean other work directories but not the shared source
-    rm -f ${WORKDIR}/temp
-    rm -f ${WORKDIR}/pseudo
+    rm -rf ${WORKDIR}/temp
+    rm -rf ${WORKDIR}/pseudo
     rm -rf ${WORKDIR}/image
     rm -rf ${WORKDIR}/deploy-*
     rm -rf ${WORKDIR}/package
