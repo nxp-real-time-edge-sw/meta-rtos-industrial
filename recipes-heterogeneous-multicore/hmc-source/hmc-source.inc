@@ -27,7 +27,7 @@ SRCREV_cmsis_6 ?= "30a859f44ef8ab4dc8f84b03ed586fd16ccf9d74"
 SRCREV_libmetal ?= "91d38634d1882f0a2151966f8c5c230ce1c0de7b"
 SRCREV_hal_nxp ?= "df59b170b903256d08c57054a6d43b0592d4d692"
 SRCREV_open-amp ?= "c30a6d8b92fcebdb797fc1a7698e8729e250f637"
-SRCREV_zephyr ?= "efe550bc592742561c171381b5c3a1c9b2e2630b"
+SRCREV_zephyr ?= "99dc576178193dc506f4816f1ee144921bf87248"
 
 SRC_URI_HMC ?= "git://github.com/nxp-real-time-edge-sw/heterogeneous-multicore.git;protocol=https"
 SRC_URI_CORE ?= "git://github.com/nxp-mcuxpresso/mcuxsdk-core;protocol=https"
