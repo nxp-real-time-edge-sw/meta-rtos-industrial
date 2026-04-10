@@ -6,10 +6,8 @@ HMC_EXAMPLE_NAME = "rpmsg_str_echo"
 
 HMC_EXAMPLE_TARGET_TYPE = "release_8m_buf"
 
-FILES:${PN} += " \
-    /${HMC_EXAMPLE_INSTALL_DIR}/rpmsg-str-echo-freertos/* \
-    /${HMC_EXAMPLE_INSTALL_DIR}/rpmsg-str-echo-zephyr/* \
-"
+do_compile[depends] += "rpmsg-str-echo:do_deploy"
+do_compile[depends] += "rpmsg-str-echo:do_package"
 
 do_install() {
     # Loop through RTOS types
