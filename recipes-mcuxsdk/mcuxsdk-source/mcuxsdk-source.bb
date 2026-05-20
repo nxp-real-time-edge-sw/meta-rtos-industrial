@@ -1,4 +1,4 @@
-# Copyright 2025 NXP
+# Copyright 2025-2026 NXP
 SUMMARY = "MCUX SDK Shared Source"
 DESCRIPTION = "Downloads and configures all MCUX SDK source repositories for sharing among recipes"
 

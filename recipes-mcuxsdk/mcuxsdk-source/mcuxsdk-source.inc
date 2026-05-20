@@ -2,103 +2,98 @@
 
 SRCREV_FORMAT = "mcuxsdk"
 
-SRCREV_mcuxsdk ?= "464f40b81f246522a152bbaeafd2821c65adbc1a"
-SRCREV_mcuxsdk-core ?= "e570f283a05a8cc291ac1165b405168250b9717a"
-SRCREV_mcuxsdk-CMSIS ?= "360049cdcff5aad83c31fc67112255edbf5ccc6b"
-SRCREV_mcuxsdk-mcu-sdk-examples ?= "0f5d413acda59010d3cf580ecd6f0094c530e711"
-SRCREV_mcuxsdk-mcu-sdk-components ?= "bcf7fef88d50f038ee6e500601ad0a2e18f83473"
-SRCREV_mcuxsdk-mcu-sdk-doc ?= "a2e0722879312c7385e90ac78f43a09d0fcd6fd3"
-SRCREV_mcuxsdk-mcuxsdk-tool-data ?= "f52fdfcdb92ad734347729f1198a0d226cd0d3d0"
-SRCREV_mcuxsdk-mcux-devices-dsc ?= "32b6a34b67f1c1252d28b56b0b26f95e613f3865"
-SRCREV_mcuxsdk-mcux-devices-kinetis ?= "978c1f97060c884d548c68ac06836750426033e8"
-SRCREV_mcuxsdk-mcux-devices-lpc ?= "fe228b87e081a1938f6211b4c60926a333ed93fb"
-SRCREV_mcuxsdk-mcux-devices-mcx ?= "6bbddd36a6efe653c4633b064705dd9f30e32ac8"
-SRCREV_mcuxsdk-mcux-devices-rt ?= "6b306e8feca475462e7fd4cd682440513f570bc4"
-SRCREV_mcuxsdk-mcux-devices-wireless ?= "5eb6a44dfbc2b36f5a3a058a3e06985e99829b76"
-SRCREV_mcuxsdk-mcux-devices-imx ?= "a999a1c98ec7fd058bd24416a7e4ff330235b09d"
-SRCREV_mcuxsdk-mcuboot_opensource ?= "0f554d03e27a85daf2345469c583a3e80d770c65"
-SRCREV_mcuxsdk-mcu_bootloader ?= "72fcb5add76cacd6f00e3d12f3b59af121e58e16"
-SRCREV_mcuxsdk-tinycbor ?= "1cb2eab953a68e3b533247be280fd4fef24bf647"
-SRCREV_mcuxsdk-pkcs11 ?= "7e42bd48bbf02ad4a85010309919ac176373f4b4"
-SRCREV_mcuxsdk-aws_iot_device-defender ?= "57291433b6a36865887d9370defe4a6ed0cb3f40"
-SRCREV_mcuxsdk-aws_iot_device-shadow ?= "08d8b1a68b7c167097479705d210da6700445368"
-SRCREV_mcuxsdk-aws_iot_jobs ?= "df5b97d03f0bc32d3f62d12dc7d10e36e82a895b"
-SRCREV_mcuxsdk-aws_iot_ota ?= "52904b5a54a0a9335291088879a889f439d7738b"
-SRCREV_mcuxsdk-aws_iot_llhttp ?= "25ae94d6b619bdbbc40cc5b62ceadad5884c53f1"
-SRCREV_mcuxsdk-usb ?= "fae72b7af511b5097c8b8e2c16337215c0bab058"
-SRCREV_mcuxsdk-lwip ?= "2419440fdf626eeedca31be06f3941678e82110d"
+SRCREV_mcuxsdk ?= "3f3935ffa531b2f0b7826d6ff6e1a15c2f35e9dc"
+SRCREV_mcuxsdk-core ?= "0455af22adf229f945516f912b16c22eb04f6a74"
+SRCREV_mcuxsdk-CMSIS ?= "dc8b75b360fce9c864a12f1ccc54172e0c733805"
+SRCREV_mcuxsdk-mcu-sdk-examples ?= "c37c97ca4376ecab88eb415f3b3679e10dee1ab7"
+SRCREV_mcuxsdk-mcu-sdk-components ?= "3d8bf5c7bb0aaa3c6334314590a831a9015991bb"
+SRCREV_mcuxsdk-mcu-sdk-doc ?= "5a330c6c9d51b7e0c868c2eddf7a580e7b04f474"
+SRCREV_mcuxsdk-mcuxsdk-tool-data ?= "68ef714fbfbfd79ca96c4ec2f89bb126f17bdaf4"
+SRCREV_mcuxsdk-mcux-devices-dsc ?= "d47dbb16a1bf8dd3a1ebffc0071a3d2fc6dd2ab7"
+SRCREV_mcuxsdk-mcux-devices-kinetis ?= "748c452a7afe87b30e3aa6460a172b7a0e0ae433"
+SRCREV_mcuxsdk-mcux-devices-lpc ?= "68bb24aeed5cccc1e758b061f7ffe1ef1c3ae926"
+SRCREV_mcuxsdk-mcux-devices-mcx ?= "5cd233f7bdebd6de33c200d2bf423fc7548d79b2"
+SRCREV_mcuxsdk-mcux-devices-rt ?= "3664324bd1240a92e05a31301f6636a7a19f01d2"
+SRCREV_mcuxsdk-mcux-devices-wireless ?= "aad7450547c4f96d705219c4ecd8bacba2ee6ef1"
+SRCREV_mcuxsdk-mcux-devices-imx ?= "2045339abe2c6fffdc2e9e1d4a694b2dfa599be9"
+SRCREV_mcuxsdk-mcuboot_opensource ?= "f82a8820675bb5f11057939d67233691ea44184e"
+SRCREV_mcuxsdk-mcu_bootloader ?= "5e0a418c1ebf89756f0a9a1856c0801d1e43428d"
+SRCREV_mcuxsdk-tinycbor ?= "4ea71e4b8e5b559f0c3ef053756cb8856449b491"
+SRCREV_mcuxsdk-pkcs11 ?= "555a0c4e4087e7d2ce0b042d978e56f32c5cf6a1"
+SRCREV_mcuxsdk-aws_iot_llhttp ?= "711ee97579c82568789426f432827175533a56c5"
+SRCREV_mcuxsdk-usb ?= "d5891dfcb12aeebb52624dfec27bdc237d64f5be"
+SRCREV_mcuxsdk-lwip ?= "0ecf2a5738b20c6085acc23094970bdc88fb5049"
 SRCREV_mcuxsdk-lin_stack ?= "458e0042f13fe9942c9e361a7bd99ce269e3b1ef"
-SRCREV_mcuxsdk-soem ?= "c31e5d679c2e75ef4ce16a5ea1174239df133037"
-SRCREV_mcuxsdk-freemodbus ?= "1bc2a5ec2cedcdc89fc32571fe31bddd09184486"
+SRCREV_mcuxsdk-soem ?= "71188ab1979ebe8e97faa1de2b9ce0d44db4626d"
+SRCREV_mcuxsdk-freemodbus ?= "3bb6432e98e28181122c633a09f3c248e8bc2ee8"
 SRCREV_mcuxsdk-canopennode ?= "8c7d852902b2d307e8b91a43332c14e366641e00"
-SRCREV_mcuxsdk-mcux-sdk-middleware-eiq ?= "abfc18b317fe054aa8bc0abc289cd3b849066f71"
-SRCREV_mcuxsdk-mcux-sdk-middleware-tensorflow ?= "f3e07bff9994c2d5276b78ea73edfb8972389b75"
-SRCREV_mcuxsdk-mcux-sdk-middleware-mpp ?= "01675982184d5a5edb623e10271bf0775ceb1d45"
-SRCREV_mcuxsdk-mcuxsdk-middleware-executorch ?= "0a7f49db8da9815015c88dea627d4b048c682455"
-SRCREV_mcuxsdk-fatfs ?= "59413c3a18725f6fdcb7f1f8bc2aae468a4dc244"
-SRCREV_mcuxsdk-mcux-sdk-middleware-sdmmc ?= "371144ab8ad2aa8775144fd3a0ac2bb8aa5f5cb0"
-SRCREV_mcuxsdk-dhara ?= "df057701dbe3c7c2bf9a18658c38c889e2eaa145"
-SRCREV_mcuxsdk-littlefs ?= "ef8dacce13bf331dfd1903ead830264854c3df35"
-SRCREV_mcuxsdk-metering ?= "b603400912ec732906874cfd8294cfb1e283758b"
-SRCREV_mcuxsdk-motor_control ?= "862367139aa773ddfc07cc8d1ee60e7dda6d4a13"
-SRCREV_mcuxsdk-rtcesl ?= "39b31a322b9fb3eb5176150a4b853c29465adc04"
-SRCREV_mcuxsdk-freemaster ?= "9774ae38547efc742ed37eeaba8953e09b13f14a"
-SRCREV_mcuxsdk-mcux-sdk-middleware-multicore ?= "9e52c5ffeb00ef0ae6f7397e12ed56cce1d9359a"
-SRCREV_mcuxsdk-mcux-mcmgr ?= "560135dc47506f93212aaf1645733df4f5172053"
-SRCREV_mcuxsdk-rpmsg-lite ?= "98f770d0c915397bad61cb152f381cafcb5af254"
-SRCREV_mcuxsdk-erpc ?= "b10fdb666dbe6783c6ba0c2061f6c2548a7ec9c7"
-SRCREV_mcuxsdk-maestro ?= "0dfff0516c52e088f46ea9b614efe0747d99cced"
-SRCREV_mcuxsdk-vglite ?= "735be0ca6283ed85049e7325d24f8fff867e38c2"
-SRCREV_mcuxsdk-vglite_sdk ?= "ee147c6276d03c84d8f1e86f68ca6bb8455bd31b"
-SRCREV_mcuxsdk-lvgl ?= "660716558391a990389c11b263b9c4d1336ae0cb"
+SRCREV_mcuxsdk-mcux-sdk-middleware-eiq ?= "4a3cb9ada1758ca81bfa6ca8dafde5d26111e358"
+SRCREV_mcuxsdk-mcux-sdk-middleware-tensorflow ?= "6963e6c15caece01f7a6346d45d934c0fabda130"
+SRCREV_mcuxsdk-mcux-sdk-middleware-mpp ?= "c0d2708ef63d046bcf1a7361d90a48d67c8313f8"
+SRCREV_mcuxsdk-mcuxsdk-middleware-executorch ?= "ad18b140526fcd2e80bdafbe6cdec49776c79df3"
+SRCREV_mcuxsdk-fatfs ?= "b935502f06809cfd012e8502c44257a94d6bbe1c"
+SRCREV_mcuxsdk-mcux-sdk-middleware-sdmmc ?= "a381b389fd693395ea483960b0a8751cab6e34bd"
+SRCREV_mcuxsdk-dhara ?= "2bcc5ae40b9942475c8660af0d61688819f4279b"
+SRCREV_mcuxsdk-littlefs ?= "4217f5aa1a51a06e9549e3acb84087a770bde458"
+SRCREV_mcuxsdk-metering ?= "1981b0ebb09437384f7e5b85243c5c203fb93500"
+SRCREV_mcuxsdk-motor_control ?= "22a974528ead236cb6daf8339ba0b17fac3c16db"
+SRCREV_mcuxsdk-rtcesl ?= "e45c17ad061bb8a72be058e220c1620011ae554a"
+SRCREV_mcuxsdk-freemaster ?= "05bb4b4f39499ea0bcbc68013e07cc7eba214f06"
+SRCREV_mcuxsdk-mcux-sdk-middleware-multicore ?= "0942eac75827fe2b9fbb5ee601a5c30f1c372ba6"
+SRCREV_mcuxsdk-mcux-mcmgr ?= "f82aab54d2d174267c34621320c4c019d6a723eb"
+SRCREV_mcuxsdk-rpmsg-lite ?= "08c63112c9fa1029d6fefe62a30e971475758fba"
+SRCREV_mcuxsdk-erpc ?= "64fd6442b1ec01642db2d5963ce617eb5e761984"
+SRCREV_mcuxsdk-maestro ?= "39ed5cf898292e48c4becb7300c56878a69be0cf"
+SRCREV_mcuxsdk-vglite ?= "c922f96bcaf9755d65b9a17dc0e4b9e6e2b5ccc4"
+SRCREV_mcuxsdk-vglite_sdk ?= "a43e907d5526640154604d48633bfc4b60a9f489"
+SRCREV_mcuxsdk-lvgl ?= "0779788b76285538b25c7c6d80b1b6856dfeb2bf"
 SRCREV_mcuxsdk-g2d_dpu ?= "6a60655caef80823cddc49e8950e2e2b29cd51a5"
-SRCREV_mcuxsdk-vit ?= "456628d36bad263cf4e82371f850435f1a2ae411"
-SRCREV_mcuxsdk-voice_seeker ?= "f429d4a52952290251c7a416065edb69c8d766c8"
-SRCREV_mcuxsdk-audio-voice-components ?= "f1d12f925a93b68b7382ee4558b53c4d09d7d41b"
-SRCREV_mcuxsdk-libjpeg ?= "a1897a51ce31153efdb3ab42428ec5c472094729"
-SRCREV_mcuxsdk-pngdec ?= "076bf189ba028ba258aa243fa53cfa2810ea9924"
-SRCREV_mcuxsdk-openh264 ?= "9190733b46d157a6f1e6fecdc07d056f353edb70"
+SRCREV_mcuxsdk-vit ?= "3969d13aba350130ade8bd73bde8cd098d71455b"
+SRCREV_mcuxsdk-audio-voice-components ?= "0d09428ea5159df561e8a33b3175147d5b854629"
+SRCREV_mcuxsdk-libjpeg ?= "eeb1869940a80ba723b527b0737107c23c9304c5"
+SRCREV_mcuxsdk-pngdec ?= "d26b03455204dba1a40ecf97d2b5d472d757f585"
+SRCREV_mcuxsdk-openh264 ?= "87a4c14ea8761fd45ae173071ce013c8e6c782e9"
 SRCREV_mcuxsdk-openvg ?= "9ff3aa3e50ee80eb41220cf982cb2e473039d853"
-SRCREV_mcuxsdk-cjson ?= "c3e187ee75d486629b857bfc1f5092ed0ec641dc"
+SRCREV_mcuxsdk-cjson ?= "0eea3821bbbbac4071c029f8dfd53aa5267b69c3"
 SRCREV_mcuxsdk-memfault ?= "f1a88a848b4f0a634375ab488d2d1f2a52085bfa"
-SRCREV_mcuxsdk-safety_iec60730b ?= "0d1ea84d4689d3ce1c8a89ae408375b059b61605"
-SRCREV_mcuxsdk-els_pkc ?= "5a52647b25af2b59515b29bbe348208875c5418a"
-SRCREV_mcuxsdk-secure-subsystem ?= "31e6429f4b4b984baf9fefb570c0bcb35ff1fc92"
-SRCREV_mcuxsdk-edgelock ?= "8392f6e6366742ef65e53b089a4100e63d0d4154"
-SRCREV_mcuxsdk-mbedtls ?= "691440bfbfd31bbddaf8471e29aea6fb03ae59e2"
-SRCREV_mcuxsdk-mbedtls3x ?= "1b2f8fca21678f21f1bc2c06051d254400cc720c"
-SRCREV_mcuxsdk-nxp_iot_agent ?= "4dba8500c59aa802891742affd99e7857c67a8c4"
-SRCREV_mcuxsdk-tfm ?= "ef96cfcdaf470a25f1dd7fcafcaae5bbfaad33d1"
-SRCREV_mcuxsdk-psa_crypto_driver ?= "4ecda75ee57e8ed75b116b759e339459ca4490a6"
+SRCREV_mcuxsdk-safety_iec60730b ?= "1f38e849ab10b4804e8d699e691c398a2bd3d9a4"
+SRCREV_mcuxsdk-els_pkc ?= "296d94ed5932d1a25a8d00f20e3454c3936ee85d"
+SRCREV_mcuxsdk-secure-subsystem ?= "db5ddb552d8a2a0cb44052658d16f16a591dd34e"
+SRCREV_mcuxsdk-edgelock ?= "b8a689fefee94bb5e776352e9ca6f6694c6a3188"
+SRCREV_mcuxsdk-mbedtls ?= "bc67dc83d6092988bfcb1ae1a60617700f1ba114"
+SRCREV_mcuxsdk-mbedtls3x ?= "9d55920717d15ae3773eb88211b4292c630f0f52"
+SRCREV_mcuxsdk-nxp_iot_agent ?= "236ba4777961ea1e25834c3d6f0a7f029e4c506d"
+SRCREV_mcuxsdk-tfm ?= "7901acf6f6a67040587f64cad5484430ee724395"
+SRCREV_mcuxsdk-psa_crypto_driver ?= "3693cf3a25c326b24da320788d1d0110c8c8b0fb"
 SRCREV_mcuxsdk-mmcau ?= "2381e9a66cb034386b8a8a6c35c6dc2c8e853dca"
-SRCREV_mcuxsdk-psa-arch-tests ?= "8014e2fde9fae3b6b7611e57819a85bbba8e62df"
+SRCREV_mcuxsdk-psa-arch-tests ?= "1726e156b27ccdfdb8a28b4a1ee18f0d6a287190"
 SRCREV_mcuxsdk-tf-m-tests ?= "6f642014a8c255e163ae0bc4d21e327de694d6a2"
 SRCREV_mcuxsdk-qcbor ?= "751d36583a9ce1a640900c57e13c9b6b8f3a2ba2"
-SRCREV_mcuxsdk-secure_storage ?= "49e1ded26283d783dbfc12868387170cd743a1f4"
-SRCREV_mcuxsdk-sgi_pkc ?= "70a67a3a44dd4cedad665658f71da25f858ce2c1"
-SRCREV_mcuxsdk-touch ?= "d2e0cac3c4467cacfac40ed9b79b34c00400f69f"
-SRCREV_mcuxsdk-mcux-sdk-middleware-connectivity-framework ?= "aab99e8fdf171c1239eb7692b765d1c48fd3868d"
-SRCREV_mcuxsdk-genfsk ?= "4522856d6ccb621b4412597d753a49d757b2609f"
-SRCREV_mcuxsdk-ble_controller ?= "9a7fbf2265e29a475502568c50d02602a1c6eb95"
-SRCREV_mcuxsdk-bluetooth ?= "65e118fed5207e1fe20b50af3d799ce56c4db405"
-SRCREV_mcuxsdk-XCVR ?= "746ab899502ea3032241eb6363b1923f0b41c616"
-SRCREV_mcuxsdk-edgefast_bt_ble ?= "6064a8e48daa07ae398e03fb252c6cdb7013cc55"
-SRCREV_mcuxsdk-ieee-802.15.4 ?= "76be1989df6afc964cbb917f2d3f561776f45ac4"
-SRCREV_mcuxsdk-ethermind ?= "5e4b6fdadacd6f02895c5d241462e450d86408ed"
-SRCREV_mcuxsdk-wifi_nxp ?= "5f6d08a23407f4db6832d7349f55374bca7f490c"
-SRCREV_mcuxsdk-fw_bin ?= "9bfa60b15917c0eb5cb984e5df30832e39217ddd"
-SRCREV_mcuxsdk-zigbee ?= "d992a615c542885da8e3e0785a3cab8c101239e1"
-SRCREV_mcuxsdk-wpa_supplicant-rtos ?= "1d78239ec9304d8934b70249079d023ba9d092ce"
-SRCREV_mcuxsdk-coex ?= "50074504a837b2be82d3f0e4259066b781b002da"
-SRCREV_mcuxsdk-freertos-kernel ?= "5e5f13ae34ea9464f4e311450373523e04a4722b"
+SRCREV_mcuxsdk-secure_storage ?= "1af5702be56ca26a9c38a1dd16770e7fa8345b78"
+SRCREV_mcuxsdk-sgi_pkc ?= "157663505008d3b8cb3f6d1fcf949f59c5ff1f44"
+SRCREV_mcuxsdk-tf-psa-crypto ?= "5956f18fcffb84f2d00620e8f9d9dcbc5090f26a"
+SRCREV_mcuxsdk-touch ?= "aade9abb784276774cf888cd5773a9101eddfe80"
+SRCREV_mcuxsdk-mcux-sdk-middleware-connectivity-framework ?= "9144674404837d6d88ab6951061d1424ce538848"
+SRCREV_mcuxsdk-genfsk ?= "6cc59591e0bfff107dd5ec090eaad5080544a431"
+SRCREV_mcuxsdk-ble_controller ?= "d70cff06714310afbc2bed99f90930b27f58b88f"
+SRCREV_mcuxsdk-bluetooth ?= "315dea716f1bb81f73a250ef208385e1d5022f85"
+SRCREV_mcuxsdk-XCVR ?= "a317df29901dde934434d164595990516f436b6d"
+SRCREV_mcuxsdk-edgefast_bt_ble ?= "1585fe5dd18911adf9aa7addb15061117832410e"
+SRCREV_mcuxsdk-ieee-802.15.4 ?= "c44cc35a0bab22e7dc0911fd6bb8fd1a1eded5cd"
+SRCREV_mcuxsdk-ethermind ?= "bbd71690563a1b2e34c33c495189320d5da3b64f"
+SRCREV_mcuxsdk-wifi_nxp ?= "bd012894a6a80de6b484729112e167020dea9041"
+SRCREV_mcuxsdk-fw_bin ?= "fcca70411367f7f9a07b584936bb780c997d24a8"
+SRCREV_mcuxsdk-zigbee ?= "9b84dfc0b6672dbab9675d4ae2816aefc4e8b189"
+SRCREV_mcuxsdk-wpa_supplicant-rtos ?= "f5882fcf96a678f12c4897d191c3a1a01c170750"
+SRCREV_mcuxsdk-coex ?= "46d87e1c3665422156712ae36df2a35544385d38"
+SRCREV_mcuxsdk-freertos-kernel ?= "e75d4285960e1b7a3d85d93463d5c81801c54f7a"
 SRCREV_mcuxsdk-mcux-freertos-drivers ?= "845ff93b52bbc1852c5b9911e74524f6baed2ba6"
-SRCREV_mcuxsdk-corepkcs11 ?= "cdfefdcc61662e84e67e46cc4ca5242ab9227ea2"
-SRCREV_mcuxsdk-coremqtt ?= "d10b9b8096db1af7097dced99eba5e805967764c"
-SRCREV_mcuxsdk-corejson ?= "ca64c02c436912b5dc505e56fedc5d343f891687"
-SRCREV_mcuxsdk-corehttp ?= "48d97e74d3150a8aac476f0bc744dd9cdf49431f"
-SRCREV_mcuxsdk-backoffalgorithm ?= "fa891d609939f9ef3019779dc2d23ace1a7f9f15"
-SRCREV_mcuxsdk-freertos-plus-tcp ?= "ef5bcc28ffea075c892f91c5e55ce0db4c084dca"
-SRCREV_mcuxsdk-coremqtt-agent ?= "bddeb2b35194e5ccc998dc87a6f173425f2a87ea"
+SRCREV_mcuxsdk-corepkcs11 ?= "931a0abb4f89db7d5f9a3e0621a94e6cfff3d7b3"
+SRCREV_mcuxsdk-coremqtt ?= "902aeafd9c60c9e435206a2b54b27a2780367d79"
+SRCREV_mcuxsdk-corejson ?= "7a73de19cee5497346e836e5582cd648526a7bcd"
+SRCREV_mcuxsdk-corehttp ?= "09e9b7471b2b8cdbb48563597fb56d9c831af606"
+SRCREV_mcuxsdk-backoffalgorithm ?= "cc666b178982cb1594f0c7b9e08df47030925234"
+SRCREV_mcuxsdk-freertos-plus-tcp ?= "d43bf2ed89d4c491699c0cfd11e2c76cf3f06d50"
 
 SRC_URI_MCUXSDK ?= "git://github.com/nxp-mcuxpresso/mcuxsdk-manifests.git;protocol=https"
 SRC_URI_MCUXSDK_CORE ?= "git://github.com/nxp-mcuxpresso/mcuxsdk-core;protocol=https"
@@ -118,10 +113,6 @@ SRC_URI_MCUXSDK_MCUBOOT_OPENSOURCE ?= "git://github.com/nxp-mcuxpresso/mcuboot;p
 SRC_URI_MCUXSDK_MCU_BOOTLOADER ?= "git://github.com/nxp-mcuxpresso/mcuxsdk-middleware-bootloader;protocol=https"
 SRC_URI_MCUXSDK_TINYCBOR ?= "git://github.com/nxp-mcuxpresso/tinycbor;protocol=https"
 SRC_URI_MCUXSDK_PKCS11 ?= "git://github.com/nxp-mcuxpresso/pkcs11;protocol=https"
-SRC_URI_MCUXSDK_AWS_IOT_DEVICE_DEFENDER ?= "git://github.com/nxp-mcuxpresso/Device-Defender-for-AWS-IoT-embedded-sdk;protocol=https"
-SRC_URI_MCUXSDK_AWS_IOT_DEVICE_SHADOW ?= "git://github.com/nxp-mcuxpresso/Device-Shadow-for-AWS-IoT-embedded-sdk;protocol=https"
-SRC_URI_MCUXSDK_AWS_IOT_JOBS ?= "git://github.com/nxp-mcuxpresso/Jobs-for-AWS-IoT-embedded-sdk;protocol=https"
-SRC_URI_MCUXSDK_AWS_IOT_OTA ?= "git://github.com/nxp-mcuxpresso/ota-for-aws-iot-embedded-sdk;protocol=https"
 SRC_URI_MCUXSDK_AWS_IOT_LLHTTP ?= "git://github.com/nxp-mcuxpresso/llhttp;protocol=https"
 SRC_URI_MCUXSDK_USB ?= "git://github.com/nxp-mcuxpresso/mcux-sdk-middleware-usb;protocol=https"
 SRC_URI_MCUXSDK_LWIP ?= "git://github.com/nxp-mcuxpresso/lwip;protocol=https"
@@ -151,7 +142,6 @@ SRC_URI_MCUXSDK_VGLITE_SDK ?= "git://github.com/nxp-mcuxpresso/gpu-vglite-exampl
 SRC_URI_MCUXSDK_LVGL ?= "git://github.com/nxp-mcuxpresso/lvgl;protocol=https"
 SRC_URI_MCUXSDK_G2D_DPU ?= "git://github.com/nxp-mcuxpresso/gpu-g2d-dpu;protocol=https"
 SRC_URI_MCUXSDK_VIT ?= "git://github.com/nxp-mcuxpresso/vit;protocol=https"
-SRC_URI_MCUXSDK_VOICE_SEEKER ?= "git://github.com/nxp-mcuxpresso/VoiceSeeker;protocol=https"
 SRC_URI_MCUXSDK_AUDIO_VOICE_COMPONENTS ?= "git://github.com/nxp-mcuxpresso/audio-voice-components;protocol=https"
 SRC_URI_MCUXSDK_LIBJPEG ?= "git://github.com/nxp-mcuxpresso/mcux-libjpeg;protocol=https"
 SRC_URI_MCUXSDK_PNGDEC ?= "git://github.com/nxp-mcuxpresso/PNGdec/;protocol=https"
@@ -174,6 +164,7 @@ SRC_URI_MCUXSDK_TF_M_TESTS ?= "git://github.com/TrustedFirmware-M/tf-m-tests;pro
 SRC_URI_MCUXSDK_QCBOR ?= "git://github.com/laurencelundblade/QCBOR;protocol=https"
 SRC_URI_MCUXSDK_SECURE_STORAGE ?= "git://github.com/nxp-mcuxpresso/secure_storage;protocol=https"
 SRC_URI_MCUXSDK_SGI_PKC ?= "git://github.com/nxp-mcuxpresso/sgi_pkc;protocol=https"
+SRC_URI_MCUXSDK_TF_PSA_CRYPTO ?= "git://github.com/nxp-mcuxpresso/tf-psa-crypto;protocol=https"
 SRC_URI_MCUXSDK_TOUCH ?= "git://github.com/nxp-mcuxpresso/mcux-touch;protocol=https"
 SRC_URI_MCUXSDK_MCUX_SDK_MIDDLEWARE_CONNECTIVITY_FRAMEWORK ?= "git://github.com/nxp-mcuxpresso/mcux-sdk-middleware-connectivity-framework;protocol=https"
 SRC_URI_MCUXSDK_GENFSK ?= "git://github.com/nxp-mcuxpresso/mcux-sdk-middleware-genfsk;protocol=https"
@@ -196,7 +187,6 @@ SRC_URI_MCUXSDK_COREJSON ?= "git://github.com/nxp-mcuxpresso/corejson;protocol=h
 SRC_URI_MCUXSDK_COREHTTP ?= "git://github.com/nxp-mcuxpresso/corehttp;protocol=https"
 SRC_URI_MCUXSDK_BACKOFFALGORITHM ?= "git://github.com/nxp-mcuxpresso/backoffalgorithm;protocol=https"
 SRC_URI_MCUXSDK_FREERTOS_PLUS_TCP ?= "git://github.com/nxp-mcuxpresso/freertos-plus-tcp;protocol=https"
-SRC_URI_MCUXSDK_COREMQTT_AGENT ?= "git://github.com/nxp-mcuxpresso/coremqtt-agent;protocol=https"
 
 SRC_URI_MCUXSDK_CORE_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_CORE};nobranch=1"
 SRC_URI_MCUXSDK_CMSIS_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_CMSIS};nobranch=1"
@@ -215,10 +205,6 @@ SRC_URI_MCUXSDK_MCUBOOT_OPENSOURCE_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_MCUBOOT_OPE
 SRC_URI_MCUXSDK_MCU_BOOTLOADER_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_MCU_BOOTLOADER};nobranch=1"
 SRC_URI_MCUXSDK_TINYCBOR_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_TINYCBOR};nobranch=1"
 SRC_URI_MCUXSDK_PKCS11_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_PKCS11};nobranch=1"
-SRC_URI_MCUXSDK_AWS_IOT_DEVICE_DEFENDER_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_AWS_IOT_DEVICE_DEFENDER};nobranch=1"
-SRC_URI_MCUXSDK_AWS_IOT_DEVICE_SHADOW_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_AWS_IOT_DEVICE_SHADOW};nobranch=1"
-SRC_URI_MCUXSDK_AWS_IOT_JOBS_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_AWS_IOT_JOBS};nobranch=1"
-SRC_URI_MCUXSDK_AWS_IOT_OTA_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_AWS_IOT_OTA};nobranch=1"
 SRC_URI_MCUXSDK_AWS_IOT_LLHTTP_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_AWS_IOT_LLHTTP};nobranch=1"
 SRC_URI_MCUXSDK_USB_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_USB};nobranch=1"
 SRC_URI_MCUXSDK_LWIP_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_LWIP};nobranch=1"
@@ -248,7 +234,6 @@ SRC_URI_MCUXSDK_VGLITE_SDK_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_VGLITE_SDK};nobranc
 SRC_URI_MCUXSDK_LVGL_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_LVGL};nobranch=1"
 SRC_URI_MCUXSDK_G2D_DPU_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_G2D_DPU};nobranch=1"
 SRC_URI_MCUXSDK_VIT_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_VIT};nobranch=1"
-SRC_URI_MCUXSDK_VOICE_SEEKER_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_VOICE_SEEKER};nobranch=1"
 SRC_URI_MCUXSDK_AUDIO_VOICE_COMPONENTS_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_AUDIO_VOICE_COMPONENTS};nobranch=1"
 SRC_URI_MCUXSDK_LIBJPEG_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_LIBJPEG};nobranch=1"
 SRC_URI_MCUXSDK_PNGDEC_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_PNGDEC};nobranch=1"
@@ -271,6 +256,7 @@ SRC_URI_MCUXSDK_TF_M_TESTS_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_TF_M_TESTS};nobranc
 SRC_URI_MCUXSDK_QCBOR_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_QCBOR};nobranch=1"
 SRC_URI_MCUXSDK_SECURE_STORAGE_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_SECURE_STORAGE};nobranch=1"
 SRC_URI_MCUXSDK_SGI_PKC_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_SGI_PKC};nobranch=1"
+SRC_URI_MCUXSDK_TF_PSA_CRYPTO_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_TF_PSA_CRYPTO};nobranch=1"
 SRC_URI_MCUXSDK_TOUCH_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_TOUCH};nobranch=1"
 SRC_URI_MCUXSDK_MCUX_SDK_MIDDLEWARE_CONNECTIVITY_FRAMEWORK_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_MCUX_SDK_MIDDLEWARE_CONNECTIVITY_FRAMEWORK};nobranch=1"
 SRC_URI_MCUXSDK_GENFSK_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_GENFSK};nobranch=1"
@@ -293,7 +279,6 @@ SRC_URI_MCUXSDK_COREJSON_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_COREJSON};nobranch=1"
 SRC_URI_MCUXSDK_COREHTTP_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_COREHTTP};nobranch=1"
 SRC_URI_MCUXSDK_BACKOFFALGORITHM_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_BACKOFFALGORITHM};nobranch=1"
 SRC_URI_MCUXSDK_FREERTOS_PLUS_TCP_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_FREERTOS_PLUS_TCP};nobranch=1"
-SRC_URI_MCUXSDK_COREMQTT_AGENT_WITH_BRANCH ?= "${SRC_URI_MCUXSDK_COREMQTT_AGENT};nobranch=1"
 
 SRC_URI = "\
     ${SRC_URI_MCUXSDK};branch=${MCUXSDK_BRANCH};name=mcuxsdk;destsuffix=manifests \
@@ -314,10 +299,6 @@ SRC_URI = "\
     ${SRC_URI_MCUXSDK_MCU_BOOTLOADER_WITH_BRANCH};name=mcuxsdk-mcu_bootloader;destsuffix=mcuxsdk/middleware/mcu_bootloader \
     ${SRC_URI_MCUXSDK_TINYCBOR_WITH_BRANCH};name=mcuxsdk-tinycbor;destsuffix=mcuxsdk/middleware/tinycbor \
     ${SRC_URI_MCUXSDK_PKCS11_WITH_BRANCH};name=mcuxsdk-pkcs11;destsuffix=mcuxsdk/middleware/pkcs11 \
-    ${SRC_URI_MCUXSDK_AWS_IOT_DEVICE_DEFENDER_WITH_BRANCH};name=mcuxsdk-aws_iot_device-defender;destsuffix=mcuxsdk/middleware/aws_iot/device-defender \
-    ${SRC_URI_MCUXSDK_AWS_IOT_DEVICE_SHADOW_WITH_BRANCH};name=mcuxsdk-aws_iot_device-shadow;destsuffix=mcuxsdk/middleware/aws_iot/device-shadow \
-    ${SRC_URI_MCUXSDK_AWS_IOT_JOBS_WITH_BRANCH};name=mcuxsdk-aws_iot_jobs;destsuffix=mcuxsdk/middleware/aws_iot/jobs \
-    ${SRC_URI_MCUXSDK_AWS_IOT_OTA_WITH_BRANCH};name=mcuxsdk-aws_iot_ota;destsuffix=mcuxsdk/middleware/aws_iot/ota \
     ${SRC_URI_MCUXSDK_AWS_IOT_LLHTTP_WITH_BRANCH};name=mcuxsdk-aws_iot_llhttp;destsuffix=mcuxsdk/middleware/llhttp \
     ${SRC_URI_MCUXSDK_USB_WITH_BRANCH};name=mcuxsdk-usb;destsuffix=mcuxsdk/middleware/usb \
     ${SRC_URI_MCUXSDK_LWIP_WITH_BRANCH};name=mcuxsdk-lwip;destsuffix=mcuxsdk/middleware/lwip \
@@ -347,7 +328,6 @@ SRC_URI = "\
     ${SRC_URI_MCUXSDK_LVGL_WITH_BRANCH};name=mcuxsdk-lvgl;destsuffix=mcuxsdk/middleware/lvgl \
     ${SRC_URI_MCUXSDK_G2D_DPU_WITH_BRANCH};name=mcuxsdk-g2d_dpu;destsuffix=mcuxsdk/middleware/g2d_dpu \
     ${SRC_URI_MCUXSDK_VIT_WITH_BRANCH};name=mcuxsdk-vit;destsuffix=mcuxsdk/middleware/audio_voice/components/vit \
-    ${SRC_URI_MCUXSDK_VOICE_SEEKER_WITH_BRANCH};name=mcuxsdk-voice_seeker;destsuffix=mcuxsdk/middleware/audio_voice/components/voice_seeker \
     ${SRC_URI_MCUXSDK_AUDIO_VOICE_COMPONENTS_WITH_BRANCH};name=mcuxsdk-audio-voice-components;destsuffix=mcuxsdk/middleware/audio_voice/components \
     ${SRC_URI_MCUXSDK_LIBJPEG_WITH_BRANCH};name=mcuxsdk-libjpeg;destsuffix=mcuxsdk/middleware/libjpeg \
     ${SRC_URI_MCUXSDK_PNGDEC_WITH_BRANCH};name=mcuxsdk-pngdec;destsuffix=mcuxsdk/middleware/pngdec \
@@ -370,6 +350,7 @@ SRC_URI = "\
     ${SRC_URI_MCUXSDK_QCBOR_WITH_BRANCH};name=mcuxsdk-qcbor;destsuffix=mcuxsdk/middleware/tfm/qcbor \
     ${SRC_URI_MCUXSDK_SECURE_STORAGE_WITH_BRANCH};name=mcuxsdk-secure_storage;destsuffix=mcuxsdk/middleware/secure_storage \
     ${SRC_URI_MCUXSDK_SGI_PKC_WITH_BRANCH};name=mcuxsdk-sgi_pkc;destsuffix=mcuxsdk/components/sgi_pkc \
+    ${SRC_URI_MCUXSDK_TF_PSA_CRYPTO_WITH_BRANCH};name=mcuxsdk-tf-psa-crypto;destsuffix=mcuxsdk/middleware/mbedtls/tf-psa-crypto \
     ${SRC_URI_MCUXSDK_TOUCH_WITH_BRANCH};name=mcuxsdk-touch;destsuffix=mcuxsdk/middleware/touch \
     ${SRC_URI_MCUXSDK_MCUX_SDK_MIDDLEWARE_CONNECTIVITY_FRAMEWORK_WITH_BRANCH};name=mcuxsdk-mcux-sdk-middleware-connectivity-framework;destsuffix=mcuxsdk/middleware/wireless/framework \
     ${SRC_URI_MCUXSDK_GENFSK_WITH_BRANCH};name=mcuxsdk-genfsk;destsuffix=mcuxsdk/middleware/wireless/genfsk \
@@ -392,7 +373,6 @@ SRC_URI = "\
     ${SRC_URI_MCUXSDK_COREHTTP_WITH_BRANCH};name=mcuxsdk-corehttp;destsuffix=mcuxsdk/rtos/freertos/corehttp \
     ${SRC_URI_MCUXSDK_BACKOFFALGORITHM_WITH_BRANCH};name=mcuxsdk-backoffalgorithm;destsuffix=mcuxsdk/rtos/freertos/backoffalgorithm \
     ${SRC_URI_MCUXSDK_FREERTOS_PLUS_TCP_WITH_BRANCH};name=mcuxsdk-freertos-plus-tcp;destsuffix=mcuxsdk/rtos/freertos/freertos-plus-tcp \
-    ${SRC_URI_MCUXSDK_COREMQTT_AGENT_WITH_BRANCH};name=mcuxsdk-coremqtt-agent;destsuffix=mcuxsdk/rtos/freertos/coremqtt-agent \
 "
 
 MCUXSDK_MODULES = "\
@@ -413,10 +393,6 @@ ${S}/mcuxsdk/middleware/mcuboot_opensource\;\
 ${S}/mcuxsdk/middleware/mcu_bootloader\;\
 ${S}/mcuxsdk/middleware/tinycbor\;\
 ${S}/mcuxsdk/middleware/pkcs11\;\
-${S}/mcuxsdk/middleware/aws_iot/device-defender\;\
-${S}/mcuxsdk/middleware/aws_iot/device-shadow\;\
-${S}/mcuxsdk/middleware/aws_iot/jobs\;\
-${S}/mcuxsdk/middleware/aws_iot/ota\;\
 ${S}/mcuxsdk/middleware/llhttp\;\
 ${S}/mcuxsdk/middleware/usb\;\
 ${S}/mcuxsdk/middleware/lwip\;\
@@ -446,7 +422,6 @@ ${S}/mcuxsdk/middleware/vglite/vglite_sdk\;\
 ${S}/mcuxsdk/middleware/lvgl\;\
 ${S}/mcuxsdk/middleware/g2d_dpu\;\
 ${S}/mcuxsdk/middleware/audio_voice/components/vit\;\
-${S}/mcuxsdk/middleware/audio_voice/components/voice_seeker\;\
 ${S}/mcuxsdk/middleware/audio_voice/components\;\
 ${S}/mcuxsdk/middleware/libjpeg\;\
 ${S}/mcuxsdk/middleware/pngdec\;\
@@ -469,6 +444,7 @@ ${S}/mcuxsdk/middleware/tfm/tf-m-tests\;\
 ${S}/mcuxsdk/middleware/tfm/qcbor\;\
 ${S}/mcuxsdk/middleware/secure_storage\;\
 ${S}/mcuxsdk/components/sgi_pkc\;\
+${S}/mcuxsdk/middleware/mbedtls/tf-psa-crypto\;\
 ${S}/mcuxsdk/middleware/touch\;\
 ${S}/mcuxsdk/middleware/wireless/framework\;\
 ${S}/mcuxsdk/middleware/wireless/genfsk\;\
@@ -491,8 +467,7 @@ ${S}/mcuxsdk/rtos/freertos/corejson\;\
 ${S}/mcuxsdk/rtos/freertos/corehttp\;\
 ${S}/mcuxsdk/rtos/freertos/backoffalgorithm\;\
 ${S}/mcuxsdk/rtos/freertos/freertos-plus-tcp\;\
-${S}/mcuxsdk/rtos/freertos/coremqtt-agent\;\
 "
 
-MCUXSDK_BRANCH = "release/25.09.00"
-PV = "25.09.00"
+MCUXSDK_BRANCH = "release/26.03.00"
+PV = "26.03.00"
