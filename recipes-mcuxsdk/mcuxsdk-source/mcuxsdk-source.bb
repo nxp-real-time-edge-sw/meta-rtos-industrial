@@ -13,6 +13,11 @@ S = "${UNPACKDIR}"
 # Don't generate packages
 inherit nopackages
 
+# mcuxsdk-examples patch
+SRC_URI += " \
+    file://0001-SOEM-fix-build-issues.patch;patchdir=${S}/mcuxsdk/examples \
+"
+
 do_configure() {
     if [ ! -d "${S}/.west" ]; then
         bbnote "Creating .west directory and config"
