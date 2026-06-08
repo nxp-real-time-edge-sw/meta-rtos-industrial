@@ -30,7 +30,7 @@ HMC_EXAMPLE_TARGET_TYPE ?= "release ddr_release"
 HMC_EXAMPLE_NAME ?= "${PN}"
 
 HMC_EXAMPLE_DIR ?= "${S}/heterogeneous-multicore/apps/${HMC_EXAMPLE_NAME}"
-HMC_EXAMPLE_INSTALL_DIR ?= "examples/heterogeneous-multicore"
+HMC_EXAMPLE_INSTALL_DIR ?= "examples/${MACHINE}/heterogeneous-multicore"
 
 DEPENDS += " \
     ${HMC_ARMGCC}-native \
