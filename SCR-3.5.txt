@@ -1,30 +1,30 @@
 Release Name: Yocto layer NXP RTOS Industrial
-Release Version: 3.4
+Release Version: 3.5
 Package License: LICENSE.txt - Additional Distribution License granted, license in Section 2.3 applies
 
 Package: Heterogeneous_Multicore
-Version: 3.4
+Version: 3.5
 Outgoing License: BSD-3-Clause
 License Files: LICENSE.txt
 Type of Content: source code, project files, linker files, binary library.
 Description and comments: Library and applications to support inter-core communication and resource sharing between heterogeneous multicore.
                           For source code of binary library, please contact with NXP support team.
 Release Location: https://github.com/nxp-real-time-edge-sw/heterogeneous-multicore
-                  branch: main (tag: Real-Time-Edge-v3.3-202512)
+                  branch: main (tag: Real-Time-Edge-v3.5-202607)
 Origin: NXP (BSD-3-Clause)
 
 Package: Zephyr
-Version: 4.3.0
+Version: 4.4.0
 Outgoing License: Apache-2.0
 License File: zephyr/LICENSE
 Type of Content: source code
 Description and comments: Open source scalable real-time operating system
 Release Location: https://github.com/nxp-zephyr/zephyr.git
-                  branch: feature/heterogeneous_multicore (tag: Real-Time-Edge-v3.3-202512)
+                  branch: feature/heterogeneous_multicore (tag: Real-Time-Edge-v3.5-202607)
 Origin: https://github.com/zephyrproject-rtos/zephyr.git
 
 Package: mcuxsdk-core
-Version: v25.09.00
+Version: v26.03.00
 Outgoing License: BSD-3-Clause
 License File: COPYING-BSD-3
 Type of content: source code, header file, script
@@ -36,7 +36,7 @@ Origin:
       Kconfiglib - Ulf Magnusson (ISC) - https://github.com/ulfalizer/Kconfiglib
 
 Package: mcuxsdk-examples
-Version: v25.09.00
+Version: v26.03.00
 Outgoing License: BSD-3-Clause
 License File: LICENSE
 Type of Content: source code, binary, project files, linker files
