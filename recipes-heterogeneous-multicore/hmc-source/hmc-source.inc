@@ -2,32 +2,30 @@
 
 SRCREV_FORMAT = "hmc"
 
-SRCREV_hmc ?= "d7c39d53814f7fbf1077b3afb78a28fe1e34ce65"
-SRCREV_core ?= "ad9e632e7735a4a6196e250027d1ea0fb0d2e5bd"
-SRCREV_mcuxsdk-manifests ?= "262a466ff0e4e84b3cf5965011154c7c6236ea63"
+SRCREV_hmc ?= "c89a5a326687d711c4c188fe50ec3134f6ce2ce0"
+SRCREV_core ?= "efd6f6c5bd24a326ec21f1fe6cf771b9bd47cd80"
+SRCREV_mcuxsdk-manifests ?= "8e1f9c6f972bff4b8a472a1b63e21e88284d83db"
 SRCREV_MCUX_CMSIS ?= "dfbb2d775b238b22dc1541c257c9ddc3b22ed4e3"
-SRCREV_mcu-sdk-components ?= "c4fad92115c7d4e69bdcd07c690018398ab6a231"
+SRCREV_mcu-sdk-components ?= "1d6cbed0284ff3d4f36afc4c1ed0489d313105c2"
 SRCREV_mcux-devices-kinetis ?= "748c452a7afe87b30e3aa6460a172b7a0e0ae433"
 SRCREV_mcux-devices-lpc ?= "68bb24aeed5cccc1e758b061f7ffe1ef1c3ae926"
 SRCREV_mcux-devices-mcx ?= "5cd233f7bdebd6de33c200d2bf423fc7548d79b2"
 SRCREV_mcux-devices-rt ?= "3664324bd1240a92e05a31301f6636a7a19f01d2"
-SRCREV_mcux-devices-imx ?= "2338cdc3cb067aaf86286e60bf9ec1f77d628b12"
+SRCREV_mcux-devices-imx ?= "0a7ecba2f01523cf1275c2a4d7548b6f85ab0561"
 SRCREV_mcu-sdk-doc ?= "5a330c6c9d51b7e0c868c2eddf7a580e7b04f474"
 SRCREV_mcu-sdk-examples ?= "c37c97ca4376ecab88eb415f3b3679e10dee1ab7"
 SRCREV_lvgl ?= "0779788b76285538b25c7c6d80b1b6856dfeb2bf"
 SRCREV_lwip ?= "85980ff48d8781414d7294bd42366b6b1a03591f"
 SRCREV_mcux-sdk-middleware-multicore ?= "0942eac75827fe2b9fbb5ee601a5c30f1c372ba6"
 SRCREV_rpmsg-lite ?= "86a3e0a1c0dca76d6db4f13af9b373456f8f0dc2"
-SRCREV_soem ?= "53acd56dca133af3817a53d93e0928f5bbc8406e"
-SRCREV_freertos-kernel ?= "d763040fc3ec9edcb8b51ff333884e86f5130aec"
-SRCREV_els_pkc ?= "71d4a89c03fb32e618ee02c0cd54b3fc92736c96"
-SRCREV_psa_crypto_driver ?= "1a93893f986db38cf2c8910f6138b634f0437a48"
+SRCREV_soem ?= "2900ce4a5f641a11d39edb286685b5c6d6e5992a"
+SRCREV_freertos-kernel ?= "f98669bf6e8ee97fa5e8fd7448a8d80868d9534b"
 SRCREV_cmsis ?= "512cc7e895e8491696b61f7ba8066b4a182569b8"
 SRCREV_cmsis_6 ?= "30a859f44ef8ab4dc8f84b03ed586fd16ccf9d74"
 SRCREV_libmetal ?= "66e084293b2a7ced5a73fbd247deddba8915883a"
-SRCREV_hal_nxp ?= "2c2f28ac333e995d7279777409817c4b4f92c1ec"
+SRCREV_hal_nxp ?= "87363e2e5869444017d58a54a5f86fa561f89f4d"
 SRCREV_open-amp ?= "5efe7974f9546582e99f5a842a816ea4b65f5227"
-SRCREV_zephyr ?= "6d1e9c921564dbe1ba37d73563ffefdf43fd4b3b"
+SRCREV_zephyr ?= "5cc0697a9246384a89ad69b04fbfde475f539821"
 
 SRC_URI_HMC ?= "git://github.com/nxp-real-time-edge-sw/heterogeneous-multicore.git;protocol=https"
 SRC_URI_CORE ?= "git://github.com/nxp-mcuxpresso/mcuxsdk-core;protocol=https"
@@ -47,8 +45,6 @@ SRC_URI_MCUX_SDK_MIDDLEWARE_MULTICORE ?= "git://github.com/nxp-mcuxpresso/mcuxsd
 SRC_URI_RPMSG_LITE ?= "git://github.com/nxp-mcuxpresso/rpmsg-lite;protocol=https"
 SRC_URI_SOEM ?= "git://github.com/nxp-real-time-edge-sw/soem;protocol=https"
 SRC_URI_FREERTOS_KERNEL ?= "git://github.com/nxp-mcuxpresso/freertos-kernel;protocol=https"
-SRC_URI_ELS_PKC ?= "git://github.com/NXP/els_pkc;protocol=https"
-SRC_URI_PSA_CRYPTO_DRIVER ?= "git://github.com/NXP/psa_crypto_driver;protocol=https"
 SRC_URI_CMSIS ?= "git://github.com/zephyrproject-rtos/cmsis;protocol=https"
 SRC_URI_CMSIS_6 ?= "git://github.com/zephyrproject-rtos/CMSIS_6;protocol=https"
 SRC_URI_LIBMETAL ?= "git://github.com/zephyrproject-rtos/libmetal;protocol=https"
@@ -73,8 +69,6 @@ SRC_URI_MCUX_SDK_MIDDLEWARE_MULTICORE_WITH_BRANCH ?= "${SRC_URI_MCUX_SDK_MIDDLEW
 SRC_URI_RPMSG_LITE_WITH_BRANCH ?= "${SRC_URI_RPMSG_LITE};nobranch=1"
 SRC_URI_SOEM_WITH_BRANCH ?= "${SRC_URI_SOEM};nobranch=1"
 SRC_URI_FREERTOS_KERNEL_WITH_BRANCH ?= "${SRC_URI_FREERTOS_KERNEL};nobranch=1"
-SRC_URI_ELS_PKC_WITH_BRANCH ?= "${SRC_URI_ELS_PKC};nobranch=1"
-SRC_URI_PSA_CRYPTO_DRIVER_WITH_BRANCH ?= "${SRC_URI_PSA_CRYPTO_DRIVER};nobranch=1"
 SRC_URI_CMSIS_WITH_BRANCH ?= "${SRC_URI_CMSIS};nobranch=1"
 SRC_URI_CMSIS_6_WITH_BRANCH ?= "${SRC_URI_CMSIS_6};nobranch=1"
 SRC_URI_LIBMETAL_WITH_BRANCH ?= "${SRC_URI_LIBMETAL};nobranch=1"
@@ -101,8 +95,6 @@ SRC_URI = "\
     ${SRC_URI_RPMSG_LITE_WITH_BRANCH};name=rpmsg-lite;destsuffix=mcuxsdk/mcuxsdk/middleware/multicore/rpmsg-lite \
     ${SRC_URI_SOEM_WITH_BRANCH};name=soem;destsuffix=mcuxsdk/mcuxsdk/middleware/soem \
     ${SRC_URI_FREERTOS_KERNEL_WITH_BRANCH};name=freertos-kernel;destsuffix=mcuxsdk/mcuxsdk/rtos/freertos/freertos-kernel \
-    ${SRC_URI_ELS_PKC_WITH_BRANCH};name=els_pkc;destsuffix=zsdk/modules/crypto/els_pkc \
-    ${SRC_URI_PSA_CRYPTO_DRIVER_WITH_BRANCH};name=psa_crypto_driver;destsuffix=zsdk/modules/crypto/psa_crypto_driver \
     ${SRC_URI_CMSIS_WITH_BRANCH};name=cmsis;destsuffix=zsdk/modules/hal/cmsis \
     ${SRC_URI_CMSIS_6_WITH_BRANCH};name=cmsis_6;destsuffix=zsdk/modules/hal/cmsis_6 \
     ${SRC_URI_LIBMETAL_WITH_BRANCH};name=libmetal;destsuffix=zsdk/modules/hal/libmetal \
@@ -129,8 +121,6 @@ ${S}/mcuxsdk/mcuxsdk/middleware/multicore\;\
 ${S}/mcuxsdk/mcuxsdk/middleware/multicore/rpmsg-lite\;\
 ${S}/mcuxsdk/mcuxsdk/middleware/soem\;\
 ${S}/mcuxsdk/mcuxsdk/rtos/freertos/freertos-kernel\;\
-${S}/zsdk/modules/crypto/els_pkc\;\
-${S}/zsdk/modules/crypto/psa_crypto_driver\;\
 ${S}/zsdk/modules/hal/cmsis\;\
 ${S}/zsdk/modules/hal/cmsis_6\;\
 ${S}/zsdk/modules/hal/libmetal\;\
