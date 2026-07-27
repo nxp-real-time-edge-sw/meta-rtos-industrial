@@ -2,7 +2,7 @@
 
 SRCREV_FORMAT = "hmc"
 
-SRCREV_hmc ?= "8f17604ae375d62904747923c6645ca85e075b70"
+SRCREV_hmc ?= "e2de018bdcc4dd222ae644cf26f475fc2f3ab8bc"
 SRCREV_core ?= "efd6f6c5bd24a326ec21f1fe6cf771b9bd47cd80"
 SRCREV_mcuxsdk-manifests ?= "8e1f9c6f972bff4b8a472a1b63e21e88284d83db"
 SRCREV_MCUX_CMSIS ?= "dfbb2d775b238b22dc1541c257c9ddc3b22ed4e3"
